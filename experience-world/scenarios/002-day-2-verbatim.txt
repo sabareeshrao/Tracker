@@ -469,3 +469,17 @@ The important lesson today is:
 
 ---
 
+### 🐨 Step 8 — How this connects to your internship
+
+**Student:** How does this connect to the Java internship on my resume?
+
+**Mentor:** Your reported internship experience includes Java, JDBC, Servlets/JSP, MySQL, CRUD screens, validation, and record management.
+
+This scenario demonstrates how those technologies can work together in a simple internal application.
+
+As you reconstruct your real work, we'll identify which forms, SQL statements, validation checks, and modules you actually developed.
+
+The flow we built today is an educational implementation, not a claim that it matches your employer's original source code.
+
+---
+
