@@ -2,24 +2,24 @@
 
 > **Purpose:** This is the mentor's **separate continuity checklist**, not the student's experience checklist or the independent 2,719-question master checklist. Read this file at the start of **every** Experience World session. Treat [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json) as the canonical machine-readable status and [EXPERIENCE_CHECKLIST.md](EXPERIENCE_CHECKLIST.md) as the student-facing career-year record. This checklist provides the *instructional decision*: **what not to repeat, what is incomplete, and exactly what to teach next**.
 
-**Last reviewed:** 2026-10-02  
+**Last reviewed:** 2026-10-03  
 **Current simulated year:** **Year 1 — June 2018–May 2019 (Internship → Backend)**  
-**Experience World questions:** **4 / 1,000 explicitly understood**; **5 / 1,000 introduced**  
-**One active lesson:** **Scenario 005 / Day 5 / Q005 — Safely delete or archive a project**  
+**Experience World questions:** **5 / 1,000 explicitly understood**; **6 / 1,000 introduced**  
+**One active lesson:** **Scenario 006 / Day 6 / Q006 — Duplicate project codes and repeated Save requests**  
 **Root 2,719-question interview bank:** Independent; do not tick anything there based merely on understanding an Experience World scenario.
 
 ## 1. Mentor's quick-resume card (READ FIRST)
 
 | Check | Recorded state | Mentor action |
 |---|---|---|
-| **Last confirmed scenario** | **004 / Day 4 / Q004** | Do not reteach Q001–Q004 as new lessons |
+| **Last confirmed scenario** | **005 / Day 5 / Q005** | Do not reteach Q001–Q005 as new lessons |
 | **Day 1 question** | What business problem did a geospatial workflow application solve? | Build on this, only reference in 1–2 sentences when necessary |
 | **Day 1 learned themes** | Centralized GIS/QA/operations status; application purpose; basic Project class; in-memory Java objects versus database persistence; frontend → backend → database overview; required-name validation | Assume these were **self-reported understood**, not performance-tested |
 | **Evidence and wording** | User explicitly said **"I understood"**; full original [Day 1 transcript](scenarios/001-day-1-verbatim.txt) is archived | Don't recreate/rewrite or replace it |
-| **Current unfinished scenario** | **005 / Day 5 / Q005** | Start a new delete/archive business decision, distinct from editing status |
+| **Current unfinished scenario** | **006 / Day 6 / Q006** | Prevent duplicates through business identity, database constraints and retry handling |
 | **Day 2 material already introduced** | The **complete rewritten Day 2** was explicitly understood and [archived without rewriting](scenarios/002-day-2-verbatim.txt): HTML POST, doPost, request parameters, validation/400, JDBC prepared INSERT, resource closing, redirect and database-failure case | **Never re-teach as a new question.** Only briefly refer back to contrast GET versus POST or SELECT versus INSERT |
 | **Day 3 understood content** | [Verbatim Q003](scenarios/003-day-3-verbatim.txt): GET, doGet, validated id, PreparedStatement SELECT, ResultSet mapping, JSP forwarding/output escaping, 400 and 404 | User explicitly understood; build only on it when teaching UPDATE |
-| **Next after completing Day 5** | **006 / Day 6 / Q006: How do duplicate project IDs or requests behave?** | Teach after confirmation of safe archival and deletion |
+| **Next after completing Day 6** | **007 / Day 7 / Q007: Where should deeper frontend/backend input validation occur?** | Teach new validation tradeoffs after confirmed duplicate handling |
 
 ## 2. What I must not teach as if new (anti-loop memory)
 
@@ -29,7 +29,8 @@
 - [x] **Q002 — HTML/JSP → HTTP POST → Servlet → JDBC → MySQL.** **UNDERSTOOD (self-reported, 2026-10-02).** Full rewritten Day 2 covered `doPost`, `getParameter`, validation/400, parameterized INSERT/`executeUpdate`, SQL injection, resource cleanup, success redirect, and MySQL error. [Original transcript](scenarios/002-day-2-verbatim.txt). Do not repeat as a new lesson.
 - [x] **Q003 — GET /projects?id=101 → doGet → SELECT → ResultSet → JSP.** **UNDERSTOOD (self-reported, 2026-10-02).** Original [Day 3 transcript](scenarios/003-day-3-verbatim.txt) archived. Do not repeat as a new question.
 - [x] **Q004 — Change an existing project status using parameterized UPDATE.** **UNDERSTOOD (self-reported 2026-10-03).** [Verbatim Day 4 source](scenarios/004-day-4-verbatim.txt): WHERE clause, allowlisted status, executeUpdate row count, missing record, safe redirect, DB failure. Do not repeat as a new question.
-- [ ] **Q005 — Decide DELETE vs soft archive for a project.** **IN PROGRESS.** New material: linked QA records, foreign key constraints, hard/soft deletion, authorization, DELETE with WHERE, SQL count and 404/409, audit/restore and hiding archived records.
+- [x] **Q005 — Decide DELETE vs soft archive for a project.** **UNDERSTOOD (self-reported 2026-10-03).** [Original Day 5 dialogue](scenarios/005-day-5-verbatim.txt) covers foreign key RESTRICT/CASCADE, soft archive flag, active/historical filtering, permissions and HTTP error distinctions. Do not reteach as a new question.
+- [ ] **Q006 — Duplicate project codes and repeated Save requests.** **IN PROGRESS, not understood.** New teaching: database ID versus projectCode, UNIQUE constraint, checking before insert vs concurrent race, specific duplicate-key error handling, HTTP 409, retries/idempotency introduction.
 
 **Crucial:** checked items above mean *teaching material that need not be repeated*, not production proficiency. Revisit an item **only when the user requests review, demonstrates a missing prerequisite, or needs a clearly different production/implementation depth.** Label the revisit as a deliberate follow-up, not a brand-new question.
 
@@ -41,8 +42,8 @@
 | Q002 / S002 | Year 1 | Employee clicks **Save Project**: what happens through HTML/JSP, Servlet, JDBC, and MySQL? | POST, doPost, request parameters, PreparedStatement INSERT, validation, success/failure | **✅ UNDERSTOOD** |
 | Q003 / S003 | Year 1 | Employee opens an existing project: how does **Read Project** work? | GET, doGet, query parameter, SELECT, ResultSet, response/JSP rendering | **✅ UNDERSTOOD** |
 | Q004 / S004 | Year 1 | Employee edits a project: how is an **Update** different from Create? | UPDATE, affected row count, missing ID, input validation | **✅ UNDERSTOOD** |
-| Q005 / S005 | Year 1 | Employee removes or archives a project: how do we design **Delete** safely? | DELETE vs soft-delete decision, authorization idea, foreign keys | **🟠 IN PROGRESS** |
-| Q006 / S006 | Year 1 | Two requests use the same project ID: what happens to **duplicates**? | unique key, detecting collisions, SQL constraints, meaningful error response | ☐ QUEUED |
+| Q005 / S005 | Year 1 | Employee removes or archives a project: how do we design **Delete** safely? | DELETE vs soft-delete decision, authorization idea, foreign keys | **✅ UNDERSTOOD** |
+| Q006 / S006 | Year 1 | Two requests use the same project ID: what happens to **duplicates**? | unique key, detecting collisions, SQL constraints, meaningful error response | **🟠 IN PROGRESS** |
 | Q007 / S007 | Year 1 | A form includes missing/invalid fields: where should **validation** run? | frontend vs backend validation, error messages, consistency; builds on Q001 | ☐ QUEUED |
 | Q008 / S008 | Year 1 | A manager needs a simple project report: how do **SQL filters, joins and aggregates** help? | SELECT/JOIN/GROUP BY, Excel export only if useful | ☐ QUEUED |
 | Q009 / S009 | Year 1 | A SQL operation fails halfway: how do local **transactions and rollback** work? | JDBC transaction boundaries, commit/rollback, error path | ☐ QUEUED |
@@ -68,9 +69,11 @@
 
 ## 5. Single-sentence next instruction (update this after each confirmation)
 
-**NOW: Teach Q005 / Day 5 / Year 1: QA wants to remove Project 102 but it has linked quality-review records. Ask whether permanent SQL DELETE or reversible archival is suitable, introduce foreign keys and restrictive vs cascading deletion as business decisions, show safe parameterized DELETE WHERE id with authorization and row-count checks, then demonstrate soft archiving and filtering active-project lists. Distinguish 400 malformed request, 404 missing project, 409 blocked by related records when appropriate, and 500 database failure. Use a realistic employee UI, mentor–student discovery, interview answer, memory chain and three-question knowledge checkpoint. Only tick after the user says Understood. Next Q006 duplicate IDs and retries. Avoid repeating basic UPDATE/SELECT/INSERT explanations.**
+**NOW: Teach Q006 / Day 6 / Year 1 as NEW business case: an Excel intake contains the same project code twice, and/or two employees submit it simultaneously. Distinguish database primary key (generated ID) from unique business project code; show duplicate request, unsafe check-then-insert race, database UNIQUE constraint as final guardrail, parameterized INSERT and MySQL duplicate-key condition, HTTP 409, and a network timeout after insert (retry uncertainty; introduce idempotency, reserve deep implementation). Include a new interactive example, mentor–student discovery, short illustrative Java code, interview answer, one-line memory chain, understanding test. Do not count Q006 complete until explicit Understood; Q007 deeper validation next. Do not reteach Day 1–5.**
 
 ## 6. Change record
+
+- **2026-10-03:** Day 5 explicitly understood and archived verbatim; Day 6/Q006 duplicates and retries now active. Five understood and six introduced, Year 1 remains current. Root question bank unchanged.
 
 - **2026-10-03:** Q004 explicitly understood and verbatim [Day 4 archive](scenarios/004-day-4-verbatim.txt) added; Q005 safely delete/archive introduced. Four understood, five introduced; root question bank untouched.
 
