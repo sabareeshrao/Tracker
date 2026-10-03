@@ -106,7 +106,7 @@
   "nextAction": "Continue Day 3 Year 1 Q003 with a NEW requirement: employee views existing Project 101 using GET /projects?id=101, Servlet doGet, validated id, JDBC parameterized SELECT, ResultSet mapping, JSP rendering with HTML escaping, 404 missing record and failure when MySQL unavailable. Do not repeat POST INSERT, which Q002 covered. Await explicit understood before marking Q003 complete; plan Q004 UPDATE next.",
   "syncedToRootTracker": false,
   "questionsPresented": 3,
-  "questionsConfirmedCompleted": 2,
+  "questionsConfirmedCompleted": 3,
   "preparationTarget": 1000,
   "currentCareerYear": 1,
   "currentCareerPeriod": "June 2018 – May 2019",
