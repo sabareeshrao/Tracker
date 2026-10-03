@@ -430,7 +430,7 @@ for(const q of QUESTION.values()){
  if(!sourceConcepts.has(n)){
   const name=s.title+' · Set '+n;
   const keys=s.title.toLowerCase().split(/[^a-z0-9@.]+/).filter(w=>w.length>4&&!['spring','developer','project','projects','using','working','designing','handling','experience','questions','features','enterprise','application','applications','implementing','writing','understanding'].includes(w)).slice(0,3);
-  const phrase=keys.map(w=>w.replace(/[^\w]/g,'\\  <script src="./app.js"></script>')).join('|');
+  const phrase=keys.map(w=>w.replace(/[^\w]/g,'\\$&')).join('|');
   const t={group:'Source-specific topics',id:'source-'+n,name,regex:phrase?new RegExp('\\b('+phrase+')\\b','i'):/$^/,qids:[],sets:new Set([n])};
   topics.push(t);sourceConcepts.set(n,t);
  }
