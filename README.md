@@ -1,5 +1,7 @@
 # TRACE — Developer-7 Knowledge Tracker
 
+**[Complete question checklist](QUESTION_CHECKLIST.md)** — tick off all 2,719 unique questions by stable Q-number. Tell ChatGPT which questions you completed to update the file.
+
 A static, private-by-default **study dashboard** generated from the complete [Developer-7 question roadmap](./docs/questions/roadmap/ALL_SETS_001_390.md).
 
 ## Open the tracker
