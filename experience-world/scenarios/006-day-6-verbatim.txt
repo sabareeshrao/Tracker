@@ -168,3 +168,232 @@ But here's an important question.
 
 **Where should we enforce this rule?**
 
+### 🐯 Step 4 — Our first idea: check before inserting
+
+**Student:** Could we search the database before inserting?
+
+If the project code already exists, we reject the request.
+
+**Mentor:** Absolutely. That's a reasonable first idea.
+
+Imagine writing:
+
+```java id="twe1l0"
+if (projectExists("PRJ-101")) {
+    throw new IllegalArgumentException(
+        "Project already exists"
+    );
+}
+
+saveProject("PRJ-101");
+```
+
+**Student:** That looks simple.
+
+**Mentor:** Let's see how it works when only one employee submits the request.
+
+```text id="bqxoz8"
+Employee A submits PRJ-101
+              ↓
+Does PRJ-101 exist?
+              ↓
+             YES
+              ↓
+       Reject duplicate
+```
+
+**Student:** Great! Problem solved.
+
+**Mentor:** Not completely.
+
+**Student:** Why? We already checked whether the project exists.
+
+**Mentor:** Because two employees can send requests at almost the same time.
+
+Now we're about to discover a real concurrency problem.
+
+---
+
+### 🦁 Step 5 — Two requests arrive at the same time
+
+**Mentor:** Imagine Employee A and Employee B both submit Project `PRJ-201`.
+
+At the beginning, that project doesn't exist.
+
+Watch what happens.
+
+<box border radius="lg" padding={3} gap={2}>
+  <grid columns={2} gap={2}>
+    <grid-item>
+      <box background="surface-secondary" radius="md" padding={3} gap={2}>
+        <text color="#38bdf8" weight="medium" size="sm">Employee A</text>
+        <text size="sm">1. Checks PRJ-201</text>
+        <text color="success" weight="medium" size="sm">Not found ✓</text>
+        <divider color="subtle"/>
+        <text size="sm">2. Prepares INSERT</text>
+        <text color="success" weight="medium" size="sm">Allowed ✓</text>
+      </box>
+    </grid-item>
+    <grid-item>
+      <box background="surface-secondary" radius="md" padding={3} gap={2}>
+        <text color="#38bdf8" weight="medium" size="sm">Employee B</text>
+        <text size="sm">1. Checks PRJ-201</text>
+        <text color="success" weight="medium" size="sm">Not found ✓</text>
+        <divider color="subtle"/>
+        <text size="sm">2. Prepares INSERT</text>
+        <text color="success" weight="medium" size="sm">Allowed ✓</text>
+      </box>
+    </grid-item>
+  </grid>
+  <icon name="arrow-down" color="secondary"/>
+  <box background="surface-secondary" radius="md" padding={3} align="center" gap={1}>
+    <icon name="database" color="#38bdf8" size="lg"/>
+    **Both requests try to insert PRJ-201**
+    <text color="secondary" size="sm" textAlign="center">The earlier checks do not reserve the project code.</text>
+  </box>
+</box>
+
+**Student:** Wait! Both employees checked before either one inserted the record.
+
+**Mentor:** Exactly.
+
+Both saw that `PRJ-201` didn't exist.
+
+So both decided they were allowed to save it.
+
+**Student:** Does that mean we might still create duplicates?
+
+**Mentor:** Yes, if the database doesn't enforce uniqueness.
+
+This is called a **race condition**.
+
+```text id="0vbzv6"
+Time        Employee A          Employee B
+-------------------------------------------------
+10:00:01    Check PRJ-201
+            Not found
+
+10:00:02                        Check PRJ-201
+                                Not found
+
+10:00:03    INSERT PRJ-201
+
+10:00:04                        INSERT PRJ-201
+```
+
+**Student:** So checking from Java isn't enough?
+
+**Mentor:** Correct!
+
+A check can make error messages friendlier, but it isn't sufficient to guarantee uniqueness when concurrent requests are possible.
+
+We need a rule that MySQL itself enforces.
+
+### 🐨 Step 6 — Introduce the UNIQUE constraint
+
+**Mentor:** Remember that our table has two identities.
+
+```text id="d8fg7b"
+Database ID  → id
+Business ID  → project_code
+```
+
+Our database ID can be the primary key.
+
+And we can put a unique constraint on `project_code`.
+
+For example, an illustrative schema could look like this:
+
+```sql id="np1mnq"
+CREATE TABLE projects (
+
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    project_code VARCHAR(40) NOT NULL,
+
+    name VARCHAR(200) NOT NULL,
+
+    status VARCHAR(30) NOT NULL,
+
+    archived BOOLEAN NOT NULL DEFAULT FALSE,
+
+    CONSTRAINT uq_project_code
+        UNIQUE (project_code)
+);
+```
+
+**Student:** What does `UNIQUE (project_code)` do?
+
+**Mentor:** It tells MySQL that two rows must not have the same project code, according to the column's comparison rules.
+
+Now imagine both employees try again.
+
+```text id="se833u"
+Employee A                   Employee B
+    |                            |
+    | INSERT PRJ-201             | INSERT PRJ-201
+    ↓                            ↓
+             MySQL
+               |
+        UNIQUE constraint
+               |
+         /-----------\
+        /             \
+   One INSERT      Other INSERT
+    succeeds        rejected
+```
+
+**Student:** So even if Java allows both requests to reach MySQL, the database prevents two identical project codes?
+
+**Mentor:** Exactly. 🐯
+
+That's our most important lesson today.
+
+**Application checks help the user. Database constraints protect the data.**
+
+*Note:* This schema illustrates the business-code column added to our earlier project model. In a real existing database, we'd migrate and backfill that column carefully rather than simply replacing the table.
+
+---
+
+### 🦊 Step 7 — What error does MySQL produce?
+
+**Student:** What happens to the request that loses the race?
+
+**Mentor:** MySQL rejects the conflicting insert.
+
+For an ordinary duplicate-key violation, MySQL reports error code `1062`.
+
+JDBC reports the database failure through an `SQLException`.
+
+**Student:** So does the employee see a huge SQL exception?
+
+**Mentor:** They shouldn't.
+
+We want the application to translate a known database conflict into a meaningful response.
+
+For example:
+
+```text id="axrtg1"
+Employee submits PRJ-201
+              ↓
+MySQL finds duplicate code
+              ↓
+JDBC reports duplicate-key error
+              ↓
+Java handles that specific error
+              ↓
+HTTP 409 Conflict
+              ↓
+"Project code already exists"
+```
+
+**Student:** Why 409?
+
+**Mentor:** HTTP `409 Conflict` can communicate that the request conflicts with the current resource state.
+
+The submitted project code is already taken.
+
+But we must be careful not to treat every SQL exception as a duplicate.
+
+A database connection failure is a different problem.
+
