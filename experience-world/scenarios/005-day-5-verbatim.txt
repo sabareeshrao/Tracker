@@ -1,0 +1,227 @@
+# 🐼 Day 5 — Your First Dangerous Delete Request
+
+<text color="secondary" size="sm" weight="medium">5-YEAR JAVA EXPERIENCE WORLD · YEAR 1 · SCENARIO 005</text>
+
+**Today's interview question: How would you safely delete or archive a project from MySQL when other records depend on it?**
+
+**Characters:** 🐯 Mentor — Java developer with five years of practical experience. 🐼 Student — recently graduated from college with no industry experience.
+
+<badge color="secondary">Educational scenario · Internship-era Java application</badge>
+
+---
+
+### 🐯 Step 1 — The operations manager wants to remove a project
+
+**Mentor:** Good morning! We have a new request from the operations team.
+
+**Student:** What's today's task?
+
+**Mentor:** Imagine Project 102, *Chennai Survey*, has been completed and delivered to the customer.
+
+The operations manager says:
+
+*"I don't want this completed project appearing in my active-project list anymore. Can you add a Delete button?"*
+
+**Student:** That sounds easy! We just delete Project 102 from MySQL.
+
+**Mentor:** Maybe. But before writing any SQL, I want you to answer one question.
+
+**Why does the manager want to delete it?**
+
+**Student:** Because the project is completed and they don't want to see it?
+
+**Mentor:** Exactly. Does that necessarily mean the company wants to permanently destroy its information?
+
+**Student:** Hmm. Not necessarily. They might only want to hide it from the active list.
+
+**Mentor:** Excellent! 🐯
+
+That's our first important discovery.
+
+**Removing something from a screen is not the same as deleting it from the database.**
+
+### 🦊 Step 2 — Something unexpected happens
+
+**Mentor:** Let's look at the information associated with Project 102.
+
+<box border radius="lg" padding={3} gap={2}>
+  <box background="surface-secondary" radius="md" padding={3} gap={1} align="center">
+    <icon name="folder" color="#38bdf8" size="lg"/>
+    **Project 102 — Chennai Survey**
+    <text color="secondary" size="sm">Status: COMPLETED</text>
+  </box>
+  <icon name="arrow-down" color="secondary" size="lg"/>
+  <grid columns={2} gap={2}>
+    <grid-item>
+      <box background="surface-secondary" radius="md" padding={3} gap={1} align="center" height="100%">
+        <icon name="clipboard-check" color="#38bdf8" size="lg"/>
+        **QA Review 501**
+        <text size="xs" color="secondary" textAlign="center">Quality checks passed</text>
+      </box>
+    </grid-item>
+    <grid-item>
+      <box background="surface-secondary" radius="md" padding={3} gap={1} align="center" height="100%">
+        <icon name="clipboard-list" color="#38bdf8" size="lg"/>
+        **QA Review 502**
+        <text size="xs" color="secondary" textAlign="center">Delivery review completed</text>
+      </box>
+    </grid-item>
+  </grid>
+  <caption>Illustrative relationship between a project and its associated QA records.</caption>
+</box>
+
+**Student:** So one project can have multiple QA reviews?
+
+**Mentor:** Yes. Imagine our application has two MySQL tables.
+
+```text id="a6at8q"
+projects
+--------------------------------
+id    name             status
+--------------------------------
+102   Chennai Survey   COMPLETED
+```
+
+```text id="mfr7ga"
+quality_reviews
+--------------------------------
+id    project_id    result
+--------------------------------
+501   102           PASSED
+502   102           PASSED
+```
+
+**Student:** Both QA reviews belong to Project 102.
+
+**Mentor:** Correct.
+
+Now suppose you permanently delete Project 102.
+
+What should happen to those QA reviews?
+
+**Student:** I don't know. They might still be important.
+
+**Mentor:** Exactly!
+
+Maybe the QA team needs them next month. Maybe the company needs historical delivery information. We can't decide to destroy them just because somebody asked for a Delete button.
+
+Now we have a reason to understand two different operations.
+
+---
+
+### 🐨 Step 3 — Hard delete versus soft delete
+
+**Mentor:** There are two common approaches.
+
+<box border radius="lg" padding={3} gap={2}>
+  <grid columns={2} gap={2}>
+    <grid-item>
+      <box background="surface-secondary" radius="md" padding={3} gap={2} height="100%">
+        <icon name="trash-2" color="#f0a1a1" size="xl"/>
+        **Hard delete**
+        <text color="secondary" size="sm">The database row is physically removed.</text>
+        <divider color="subtle"/>
+        <text size="sm">Project 102 no longer exists in the projects table.</text>
+      </box>
+    </grid-item>
+    <grid-item>
+      <box background="surface-secondary" radius="md" padding={3} gap={2} height="100%">
+        <icon name="archive" color="#38bdf8" size="xl"/>
+        **Soft delete / archive**
+        <text color="secondary" size="sm">The row remains, but is marked inactive or archived.</text>
+        <divider color="subtle"/>
+        <text size="sm">Project 102 remains available for authorized historical access.</text>
+      </box>
+    </grid-item>
+  </grid>
+</box>
+
+**Student:** So with hard delete, the information is actually removed?
+
+**Mentor:** Correct. An SQL `DELETE` removes the row.
+
+**Student:** And soft delete?
+
+**Mentor:** Instead of removing the row, we change a column to mark it as archived.
+
+For our example, imagine we introduce an `archived` column.
+
+```text id="crxg34"
+projects
+----------------------------------------------
+id    name             status       archived
+----------------------------------------------
+102   Chennai Survey   COMPLETED    false
+```
+
+After the employee archives it:
+
+```text id="6uk1gi"
+projects
+----------------------------------------------
+id    name             status       archived
+----------------------------------------------
+102   Chennai Survey   COMPLETED    true
+```
+
+**Student:** Oh! The record still exists, but our application knows it shouldn't appear in the active list.
+
+**Mentor:** Exactly.
+
+And because we haven't removed Project 102, its related QA reviews can still reference it.
+
+### 🐯 Step 4 — Try both approaches
+
+**Mentor:** Let's see what would happen with each operation.
+
+{@body const [method,setMethod]=DIL.useState("hard")}
+{@body const [projectState,setProjectState]=DIL.useState("active")}
+{@body const [outcome,setOutcome]=DIL.useState(null)}
+<box border radius="lg" padding={3} gap={3}>
+  <row justify="between" align="center">
+    <text weight="medium" size="sm">Project 102 — Chennai Survey</text>
+    <badge color={projectState==="active"?"secondary":"info"}>{projectState==="active"?"Active":"Archived"}</badge>
+  </row>
+  <box background="surface-secondary" padding={3} radius="md" gap={2}>
+    <row justify="between" align="center">
+      <text size="sm" color="secondary">Related QA reviews</text>
+      **2 records**
+    </row>
+    <row justify="between" align="center">
+      <text size="sm" color="secondary">Project in database</text>
+      **Yes**
+    </row>
+  </box>
+  <box gap={1}>
+    <label>Choose an operation</label>
+    <radio-group direction="col" value={method} onChange={v=>{setMethod(v);setOutcome(null)}}>
+      <radio value="hard">Permanently delete the project</radio>
+      <radio value="archive">Archive the project</radio>
+    </radio-group>
+  </box>
+  <button block onClick={()=>{
+    if(method==="hard"){setOutcome({kind:"error",text:"DELETE blocked: the two QA reviews still reference Project 102. No records removed."});}
+    else if(projectState==="archived"){setOutcome({kind:"info",text:"Project 102 is already archived. No change needed."});}
+    else{setProjectState("archived");setOutcome({kind:"success",text:"Project 102 is archived. Its database row and both QA reviews are preserved."});}
+  }}>{method==="hard"?"Attempt permanent DELETE":"Archive Project 102"}</button>
+  {#if outcome!==null}
+    <box background="surface-secondary" radius="md" padding={3} gap={2}>
+      <row align="start" gap={2}>
+        <icon name={outcome.kind==="success"?"check-circle":outcome.kind==="info"?"info":"alert-triangle"} color={outcome.kind==="success"?"success":outcome.kind==="info"?"secondary":"danger"} size="lg"/>
+        <text size="sm">{outcome.text}</text>
+      </row>
+      {#if projectState==="archived"}
+        <text size="sm" color="secondary">Active-project list: Project 102 is hidden. Historical-project list: Project 102 remains accessible.</text>
+      {/if}
+    </box>
+  {/if}
+  <button size="sm" color="secondary" variant="outline" onClick={()=>{setMethod("hard");setProjectState("active");setOutcome(null)}}>Reset example</button>
+  <caption>Simulation assumes the QA relationship uses a restrictive foreign key. Nothing is deleted or changed in a real database.</caption>
+</box>
+
+**Student:** When I tried permanent deletion, the database refused.
+
+**Mentor:** Correct. Let's understand why.
+
+---
+
