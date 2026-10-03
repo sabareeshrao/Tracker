@@ -6,14 +6,15 @@
   "status": "in-progress",
   "completedScenarioIds": [
     "001",
-    "002"
+    "002",
+    "003"
   ],
   "activeScenario": {
-    "id": "003",
-    "title": "How does an employee retrieve an existing project using HTTP GET, Servlet, JDBC, and MySQL?",
+    "id": "004",
+    "title": "Update an existing project status using SQL UPDATE",
     "status": "in-progress",
     "startedAt": "2026-10-02",
-    "anchorQuestion": "What happens when a user opens an existing project: how does GET read MySQL data and display it?"
+    "anchorQuestion": "How do we update exactly one project and handle a missing ID?"
   },
   "concepts": {
     "geospatial-workflow-business-context": {
@@ -105,7 +106,7 @@
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
   "nextAction": "Continue Day 3 Year 1 Q003 with a NEW requirement: employee views existing Project 101 using GET /projects?id=101, Servlet doGet, validated id, JDBC parameterized SELECT, ResultSet mapping, JSP rendering with HTML escaping, 404 missing record and failure when MySQL unavailable. Do not repeat POST INSERT, which Q002 covered. Await explicit understood before marking Q003 complete; plan Q004 UPDATE next.",
   "syncedToRootTracker": false,
-  "questionsPresented": 3,
+  "questionsPresented": 4,
   "questionsConfirmedCompleted": 3,
   "preparationTarget": 1000,
   "currentCareerYear": 1,
@@ -115,9 +116,9 @@
   "experienceWebPagePath": "experience.html",
   "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving.",
   "mentorTeachingChecklistPath": "experience-world/MENTOR_TEACHING_CHECKLIST.md",
-  "nextQuestionId": "Q003",
-  "lastConfirmedQuestionId": "Q002",
-  "nextPlannedQuestionIdAfterActive": "Q004",
+  "nextQuestionId": "Q004",
+  "lastConfirmedQuestionId": "Q003",
+  "nextPlannedQuestionIdAfterActive": "Q005",
   "avoidRepeatingConfirmedConcepts": true,
   "mentorResumeProtocol": "Read MENTOR_TEACHING_CHECKLIST.md, KNOWLEDGE_STATE.json and EXPERIENCE_CHECKLIST.md before teaching. Q001 and Q002 are understood self-reported; Q003 introduced/in progress. Avoid repeating them as new lessons. Preserve each full original conversation verbatim on confirmation and update both checklists, roadmap and canonical state.",
   "confirmedLessons": [
