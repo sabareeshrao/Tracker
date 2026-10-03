@@ -659,3 +659,147 @@ Notice how we separated two responsibilities: retrieving project data and presen
 
 ---
 
+### 🐨 Step 9 — Understand the complete request flow
+
+**Mentor:** Now picture the entire process.
+
+<box border radius="lg" padding={3} gap={1} align="center">
+  {#each [{name:"1. Operations employee",desc:"Clicks View Project 101",ic:"user-round"},{name:"2. Browser",desc:"Sends GET /projects?id=101",ic:"monitor"},{name:"3. ProjectServlet",desc:"doGet() reads and validates the ID",ic:"code-2"},{name:"4. JDBC",desc:"Executes a parameterized SELECT",ic:"database"},{name:"5. MySQL",desc:"Returns the matching record",ic:"hard-drive"},{name:"6. ResultSet",desc:"Java reads the returned columns",ic:"rows-3"},{name:"7. Project object",desc:"Holds the retrieved values",ic:"box"},{name:"8. JSP",desc:"Displays safely escaped project details",ic:"file-code-2"},{name:"9. Employee",desc:"Sees the requested project",ic:"check-circle"}] as step,i}
+    <box background="surface-secondary" radius="md" width="100%" padding={3}>
+      <row align="center" gap={3}>
+        <icon name={step.ic} color="#38bdf8" size="lg"/>
+        <box flex={1} gap="2px">
+          **{step.name}**
+          <text size="sm" color="secondary">{step.desc}</text>
+        </box>
+      </row>
+    </box>
+    {#if i<8}
+      <icon name="arrow-down" color="secondary"/>
+    {/if}
+  {/each}
+</box>
+
+**Student:** I think I understand. Yesterday we saved a project, and today we're retrieving it.
+
+**Mentor:** Correct.
+
+But tell me, why did we create a `Project` object after reading the database?
+
+**Student:** Because Java code works with objects, so we use the returned database columns to construct a project object.
+
+**Mentor:** Exactly.
+
+And why do we forward it to JSP?
+
+**Student:** Because the employee needs to see the information in the browser.
+
+**Mentor:** Perfect. 🐯
+
+You've now connected HTML, HTTP, Java Servlets, JDBC, MySQL, Java objects, and JSP through one real-world business requirement.
+
+### 🦊 Step 10 — Connect this with your internship
+
+**Student:** Does this match the Java work described in my resume?
+
+**Mentor:** Your reported internship experience includes Java, JDBC, Servlets/JSP, MySQL, project record management, search screens, filtering, and operational reporting.
+
+This scenario helps you understand the mechanics behind that category of work.
+
+However, our Project 101 example and the exact code above are educational. They don't establish which query, Servlet, or JSP file existed at your employer.
+
+As we connect more lessons to actual source code or implementation details you confirm, we'll distinguish your real contributions from our practice examples.
+
+---
+
+## 🎯 Today's interview-ready answer
+
+**Student:** What should I say if an interviewer asks, "How did you retrieve database records using Servlets and JDBC?"
+
+**Mentor:** You can explain the general technical process like this:
+
+<WritingBlock id="83512" variant="standard">In a traditional Java web application, we can retrieve records from a relational database using Java Servlets and JDBC.
+
+When a user requests an existing record, the browser sends an HTTP GET request with the required identifier.
+
+The Servlet handles that request through its doGet() method and retrieves the identifier using HttpServletRequest.
+
+After validating the identifier, JDBC executes a parameterized SQL SELECT query using PreparedStatement.
+
+The returned database records are read through a ResultSet. We can then map the column values into Java objects.
+
+If the requested record does not exist, the application can return HTTP 404. If the request contains invalid input, it can return HTTP 400.
+
+When the record is found, the Servlet can pass the Java object to a JSP using request attributes and RequestDispatcher.
+
+The JSP then displays the retrieved information to the user, with proper output escaping.
+
+This separates database retrieval from presentation and allows the application to handle missing records and database failures appropriately.</WritingBlock>
+
+### 🧠 One-line memory trick
+
+**Browser → HTTP GET → Servlet `doGet()` → JDBC `SELECT` → ResultSet → Java Object → JSP → Browser**
+
+---
+
+## 📘 Day 3 — Test your understanding
+
+**🐯 Mentor:** Before we move to updating records tomorrow, I want you to explain today's task in your own words.
+
+Imagine I review your code and ask these three questions.
+
+{@body const quiz=["Yesterday we used doPost() and INSERT. Why are we using doGet() and SELECT today?","We execute SELECT using JDBC. What does ResultSet.next() do, and how do we read the project's name?","An employee requests Project 999, which does not exist. What should the Servlet do, and why?"]}
+{@body const [responses,setResponses]=DIL.useState(["","",""])}
+<box border radius="lg" padding={3} gap={3}>
+  {#each quiz as q,i}
+    <box key={i} gap={2}>
+      <row align="start" gap={2}>
+        <box background="surface-secondary" radius="md" size="28px" align="center" justify="center">
+          <text size="sm" weight="medium">{i+1}</text>
+        </box>
+        <box flex={1}>
+          <text size="sm" weight="medium">{q}</text>
+        </box>
+      </row>
+      <textarea rows={3} placeholder="Explain in your own words..." value={responses[i]} onChange={v=>setResponses(prev=>prev.map((a,j)=>i===j?v:a))}/>
+    </box>
+  {/each}
+  <button block disabled={!responses.every(v=>v.trim())} onClick={()=>GenUI.issueNewTurn("Day 3 Scenario 003 — Please review my understanding-test answers:\n\n"+quiz.map((q,i)=>`${i+1}. ${q}\nMy answer: ${responses[i]}`).join("\n\n")+"\nExplain any mistakes in our simple mentor–student style. Do not mark Day 3 completed until I explicitly say Understood.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+</box>
+
+## 📊 Your Experience World progress
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" justify="between">
+    **Current career year**
+    <text color="#38bdf8" weight="medium">Year 1 · 2018–2019</text>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 1 — Business understanding</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 2 — Save Project</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 3 — View Project</text>
+    <badge>Awaiting understanding</badge>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions introduced</text>
+    **3 / 1,000**
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions confirmed understood</text>
+    **2 / 1,000**
+  </row>
+</box>
+
+**🐯 Mentor:** That's your third day. You've now learned how a Java application can save a new project and retrieve an existing project.
+
+Our next challenge will be different: an employee notices that a project's status is incorrect and wants to change it. We'll discover why we need SQL `UPDATE`, how to identify the correct record, and what happens when an update fails.
+
+For now, Day 3 remains in progress. When you say **"Understood,"** I'll save this complete lesson to GitHub and update both our checklists before proceeding to Question 004.
