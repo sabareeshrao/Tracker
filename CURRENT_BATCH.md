@@ -6,35 +6,35 @@
 
 ### Your five questions
 
-#### 1. 2537 — Can you please explain your recent project and also introduce yourself?
+#### 1. Q2537 — Can you please explain your recent project and also introduce yourself?
 
 - **Roadmap set:** 348 — Project Introduction and Self-Introduction ([source](docs/questions/roadmap/ALL_SETS_001_390.md#L7120))
 - **Why this is in the batch:** Full Stack Java Developer; 5+ services; 20+ endpoints; geospatial workflows.
 - **What to cover:** Self-introduction, your project, role and credible scope
 - **Completion:** [ ] Waiting for user confirmation. Never infer completion from resume alone.
 
-#### 2. 1596 — Why do we need separate Controller, Service, Business and Repository Layers in a Spring Boot application?
+#### 2. Q1596 — Why do we need separate Controller, Service, Business and Repository Layers in a Spring Boot application?
 
 - **Roadmap set:** 171 — Legacy Spring Application Experience ([source](docs/questions/roadmap/ALL_SETS_001_390.md#L3870))
 - **Why this is in the batch:** Spring Boot/Hibernate backend services and reusable validation modules.
 - **What to cover:** Controller → Service → business logic → Repository; real use from your services
 - **Completion:** [ ] Waiting for user confirmation. Never infer completion from resume alone.
 
-#### 3. 1928 — What REST API best practices do you follow in your project?
+#### 3. Q1928 — What REST API best practices do you follow in your project?
 
 - **Roadmap set:** 213 — REST API Design Best Practices ([source](docs/questions/roadmap/ALL_SETS_001_390.md#L4754))
 - **Why this is in the batch:** 20+ REST endpoints in full-stack role and 15+ earlier backend endpoints.
 - **What to cover:** REST conventions, validation, status codes, errors, versioning and maintainability
 - **Completion:** [ ] Waiting for user confirmation. Never infer completion from resume alone.
 
-#### 4. 1531 — Are you comfortable with indexes in SQL?
+#### 4. Q1531 — Are you comfortable with indexes in SQL?
 
 - **Roadmap set:** 165 — SQL Index Fundamentals ([source](docs/questions/roadmap/ALL_SETS_001_390.md#L3711))
 - **Why this is in the batch:** SQL joins, indexing and measured 20–25% performance improvements.
 - **What to cover:** Index basics, query plans, read/write costs and measurable optimization
 - **Completion:** [ ] Waiting for user confirmation. Never infer completion from resume alone.
 
-#### 5. 347 — How do you handle exceptions in your project?
+#### 5. Q0347 — How do you handle exceptions in your project?
 
 - **Roadmap set:** 15 — Exception Handling in Projects ([source](docs/questions/roadmap/ALL_SETS_001_390.md#L622))
 - **Why this is in the batch:** Production defect resolution and reusable exception-handling components.
