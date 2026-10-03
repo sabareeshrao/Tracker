@@ -1,0 +1,571 @@
+# 🐼 Day 2 — Your First Real Java Development Task
+
+<text color="secondary" size="sm" weight="medium">5-YEAR JAVA EXPERIENCE WORLD · YEAR 1 · SCENARIO 002</text>
+
+**Today's interview question: How does a user request travel from an HTML form through a Java Servlet and JDBC into a MySQL database?**
+
+**Characters:** 🐯 Mentor — 5 years of Java development experience. 🐼 Student — recently graduated from college, with no industry experience.
+
+<badge color="secondary">Educational scenario based on your internship technologies</badge>
+
+---
+
+### 🐯 Step 1 — Your mentor assigns your first task
+
+**Mentor:** Good morning! Yesterday, we understood why our company needs a project-tracking application.
+
+Today, I'm assigning you your first development task.
+
+**Student:** My first real task? What should I build?
+
+**Mentor:** Our operations team needs a screen where employees can register new mapping projects.
+
+Imagine an employee opens this screen:
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" justify="between">
+    <text size="xs" weight="medium" color="secondary">PROJECT REGISTRATION</text>
+    <icon name="folder-plus" color="#38bdf8" size="lg"/>
+  </row>
+  {@body const [projectName,setProjectName] = DIL.useState("Hyderabad Mapping")}
+  {@body const [demoResult,setDemoResult] = DIL.useState("idle")}
+  <box gap={1}>
+    <label>Project Name</label>
+    <input value={projectName} onChange={v=>{setProjectName(v);setDemoResult("idle")}} placeholder="Enter project name"/>
+  </box>
+  <box gap={1}>
+    <label>Initial Status</label>
+    <input value="CREATED" disabled/>
+  </box>
+  <button block onClick={()=>setDemoResult(projectName.trim()?"success":"error")}>Save Project</button>
+  {#if demoResult==="success"}
+    <box background="surface-secondary" padding={2} radius="md" gap={1}>
+      <row align="center" gap={2}>
+        <icon name="check-circle" color="success"/>
+        <text color="success" weight="medium" size="sm">Simulated request successful</text>
+      </row>
+      <text size="sm">Project: {projectName.trim()}</text>
+      <text size="sm">Status: CREATED</text>
+    </box>
+  {:else if demoResult==="error"}
+    <row gap={2} align="center">
+      <icon name="alert-circle" color="danger"/>
+      <text color="danger" size="sm">Project name is required.</text>
+    </row>
+  {/if}
+  <caption>Interactive demonstration only. No real database is connected.</caption>
+</box>
+
+**Student:** This looks simple. We need to collect a project name and save it.
+
+**Mentor:** Exactly. But here's my question.
+
+When the employee clicks **Save Project**, where does the information go?
+
+**Student:** Into Java?
+
+**Mentor:** Eventually, yes. But the browser and the Java application are different parts of our system.
+
+We need a way for them to communicate.
+
+### 🦊 Step 2 — Understand the browser's problem
+
+**Mentor:** You learned HTML in college, correct?
+
+**Student:** Yes. I can create a form with text boxes and buttons.
+
+**Mentor:** Great! Imagine you write this:
+
+```html id="17pzsl"
+<form action="/projects" method="post">
+
+    <input name="projectName">
+
+    <button type="submit">Save Project</button>
+
+</form>
+```
+
+**Student:** Okay. But what does `action="/projects"` mean?
+
+**Mentor:** It tells the browser where to send the form information.
+
+And `method="post"` tells it to send an HTTP POST request.
+
+When the employee enters:
+
+```text id="kuhhy5"
+Project Name: Hyderabad Mapping
+```
+
+The browser sends the value to the server.
+
+```text id="3wo74t"
+Browser
+   |
+   | POST /projects
+   |
+   | projectName=Hyderabad Mapping
+   ↓
+Java Application
+```
+
+**Student:** So HTML doesn't directly insert anything into MySQL?
+
+**Mentor:** Correct! HTML collects the information. The browser sends an HTTP request, and our server-side code decides what to do with it.
+
+**Student:** But how does Java know someone sent a request?
+
+**Mentor:** Excellent! Now we have a reason to introduce a Servlet.
+
+### 🐨 Step 3 — Why do we need a Servlet?
+
+**Mentor:** Think of a Servlet as a Java component that handles incoming HTTP requests.
+
+Our web server and Servlet container route the request to the appropriate Servlet.
+
+For this example:
+
+```text id="hqlqft"
+Browser sends POST /projects
+             ↓
+      Servlet Container
+             ↓
+        ProjectServlet
+             ↓
+        Java code runs
+```
+
+**Student:** So I need to create a Java class?
+
+**Mentor:** Exactly.
+
+In this educational example, we write:
+
+```java id="lstxoq"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String projectName =
+                request.getParameter("projectName");
+    }
+}
+```
+
+**Student:** Wait! What is `doPost()`?
+
+**Mentor:** When an HTTP POST request reaches this Servlet, the container invokes its `doPost()` method.
+
+**Student:** And what is `getParameter()` doing?
+
+**Mentor:** Remember our HTML input?
+
+```html id="valuab"
+<input name="projectName">
+```
+
+The submitted field is named `projectName`.
+
+So Java retrieves its value using:
+
+```java id="bha77c"
+String projectName =
+        request.getParameter("projectName");
+```
+
+If the employee submitted `Hyderabad Mapping`, that's the string we receive.
+
+**Student:** Oh! So the HTML input name and Java parameter name must match?
+
+**Mentor:** Exactly. 🐯
+
+Now we're connecting frontend information to backend Java code.
+
+### 🐼 Step 4 — Something goes wrong
+
+**Mentor:** Before inserting the project into MySQL, let's consider another situation.
+
+An employee submits this:
+
+```text id="5kqe0u"
+Project Name: [EMPTY]
+```
+
+**Student:** We should reject it.
+
+**Mentor:** Correct.
+
+The browser might prevent an empty submission if we use HTML's `required` attribute, but can we trust every request to come through our HTML form?
+
+**Student:** No. Someone could send a request directly to the server.
+
+**Mentor:** Exactly!
+
+That's why the backend must also validate the input.
+
+```java id="dq4s38"
+if (projectName == null || projectName.isBlank()) {
+
+    response.sendError(
+        400,
+        "Project name is required"
+    );
+
+    return;
+}
+```
+
+**Student:** What does `400` mean?
+
+**Mentor:** It's an HTTP status code. `400 Bad Request` tells the client that its request is invalid.
+
+And `return` stops this method from continuing to the database insert.
+
+**Student:** So invalid information won't be saved?
+
+**Mentor:** Correct, provided we perform the check before the database operation.
+
+Notice what we're learning:
+
+```text id="xb0na6"
+User submits project
+         ↓
+   Servlet receives
+         ↓
+    Validate input
+         ↓
+   Is name present?
+       /      \
+     YES       NO
+      |         |
+  Continue    Return 400
+```
+
+Now let's save valid information.
+
+---
+
+### 🦊 Step 5 — Why do we need JDBC?
+
+**Student:** I received the project name in Java. How do I insert it into MySQL?
+
+**Mentor:** In our internship-era application example, we can use JDBC.
+
+**Student:** What exactly is JDBC?
+
+**Mentor:** JDBC stands for **Java Database Connectivity**.
+
+It provides Java APIs for connecting to relational databases, executing SQL, and reading results.
+
+For example, we want MySQL to store this:
+
+| id | name | status |
+|---|---|---|
+| 101 | Hyderabad Mapping | CREATED |
+
+**Student:** So we need an SQL INSERT statement.
+
+**Mentor:** Correct!
+
+```sql id="2o401c"
+INSERT INTO projects (name, status)
+VALUES ('Hyderabad Mapping', 'CREATED');
+```
+
+But there is a problem.
+
+**Student:** What's the problem now?
+
+**Mentor:** The project name comes from the user.
+
+We must not build SQL by directly joining untrusted text into the SQL statement.
+
+For example, this is unsafe:
+
+```java id="6ku6wa"
+String sql = "INSERT INTO projects (name) VALUES ('"
+        + projectName + "')";
+```
+
+**Student:** Why is it unsafe?
+
+**Mentor:** A specially crafted input could change the meaning of the SQL command. This is called SQL injection.
+
+Instead, we use a `PreparedStatement`.
+
+```java id="26gdtf"
+String sql =
+    "INSERT INTO projects (name, status) VALUES (?, ?)";
+
+PreparedStatement statement =
+    connection.prepareStatement(sql);
+
+statement.setString(1, projectName);
+statement.setString(2, "CREATED");
+
+statement.executeUpdate();
+```
+
+**Student:** What do the question marks mean?
+
+**Mentor:** They're placeholders for values.
+
+```text id="fiajo6"
+INSERT INTO projects (name, status)
+VALUES (?, ?)
+        ↑  ↑
+        |  |
+        |  └── "CREATED"
+        |
+        └───── "Hyderabad Mapping"
+```
+
+**Student:** And `executeUpdate()` actually executes the INSERT?
+
+**Mentor:** Exactly! It executes the SQL statement and returns the number of affected rows.
+
+In this example, a successful single-record insert normally affects one row.
+
+**Student:** So JDBC is how our Java application communicates with MySQL.
+
+**Mentor:** Correct. 🐨
+
+### 🐯 Step 6 — Let's connect everything
+
+**Mentor:** Now let's look at the complete request flow.
+
+<box border radius="lg" padding={3} gap={1} align="center">
+  {#each [{name:"1. Employee",detail:"Enters Hyderabad Mapping",ic:"user-round"},{name:"2. HTML / JSP form",detail:"Submits POST /projects",ic:"monitor"},{name:"3. Java Servlet",detail:"Receives the project name",ic:"code-2"},{name:"4. Validation",detail:"Rejects missing information",ic:"shield-check"},{name:"5. JDBC",detail:"Executes a prepared SQL INSERT",ic:"database"},{name:"6. MySQL",detail:"Stores the new project record",ic:"hard-drive"},{name:"7. HTTP response",detail:"Browser receives the result",ic:"check-circle"}] as step,i}
+    <box background="surface-secondary" padding={3} radius="md" width="100%">
+      <row align="center" gap={3}>
+        <icon name={step.ic} color="#38bdf8" size="lg"/>
+        <box flex={1} gap="2px">
+          **{step.name}**
+          <text size="sm" color="secondary">{step.detail}</text>
+        </box>
+      </row>
+    </box>
+    {#if i<6}
+      <icon name="arrow-down" color="secondary"/>
+    {/if}
+  {/each}
+</box>
+
+**Student:** This makes sense. Could you show me the complete Java method?
+
+**Mentor:** Sure. Here's a simplified Servlet using a MySQL connection configured through environment variables. Assume the `projects` table already exists and the JDBC driver has been configured.
+
+```java id="blu9dk"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String projectName =
+                request.getParameter("projectName");
+
+        if (projectName == null || projectName.isBlank()) {
+            response.sendError(400, "Project name is required");
+            return;
+        }
+
+        String sql =
+            "INSERT INTO projects (name, status) VALUES (?, ?)";
+
+        try (
+            Connection connection = DriverManager.getConnection(
+                System.getenv("DB_URL"),
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASSWORD")
+            );
+
+            PreparedStatement statement =
+                connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(1, projectName.trim());
+            statement.setString(2, "CREATED");
+
+            statement.executeUpdate();
+
+            response.sendRedirect(
+                request.getContextPath() + "/project-created.jsp"
+            );
+
+        } catch (SQLException ex) {
+
+            throw new ServletException(
+                "Unable to save project", ex
+            );
+        }
+    }
+}
+```
+
+<caption>Illustrative Servlet code using the classic Servlet API, JDBC and MySQL. Imports and deployment configuration are omitted to focus on the request flow.</caption>
+
+**Student:** I understand most of it. But why do we use `try` with parentheses?
+
+**Mentor:** That's Java's **try-with-resources**.
+
+The JDBC connection and prepared statement are automatically closed after use, including when an exception happens.
+
+We'll examine database resource management in greater depth when we reach that scenario.
+
+**Student:** And what does `sendRedirect()` do?
+
+**Mentor:** It tells the browser to navigate to another page after the save succeeds.
+
+Notice the important difference: saving the project happens on the server; displaying the success page happens in the browser.
+
+---
+
+### 🦁 Step 7 — Your first production-style failure
+
+**Mentor:** Now imagine the employee clicks Save, but the MySQL database is unavailable.
+
+What happens?
+
+**Student:** The JDBC operation will fail.
+
+**Mentor:** Correct.
+
+```text id="aozntt"
+Browser        → SUCCESS: Request submitted
+Servlet        → SUCCESS: Request received
+Validation     → SUCCESS: Project name valid
+Database       → FAILED: Connection unavailable
+```
+
+**Student:** Then should we display "Project saved successfully"?
+
+**Mentor:** Absolutely not.
+
+We must not tell the user the project was saved when the database operation failed.
+
+In our example, the SQL exception is wrapped in a `ServletException`, which the server handles as a failure. A production application would also log the problem appropriately and return a safe, user-friendly error response.
+
+**Student:** What if the user clicks Save again?
+
+**Mentor:** Excellent question.
+
+We need to understand whether retrying might create duplicate projects, and what makes a project unique.
+
+That's a separate design problem we'll cover later.
+
+The important lesson today is:
+
+**A successful HTTP request does not automatically mean the database operation succeeded.**
+
+---
+
+### 🐨 Step 8 — How this connects to your internship
+
+**Student:** How does this connect to the Java internship on my resume?
+
+**Mentor:** Your reported internship experience includes Java, JDBC, Servlets/JSP, MySQL, CRUD screens, validation, and record management.
+
+This scenario demonstrates how those technologies can work together in a simple internal application.
+
+As you reconstruct your real work, we'll identify which forms, SQL statements, validation checks, and modules you actually developed.
+
+The flow we built today is an educational implementation, not a claim that it matches your employer's original source code.
+
+---
+
+## 🎯 Today's interview-ready answer
+
+**Student:** What if an interviewer asks how I developed a form that saves information into a database?
+
+**Mentor:** You can explain the technical flow like this:
+
+<WritingBlock id="82714" variant="standard">In a traditional Java web application, an HTML or JSP form collects information from the user and submits it to the server through an HTTP request.
+
+For example, when an employee creates a project, the browser sends a POST request containing the project details.
+
+A Java Servlet receives the request and reads the submitted information using HttpServletRequest.
+
+Before saving the data, the application validates the required fields.
+
+For database operations, we can use JDBC to connect to MySQL and execute SQL statements using PreparedStatement.
+
+PreparedStatement allows us to pass user-provided values as parameters instead of directly concatenating them into SQL.
+
+Once the insert succeeds, the server can return a response or redirect the browser to a success page.
+
+If validation or database processing fails, the application handles the error and avoids reporting a successful save.
+
+This is the basic request-to-database flow used in traditional Java web applications.</WritingBlock>
+
+### 🧠 One-line memory trick
+
+**HTML Form → HTTP POST → Servlet → Validation → JDBC → PreparedStatement → MySQL → HTTP Response**
+
+---
+
+## 📘 Day 2 — Test your understanding
+
+**🐯 Mentor:** Before we move forward, I want to check whether you understand how these components communicate.
+
+Imagine I'm sitting beside you in the office, reviewing your first task. Answer these three questions in your own words.
+
+{@body const questions=["An employee enters a project name and clicks Save. Explain how that name reaches the Java Servlet.","Why do we use JDBC and PreparedStatement instead of directly joining the project name into an SQL query?","The project name is valid, but the MySQL database is unavailable. Should the application display a success message? Why?"]}
+{@body const [answers,setAnswers]=DIL.useState(["","",""])}
+<box border radius="lg" padding={3} gap={3}>
+  {#each questions as q,i}
+    <box gap={2} key={i}>
+      <row gap={2} align="start">
+        <box background="surface-secondary" radius="md" size="28px" align="center" justify="center">
+          <text weight="medium" size="sm">{i+1}</text>
+        </box>
+        <box flex={1}>
+          <text weight="medium" size="sm">{q}</text>
+        </box>
+      </row>
+      <textarea value={answers[i]} onChange={v=>setAnswers(prev=>prev.map((a,j)=>i===j?v:a))} placeholder="Explain in your own words..." rows={3}/>
+    </box>
+  {/each}
+  <button block disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Day 2 Scenario 002 — Here are my understanding-test answers:\n\n"+questions.map((q,i)=>`${i+1}. ${q}\nMy answer: ${answers[i]}`).join("\n\n")+"\nPlease review them in our simple mentor-student style and correct any gaps. Do not mark Day 2 understood until I explicitly confirm.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+</box>
+
+## 📊 Your Experience World progress
+
+<box border radius="lg" padding={3} gap={2}>
+  <row justify="between" align="center">
+    **Current career year**
+    <text color="#38bdf8" weight="medium">Year 1 · 2018–2019</text>
+  </row>
+  <divider color="subtle"/>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Day 1 — Business understanding</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Day 2 — Java request-to-database flow</text>
+    <badge>Awaiting understanding</badge>
+  </row>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Questions introduced</text>
+    **2 / 1,000**
+  </row>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Questions confirmed understood</text>
+    **1 / 1,000**
+  </row>
+</box>
+
+**🐯 Mentor:** That's your second day. You now have an example of how an employee's request travels from a browser into Java and eventually reaches MySQL.
+
+Once this flow makes sense, our next challenge will be retrieving an existing project from the database instead of creating a new one.
+
+When you're satisfied, say **"Understood."** I'll preserve this rewritten Day 2 lesson in GitHub, update both checklists, and advance to Question 003.
