@@ -445,9 +445,20 @@ let githubBatch=null, githubUpdatedAt=null, githubSyncStatus='Browser-only until
 async function loadGithubProgress(){
  if(typeof fetch!=='function')return;
  try {
-  const response=await fetch('./STUDY_PROGRESS.json?v='+Date.now(),{cache:'no-store'});
-  if(!response.ok)throw Error('Progress file unavailable: '+response.status);
-  const remote=await response.json();
+  // GitHub Pages can load its sibling file. A downloaded file:// page
+  // instead reads the public GitHub raw JSON over HTTPS when online.
+  const localUrl='./STUDY_PROGRESS.json?v='+Date.now();
+  const remoteUrl='https://raw.githubusercontent.com/sabareeshrao/Tracker/main/STUDY_PROGRESS.json?v='+Date.now();
+  const urls=window.location?.protocol==='file:'?[remoteUrl]:[localUrl,remoteUrl];
+  let remote=null;
+  for(const url of urls){
+   try{
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok)throw Error('Progress file unavailable: '+response.status);
+    remote=await response.json();break;
+   }catch(err){ /* Keep trying the next readable source. */ }
+  }
+  if(!remote)throw Error('GitHub study progress unavailable');
   if(remote.version!==1||!remote.progress||remote.progress.version!==1)throw Error('Invalid GitHub progress version');
   const p=remote.progress;
   for(const [id,v] of Object.entries(p.concepts||{})){
