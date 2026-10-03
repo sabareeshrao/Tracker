@@ -441,4 +441,239 @@ public class CreateProjectServlet extends HttpServlet {
         try (
             Connection connection = DriverManager.getConnection(
                 System.getenv("DB_URL"),
-          
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASSWORD")
+            );
+
+            PreparedStatement statement =
+                connection.prepareStatement(
+                    sql,
+                    Statement.RETURN_GENERATED_KEYS
+                )
+        ) {
+
+            statement.setString(1, projectCode);
+            statement.setString(2, projectName);
+            statement.setString(3, "CREATED");
+
+            statement.executeUpdate();
+
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+
+                if (!keys.next()) {
+                    throw new ServletException(
+                        "Database did not return a project ID"
+                    );
+                }
+
+                long newId = keys.getLong(1);
+
+                response.sendRedirect(
+                    request.getContextPath()
+                    + "/projects?id="
+                    + newId
+                );
+            }
+
+        } catch (SQLException ex) {
+
+            if (ex.getErrorCode() == 1062) {
+                response.sendError(
+                    409,
+                    "Project code already exists"
+                );
+                return;
+            }
+
+            throw new ServletException(
+                "Unable to create project", ex
+            );
+        }
+    }
+}
+```
+
+<caption>Illustrative MySQL-specific example. It assumes proper JDBC configuration, imports, a generated primary key, and project-code uniqueness. In a real application, check which unique constraint failed, validate field lengths and code formats, and apply authentication, authorization, and CSRF protection. Only the known duplicate-key error is mapped to 409.</caption>
+
+**Student:** There's something I noticed.
+
+We never called `projectExists()` before inserting.
+
+**Mentor:** Correct.
+
+For a simple create operation, we can let the database's unique constraint make the final decision.
+
+A separate existence check is optional, and it cannot replace the database constraint.
+
+**Student:** And `getGeneratedKeys()` gets the new database ID?
+
+**Mentor:** Exactly.
+
+MySQL generates the numeric primary key, and JDBC can retrieve it.
+
+Then we redirect to the details page for the newly created project.
+
+---
+
+### 🐼 Step 9 — Why normalize the project code?
+
+**Student:** Why did you use this line?
+
+```java id="iyz88m"
+String projectCode =
+        rawCode.trim().toUpperCase(Locale.ROOT);
+```
+
+**Mentor:** Imagine three employees type the same business code slightly differently.
+
+```text id="8gm0o5"
+PRJ-101
+prj-101
+ PRJ-101
+```
+
+**Student:** One is lowercase, and one has extra spaces.
+
+**Mentor:** Correct.
+
+Should those represent three different mapping projects?
+
+**Student:** No, assuming the company treats project codes as case-insensitive.
+
+**Mentor:** Exactly.
+
+If that is our business rule, we normalize the code before saving.
+
+```text id="10npio"
+"PRJ-101"   → "PRJ-101"
+"prj-101"   → "PRJ-101"
+" PRJ-101 " → "PRJ-101"
+```
+
+**Student:** So normalization helps identify duplicates consistently.
+
+**Mentor:** Correct.
+
+But this rule must match how the database compares codes—for example, its column collation or a separately stored normalized key.
+
+We shouldn't assume every business treats uppercase and lowercase codes as equivalent.
+
+---
+
+### 🦁 Step 10 — The unexpected retry problem
+
+**Mentor:** Now let's examine an even more interesting situation.
+
+An employee clicks Save.
+
+MySQL successfully inserts `PRJ-301`.
+
+But before the browser receives the response, the network connection drops.
+
+```text id="hh1ex0"
+Browser sends PRJ-301
+          ↓
+Java Servlet receives request
+          ↓
+MySQL INSERT succeeds ✅
+          ↓
+Network connection fails ❌
+          ↓
+Employee sees no success response
+```
+
+**Student:** But the project was saved!
+
+**Mentor:** Exactly.
+
+The employee doesn't know that.
+
+So they click Save again.
+
+**Student:** Then the second request finds the duplicate and returns 409.
+
+**Mentor:** Correct, with the simple implementation we've written.
+
+**Student:** But the employee might think the original project wasn't created.
+
+**Mentor:** Excellent observation!
+
+This is an important distinction:
+
+**A duplicate caused by a genuinely new request is not always the same as a retry of a previously successful request.**
+
+**Student:** How can the application know the difference?
+
+**Mentor:** One common technique is an **idempotency key**.
+
+Imagine the browser creates an identifier for one logical Save operation:
+
+```text id="en2ryp"
+Request attempt 1
+Idempotency Key: SAVE-ABC-123
+
+Request attempt 2 (retry)
+Idempotency Key: SAVE-ABC-123
+```
+
+The server can use a reliably stored record of that key and its outcome to recognize a repeated attempt.
+
+**Student:** So the retry can receive the original result instead of creating another project?
+
+**Mentor:** Exactly, when the idempotency mechanism has been designed and stored correctly.
+
+But notice: a `UNIQUE(project_code)` constraint alone doesn't implement the full idempotency-key workflow.
+
+It prevents duplicate business codes. An idempotency mechanism additionally helps identify repeated attempts at the *same logical operation*.
+
+We'll build that mechanism more deeply when we study retries and reliable processing.
+
+---
+
+### 🐨 Step 11 — Connect this to real operational work
+
+**Student:** How does this connect to mapping projects beyond an employee clicking Save twice?
+
+**Mentor:** Imagine the operations team imports an Excel spreadsheet containing hundreds of project records.
+
+One row contains:
+
+```text id="mqcm8v"
+Project Code: PRJ-401
+```
+
+A later row also contains:
+
+```text id="zm4vic"
+Project Code: PRJ-401
+```
+
+**Student:** So duplicates can also come from source data.
+
+**Mentor:** Exactly!
+
+And suppose two imports run around the same time.
+
+Even if each import checks for duplicates within its own spreadsheet, they might still try to insert the same project code concurrently.
+
+**Student:** The database UNIQUE constraint still protects the shared table.
+
+**Mentor:** Correct.
+
+Now you've connected the same concept to two different business situations: interactive form submission and batch data intake.
+
+A batch process may also need to report which rows were accepted, which were duplicates, and which failed for other reasons.
+
+That's an interesting future exercise, but we won't turn today's lesson into another large topic.
+
+---
+
+### 🐯 Step 12 — What have we actually learned?
+
+**Student:** Let me try to explain it.
+
+The project code represents the business project, while the numeric ID represents the database row.
+
+**Mentor:** Correct.
+
+**Student:** Before saving, Java might check whether the code already exists. But two simultaneo
