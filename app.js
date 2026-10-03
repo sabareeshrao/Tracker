@@ -208,6 +208,7 @@ function navHtml(){
  '<div class="nav-list">'+[
  ['overview','grid','Overview'],['roadmap','list','Set roadmap'],['atlas','atlas','Concept atlas'],['questions','list','Question bank'],['journal','journal','Study journal']
  ].map(n=>'<button class="nav-button '+(view===n[0]?'active':'')+'" data-action="view" data-view="'+n[0]+'"><span class="nav-icon">'+icon(n[1])+'</span>'+n[2]+(n[0]==='journal'?'<span class="nav-number">'+progress.notes.length+'</span>':'')+'</button>').join('')+'</div>'+
+ '<a class="nav-button experience-nav" href="experience.html" aria-label="Open Experience World five-year career checklist"><span class="nav-icon">✦</span>Experience World <span class="nav-number">5 YRS</span></a>'+ 
  '<div class="nav-kicker nav-kicker-2">LEARNING STATUS</div>'+
  '<div class="sidebar-progress"><div class="mini-caption"><span>Concept coverage</span><strong>'+s.cPercent+'%</strong></div>'+meter(s.cPercent,'green')+'<div class="mini-caption dim"><span>'+s.cStarted+' of '+topics.length+' concepts started</span><span>Personal</span></div></div>'+
  '<div class="sidebar-bottom"><div class="save-indicator"><span class="live-dot"></span> Browser + GitHub updates</div><a href="https://github.com/sabareeshrao/Tracker" target="_blank" rel="noopener noreferrer">View source repository '+icon('arrow')+'</a></div></aside>';
