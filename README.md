@@ -6,9 +6,9 @@ A static, private-by-default **study dashboard** generated from the complete [De
 
 After GitHub Pages is enabled for this repository: **https://sabareeshrao.github.io/Tracker/**
 
-In the GitHub repository, go to **Settings → Pages → Build and deployment → Deploy from a branch**. Select **main** and **/(root)**, then save. Pages will publish the root \`index.html\`.
+In the GitHub repository, go to **Settings → Pages → Build and deployment → Deploy from a branch**. Select **main** and **/(root)**, then save. Pages will publish the root `index.html`.
 
-You can also open \`index.html\` locally in a browser, keeping \`data.js\` and \`app.js\` beside it.
+You can also open `index.html` locally in a browser, keeping `data.js` and `app.js` beside it.
 
 ## What's included
 
@@ -35,9 +35,9 @@ If you want the assistant to use your progress later, provide the exported JSON 
 
 | File | Purpose |
 |---|---|
-| \`index.html\` | GitHub Pages-ready responsive interface |
-| \`app.js\` | Study journal, topic matching, milestone logic, question tracking and backup |
-| \`data.js\` | Generated all-question catalog with source references |
-| \`docs/questions/roadmap/ALL_SETS_001_390.md\` | Unmodified original question roadmap |
+| `index.html` | GitHub Pages-ready responsive interface |
+| `app.js` | Study journal, topic matching, milestone logic, question tracking and backup |
+| `data.js` | Generated all-question catalog with source references |
+| `docs/questions/roadmap/ALL_SETS_001_390.md` | Unmodified original question roadmap |
 
-The source catalog is the source of truth. Regenerate \`data.js\` after changing the roadmap; do not hand-edit question wording in the catalog.
+The source catalog is the source of truth. Regenerate `data.js` after changing the roadmap; do not hand-edit question wording in the catalog.
