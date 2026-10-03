@@ -47,7 +47,7 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - [Experience checklist (Markdown)](EXPERIENCE_CHECKLIST.md) — career-year and scenario-by-scenario status.
 - [Live Experience World page](../experience.html) — high-contrast sky-blue tracker linked from the main dashboard sidebar.
 - [Day 1 exact original conversation](scenarios/001-day-1-verbatim.txt) — original source text, not an edited summary.
-- **Current teaching year: Year 1 (June 2018–May 2019), internship → backend.** Day 1 understood (self-reported); Day 2 in progress; Experience World count 1/1,000.
+- **Current teaching year: Year 1 (June 2018–May 2019), internship → backend.** Day 1 and Day 2 understood (self-reported); Day 3 in progress; Experience World count 2/1,000.
 - Save future completed Day conversations **verbatim**, including original wording, code, diagrams and source formatting. Preserve chat-specific UI components as literal source; GitHub Markdown cannot execute them.
 - Keep completion metadata, question/year labels, and source-of-truth notes in separate files; never insert a rewritten synopsis in place of the original lesson.
 
@@ -56,4 +56,4 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - [Knowledge state](KNOWLEDGE_STATE.json)
 - [Scenario archive](scenarios/README.md)
 
-**Current status:** Scenario 001 explicitly understood and [archived verbatim](scenarios/001-day-1-verbatim.txt) on 2026-10-02; Scenario 002 in progress. Experience World priority target: **1/1,000 confirmed understood**, **2/1,000 presented**. This is distinct from the root 2,719-question tracker.
+**Current status:** Scenarios 001 and 002 understood and archived verbatim: [Day 1](scenarios/001-day-1-verbatim.txt) and [Day 2](scenarios/002-day-2-verbatim.txt). Scenario 003 in progress. Priority target: **2/1,000 confirmed understood**, **3/1,000 presented**; separate from root interview bank. This is distinct from the root 2,719-question tracker.
