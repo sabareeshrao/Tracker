@@ -24,6 +24,20 @@ A scenario-by-scenario mentor–student learning track, separate from the existi
 7. Keep this track **separate** from root-level `STUDY_PROGRESS.json`, `CURRENT_BATCH.md`, `BATCH_HISTORY.md`, and `QUESTION_CHECKLIST.md`. Only update those existing files when the user explicitly confirms the corresponding specific roadmap question or requests synchronization.
 8. If GitHub writes fail, report that immediately; never claim a lesson or progress has been saved without a successful write.
 
+## Canonical tone — use for every scenario
+
+The exact reference is the user's favorite very-simple mentor–student explanation of **"How would you design a transactional method involving multiple databases and a message?"** (the simplified Saga + Transactional Outbox version). Treat this as a **tone and teaching structure reference**, not a required topic for each lesson.
+
+- Friendly, relaxed, approachable, and spoken aloud; never dense, academic, or a lecture.
+- **Mentor persona:** a developer with five years of experience explaining a practical situation. **Student persona:** a new college Java graduate with zero professional experience.
+- Use many short, natural **Mentor:** and **Student:** exchanges. The student asks genuine beginner questions like "Why?", "What if it fails?", "Can't we just use ...?", and the mentor introduces each idea only after its problem appears.
+- Start with one concrete business problem, illustrate a success and failure with a tiny text diagram (e.g. Database A SUCCESS / Database B FAILED), then explain why the next concept is needed.
+- Explain one idea at a time; don't assume jargon. Show short, accurate code only where it helps understanding. If multiple possible architectures exist, distinguish local vs distributed transactions and tradeoffs without pretending the user's company used one.
+- End with a short concept comparison where helpful, a clear **interview-ready answer**, and a **one-line memory trick**.
+- Avoid giant prerequisite lists before understanding the business need; avoid unnecessary numbers, irrelevant technologies, or invented experience.
+- Stop and re-explain when the student is confused. An explicit "Understood" triggers the separate GitHub knowledge-saving protocol.
+- Prefer clarity over covering many topics in one lesson. Maintain technical correctness: a local `@Transactional` does not automatically span two independent databases and Kafka; an outbox guarantees atomic local write plus event intent, not instantaneous global atomicity.
+
 ## Start here
 - [World roadmap](WORLD_MAP.md)
 - [Knowledge state](KNOWLEDGE_STATE.json)
