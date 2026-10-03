@@ -7,14 +7,15 @@
   "completedScenarioIds": [
     "001",
     "002",
-    "003"
+    "003",
+    "004"
   ],
   "activeScenario": {
-    "id": "004",
-    "title": "Update an existing project status using SQL UPDATE",
+    "id": "005",
+    "title": "Should a project be deleted or archived when a user no longer needs it?",
     "status": "in-progress",
-    "startedAt": "2026-10-02",
-    "anchorQuestion": "How do we update exactly one project and handle a missing ID?"
+    "startedAt": "2026-10-03",
+    "anchorQuestion": "How do you safely delete or archive an existing MySQL record using JDBC while protecting related QA/workflow data?"
   },
   "concepts": {
     "geospatial-workflow-business-context": {
@@ -70,6 +71,26 @@
       "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
       "lesson": "002",
       "description": "Redirect on successful save versus database error"
+    },
+    "sql-update-where-targeting": {
+      "status": "understood-self-reported",
+      "lesson": "004",
+      "description": "UPDATE SET with WHERE targets a single existing record"
+    },
+    "update-status-allowlist": {
+      "status": "understood-self-reported",
+      "lesson": "004",
+      "description": "Validate new status and ID before database change"
+    },
+    "jdbc-update-row-count": {
+      "status": "understood-self-reported",
+      "lesson": "004",
+      "description": "Affected-row count and distinction between absent project and DB failure"
+    },
+    "sql-update-safety-no-where": {
+      "status": "understood-self-reported",
+      "lesson": "004",
+      "description": "UPDATE without WHERE may unintentionally modify all rows"
     }
   },
   "unknowns": [
@@ -78,27 +99,36 @@
     "Actual source code or repo for past work"
   ],
   "latestConfirmedLesson": {
-    "id": "003",
-    "title": "Retrieve a saved project with GET, Servlet, JDBC SELECT, ResultSet and JSP",
-    "date": "2026-10-02",
-    "confirmation": "day 3 understood start day 4",
-    "evidenceLevel": "self-reported comprehension",
-    "verbatimArchivePath": "experience-world/scenarios/003-day-3-verbatim.txt",
-    "archivePath": "experience-world/scenarios/003-view-project-servlet-jdbc.md",
+    "id": "004",
+    "title": "Update one existing project status using parameterized SQL UPDATE",
+    "date": "2026-10-03",
+    "confirmation": "User explicitly said 'understood advance to next'",
+    "evidenceLevel": "self-reported comprehension only",
+    "verbatimArchivePath": "experience-world/scenarios/004-day-4-verbatim.txt",
+    "archivePath": "experience-world/scenarios/004-update-project-jdbc.md",
     "coveredConcepts": [
-      "GET query parameter and doGet",
-      "validate ID and 400",
-      "SELECT and executeQuery",
-      "ResultSet row mapping",
-      "404 absent project",
-      "forward to JSP with escaped text"
+      "SQL UPDATE compared to INSERT/SELECT",
+      "Critical role of WHERE clause when updating one row",
+      "POST project status form and dedicated Servlet",
+      "Validating allowed status values",
+      "PreparedStatement for UPDATE with WHERE id",
+      "executeUpdate affected-row count 0 versus 1",
+      "404 absent record vs 400 invalid input vs database error",
+      "Redirect after successful update",
+      "Lost updates introduced as deferred concurrency topic"
+    ],
+    "unresolvedOrDeferred": [
+      "Safe delete vs soft archive",
+      "Foreign key consequences of hard DELETE",
+      "Authorizing project deletion",
+      "Lost update/concurrency control deeper lesson"
     ]
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Q004 Day 4: employee corrects project status. Explain parameterized UPDATE WHERE id, input validation, executeUpdate row count, missing project, error handling. Q005 safe deletion is next; don't repeat Day 1-3.",
+  "nextAction": "Start Day 5 Q005. New business scenario: deleting Project 102 would also affect linked QA records. Introduce DELETE vs soft delete/archiving, foreign keys and constraints, explicit authorization and confirmation, parameterized deletion, checking row count, 404 vs 409 foreign-key conflict, reversible archive, hidden-from-active-list filtering. Include meaningful beginner dialogue and fail case; finish with test, interview answer and one-line memory trick. Q006 duplicate IDs is next after confirmation. Do not repeat Day 1-4 material.",
   "syncedToRootTracker": false,
-  "questionsPresented": 4,
-  "questionsConfirmedCompleted": 3,
+  "questionsPresented": 5,
+  "questionsConfirmedCompleted": 4,
   "preparationTarget": 1000,
   "currentCareerYear": 1,
   "currentCareerPeriod": "June 2018 – May 2019",
@@ -107,11 +137,11 @@
   "experienceWebPagePath": "experience.html",
   "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving.",
   "mentorTeachingChecklistPath": "experience-world/MENTOR_TEACHING_CHECKLIST.md",
-  "nextQuestionId": "Q004",
-  "lastConfirmedQuestionId": "Q003",
-  "nextPlannedQuestionIdAfterActive": "Q005",
+  "nextQuestionId": "Q005",
+  "lastConfirmedQuestionId": "Q004",
+  "nextPlannedQuestionIdAfterActive": "Q006",
   "avoidRepeatingConfirmedConcepts": true,
-  "mentorResumeProtocol": "Read MENTOR_TEACHING_CHECKLIST.md, KNOWLEDGE_STATE.json and EXPERIENCE_CHECKLIST.md before teaching. Q001 and Q002 are understood self-reported; Q003 introduced/in progress. Avoid repeating them as new lessons. Preserve each full original conversation verbatim on confirmation and update both checklists, roadmap and canonical state.",
+  "mentorResumeProtocol": "Before teaching inspect MENTOR_TEACHING_CHECKLIST.md then canonical state and experience checklist. Q001–Q004 understood self-reported; Q005 in progress. Keep original lesson text unmodified; update both checklists and status only on explicit confirmation.",
   "confirmedLessons": [
     {
       "id": "001",
@@ -172,6 +202,32 @@
         "ResultSet row mapping",
         "404 absent project",
         "forward to JSP with escaped text"
+      ]
+    },
+    {
+      "id": "004",
+      "title": "Update one existing project status using parameterized SQL UPDATE",
+      "date": "2026-10-03",
+      "confirmation": "User explicitly said 'understood advance to next'",
+      "evidenceLevel": "self-reported comprehension only",
+      "verbatimArchivePath": "experience-world/scenarios/004-day-4-verbatim.txt",
+      "archivePath": "experience-world/scenarios/004-update-project-jdbc.md",
+      "coveredConcepts": [
+        "SQL UPDATE compared to INSERT/SELECT",
+        "Critical role of WHERE clause when updating one row",
+        "POST project status form and dedicated Servlet",
+        "Validating allowed status values",
+        "PreparedStatement for UPDATE with WHERE id",
+        "executeUpdate affected-row count 0 versus 1",
+        "404 absent record vs 400 invalid input vs database error",
+        "Redirect after successful update",
+        "Lost updates introduced as deferred concurrency topic"
+      ],
+      "unresolvedOrDeferred": [
+        "Safe delete vs soft archive",
+        "Foreign key consequences of hard DELETE",
+        "Authorizing project deletion",
+        "Lost update/concurrency control deeper lesson"
       ]
     }
   ]
