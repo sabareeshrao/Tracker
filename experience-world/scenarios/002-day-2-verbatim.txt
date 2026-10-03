@@ -251,3 +251,113 @@ Now let's save valid information.
 
 ---
 
+### 🦊 Step 5 — Why do we need JDBC?
+
+**Student:** I received the project name in Java. How do I insert it into MySQL?
+
+**Mentor:** In our internship-era application example, we can use JDBC.
+
+**Student:** What exactly is JDBC?
+
+**Mentor:** JDBC stands for **Java Database Connectivity**.
+
+It provides Java APIs for connecting to relational databases, executing SQL, and reading results.
+
+For example, we want MySQL to store this:
+
+| id | name | status |
+|---|---|---|
+| 101 | Hyderabad Mapping | CREATED |
+
+**Student:** So we need an SQL INSERT statement.
+
+**Mentor:** Correct!
+
+```sql id="2o401c"
+INSERT INTO projects (name, status)
+VALUES ('Hyderabad Mapping', 'CREATED');
+```
+
+But there is a problem.
+
+**Student:** What's the problem now?
+
+**Mentor:** The project name comes from the user.
+
+We must not build SQL by directly joining untrusted text into the SQL statement.
+
+For example, this is unsafe:
+
+```java id="6ku6wa"
+String sql = "INSERT INTO projects (name) VALUES ('"
+        + projectName + "')";
+```
+
+**Student:** Why is it unsafe?
+
+**Mentor:** A specially crafted input could change the meaning of the SQL command. This is called SQL injection.
+
+Instead, we use a `PreparedStatement`.
+
+```java id="26gdtf"
+String sql =
+    "INSERT INTO projects (name, status) VALUES (?, ?)";
+
+PreparedStatement statement =
+    connection.prepareStatement(sql);
+
+statement.setString(1, projectName);
+statement.setString(2, "CREATED");
+
+statement.executeUpdate();
+```
+
+**Student:** What do the question marks mean?
+
+**Mentor:** They're placeholders for values.
+
+```text id="fiajo6"
+INSERT INTO projects (name, status)
+VALUES (?, ?)
+        ↑  ↑
+        |  |
+        |  └── "CREATED"
+        |
+        └───── "Hyderabad Mapping"
+```
+
+**Student:** And `executeUpdate()` actually executes the INSERT?
+
+**Mentor:** Exactly! It executes the SQL statement and returns the number of affected rows.
+
+In this example, a successful single-record insert normally affects one row.
+
+**Student:** So JDBC is how our Java application communicates with MySQL.
+
+**Mentor:** Correct. 🐨
+
+### 🐯 Step 6 — Let's connect everything
+
+**Mentor:** Now let's look at the complete request flow.
+
+<box border radius="lg" padding={3} gap={1} align="center">
+  {#each [{name:"1. Employee",detail:"Enters Hyderabad Mapping",ic:"user-round"},{name:"2. HTML / JSP form",detail:"Submits POST /projects",ic:"monitor"},{name:"3. Java Servlet",detail:"Receives the project name",ic:"code-2"},{name:"4. Validation",detail:"Rejects missing information",ic:"shield-check"},{name:"5. JDBC",detail:"Executes a prepared SQL INSERT",ic:"database"},{name:"6. MySQL",detail:"Stores the new project record",ic:"hard-drive"},{name:"7. HTTP response",detail:"Browser receives the result",ic:"check-circle"}] as step,i}
+    <box background="surface-secondary" padding={3} radius="md" width="100%">
+      <row align="center" gap={3}>
+        <icon name={step.ic} color="#38bdf8" size="lg"/>
+        <box flex={1} gap="2px">
+          **{step.name}**
+          <text size="sm" color="secondary">{step.detail}</text>
+        </box>
+      </row>
+    </box>
+    {#if i<6}
+      <icon name="arrow-down" color="secondary"/>
+    {/if}
+  {/each}
+</box>
+
+**Student:** This makes sense. Could you show me the complete Java method?
+
+**Mentor:** Sure. Here's a simplified Servlet using a MySQL connection configured through environment variables. Assume the `projects` table already exists and the JDBC driver has been configured.
+
