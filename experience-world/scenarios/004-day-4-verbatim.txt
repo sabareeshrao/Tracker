@@ -297,3 +297,221 @@ There's another problem we need to solve.
 
 ---
 
+### 🐼 Step 6 — What if the employee submits an invalid status?
+
+**Mentor:** Imagine somebody sends this request:
+
+```text id="e904b9"
+projectId = 102
+newStatus = BANANA
+```
+
+**Student:** That's not a valid project status!
+
+**Mentor:** Correct.
+
+Our example application permits only these statuses:
+
+```text id="ic8glf"
+CREATED
+PROCESSING
+COMPLETED
+```
+
+We can check whether the submitted status belongs to this allowed set.
+
+```java id="fltayg"
+Set<String> allowedStatuses = Set.of(
+    "CREATED",
+    "PROCESSING",
+    "COMPLETED"
+);
+
+if (!allowedStatuses.contains(newStatus)) {
+
+    response.sendError(
+        400,
+        "Invalid project status"
+    );
+
+    return;
+}
+```
+
+**Student:** Why don't we accept any String?
+
+**Mentor:** Because our application's business rules define which values are meaningful.
+
+Imagine management opens the dashboard and sees:
+
+```text id="blk9jv"
+Project 102 → BANANA
+```
+
+That isn't useful workflow information.
+
+**Student:** So validation protects the correctness of our data.
+
+**Mentor:** Exactly.
+
+And in a more developed workflow, we'd also check whether the particular status transition is allowed.
+
+For example, changing from `COMPLETED` back to `CREATED` might require approval. We will explore those more advanced business rules later.
+
+For now, let's update Project 102.
+
+### 🐯 Step 7 — Execute the update using JDBC
+
+**Student:** We have a valid project ID and a valid status.
+
+What happens next?
+
+**Mentor:** Java prepares the SQL statement.
+
+```java id="z0rh6v"
+String sql = """
+    UPDATE projects
+    SET status = ?
+    WHERE id = ?
+    """;
+```
+
+**Student:** Two question marks?
+
+**Mentor:** Correct!
+
+The first is the new status. The second is the project ID.
+
+```java id="294nqf"
+PreparedStatement statement =
+    connection.prepareStatement(sql);
+
+statement.setString(1, newStatus);
+statement.setInt(2, projectId);
+```
+
+**Student:** And how do we execute UPDATE?
+
+**Mentor:** Just like INSERT, we use `executeUpdate()`.
+
+```java id="mf2509"
+int rowsUpdated = statement.executeUpdate();
+```
+
+**Student:** Wait. Why are we saving the return value?
+
+**Mentor:** Because this is something very useful that you haven't needed to examine closely before.
+
+`executeUpdate()` returns an integer indicating the number of affected rows for this JDBC update.
+
+In our simple primary-key update, it helps us distinguish whether a matching row was updated.
+
+### 🐨 Step 8 — What does the affected-row count mean?
+
+**Mentor:** Let's run the update for Project 102.
+
+```sql id="bt0sz5"
+UPDATE projects
+SET status = 'COMPLETED'
+WHERE id = 102;
+```
+
+Assuming the row exists, the update count is normally:
+
+```text id="jdpo2d"
+rowsUpdated = 1
+```
+
+**Student:** Because one project matched the update?
+
+**Mentor:** Exactly.
+
+Now imagine you try Project 999.
+
+```sql id="86btth"
+UPDATE projects
+SET status = 'COMPLETED'
+WHERE id = 999;
+```
+
+Our database has no Project 999.
+
+```text id="l3ngy4"
+rowsUpdated = 0
+```
+
+**Student:** So the SQL statement can execute without throwing an exception, even if no record is found?
+
+**Mentor:** Precisely! 🦊
+
+That's today's most important discovery.
+
+**A successful SQL execution does not necessarily mean the requested record existed.**
+
+| Situation | JDBC result | Application action |
+|---|---|---|
+| Project 102 exists | 1 row affected | Confirm the update |
+| Project 999 doesn't exist | 0 rows affected | Return 404 |
+| Database connection fails | SQLException | Handle server error |
+
+For this example, `id` is a primary key, so more than one matching row is not expected. Also, updating an already-equal value can have database-specific nuances; MySQL connection settings may affect how update counts are reported.
+
+**Student:** So we shouldn't immediately display success just because the SQL statement didn't throw an exception?
+
+**Mentor:** Correct.
+
+We should check the outcome.
+
+```java id="r7shli"
+int rowsUpdated = statement.executeUpdate();
+
+if (rowsUpdated == 0) {
+    response.sendError(404, "Project not found");
+    return;
+}
+```
+
+**Student:** Got it. Now the application knows when the project doesn't exist.
+
+---
+
+### 🦁 Step 9 — Your first update failure
+
+**Mentor:** Let's imagine the employee requests an update, but MySQL is temporarily unavailable.
+
+```text id="1ak6rp"
+Employee clicks Update Project
+               ↓
+Servlet receives the request     ✅
+               ↓
+Input validation succeeds        ✅
+               ↓
+JDBC executes UPDATE             ❌
+               ↓
+Database connection failure
+```
+
+**Student:** Then we must not display "Project updated successfully."
+
+**Mentor:** Correct.
+
+A failed database operation must be handled as a failure.
+
+And we should avoid exposing internal database error details to the employee.
+
+A production application would also record useful diagnostic information for the development or support team.
+
+**Student:** What happens if two employees change the same project at the same time?
+
+**Mentor:** Excellent question!
+
+Imagine Employee A changes Project 102 to `PROCESSING`, while Employee B changes it to `COMPLETED`.
+
+Without additional safeguards, one update can overwrite the other.
+
+That's a concurrency problem called a **lost update**.
+
+We'll study concurrency control separately. Today's goal is to understand one update request from start to finish.
+
+---
+
