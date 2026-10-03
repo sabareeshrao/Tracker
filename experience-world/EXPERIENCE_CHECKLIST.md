@@ -3,7 +3,7 @@
 **Source of truth:** [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json)  
 **Mentor's separate teaching queue:** [MENTOR_TEACHING_CHECKLIST.md](MENTOR_TEACHING_CHECKLIST.md) — what has been explained, what must not be repeated, and the next unique interview scenario.  
 **View on the website:** [Experience tracker](../experience.html)  
-**Priority study target:** 1,000 scenario-led interview questions, **4 understood / 1,000**, with 5 introduced as of 2026-10-02.  
+**Priority study target:** 1,000 scenario-led interview questions, **5 understood / 1,000**, with 6 introduced as of 2026-10-02.  
 **Current simulated career year:** **Year 1 — June 2018 to May 2019 (internship → backend)**.  
 **Actual resume timeline:** June 2018–November 2023. Year labels here represent the *teaching timeline*, not additional employment or unverified professional milestones.
 
@@ -15,7 +15,8 @@
 - [x] **Scenario 002 / Q002 — Day 2:** When an employee clicks Save Project, how does data travel from a web form through Servlet/JDBC to MySQL? [Verbatim Day 2](scenarios/002-day-2-verbatim.txt) · [Original Markdown](scenarios/002-save-project-servlet-jdbc.md) · **Understood (self-reported)**
 - [x] **Scenario 003 / Q003 — Day 3:** Read an existing project through GET, Servlet doGet, JDBC SELECT/ResultSet, and JSP. [Exact Day 3 transcript](scenarios/003-day-3-verbatim.txt) · [Original Markdown/DIL](scenarios/003-view-project-servlet-jdbc.md) · **Understood (self-reported)**
 - [x] **Scenario 004 / Q004 — Day 4:** Update an existing project's status using SQL UPDATE, validate the new value, and check affected rows. [Original Day 4 transcript](scenarios/004-day-4-verbatim.txt) · [matching source Markdown](scenarios/004-update-project-jdbc.md) · **Understood (self-reported)**
-- [ ] **Scenario 005 / Q005 — Day 5:** Safely delete or archive a project with linked QA records using JDBC and MySQL. **In progress**
+- [x] **Scenario 005 / Q005 — Day 5:** Safely delete or archive a project with linked QA records using JDBC and MySQL. [Original Day 5 transcript](scenarios/005-day-5-verbatim.txt) · [matching source Markdown](scenarios/005-safe-delete-vs-archive.md) · **Understood (self-reported)**
+- [ ] **Scenario 006 / Q006 — Day 6:** Handle duplicate project codes and repeated Save requests with MySQL uniqueness and safe conflict handling. **In progress**
 - [ ] CRUD operations with JSP/Servlet, JDBC, and MySQL — future lesson, not yet assigned.
 - [ ] Validation and safe SQL parameter handling — future lesson, not yet assigned.
 
