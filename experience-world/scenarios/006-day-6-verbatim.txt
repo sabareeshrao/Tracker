@@ -630,3 +630,154 @@ We'll build that mechanism more deeply when we study retries and reliable proces
 
 ---
 
+### 🐨 Step 11 — Connect this to real operational work
+
+**Student:** How does this connect to mapping projects beyond an employee clicking Save twice?
+
+**Mentor:** Imagine the operations team imports an Excel spreadsheet containing hundreds of project records.
+
+One row contains:
+
+```text id="mqcm8v"
+Project Code: PRJ-401
+```
+
+A later row also contains:
+
+```text id="zm4vic"
+Project Code: PRJ-401
+```
+
+**Student:** So duplicates can also come from source data.
+
+**Mentor:** Exactly!
+
+And suppose two imports run around the same time.
+
+Even if each import checks for duplicates within its own spreadsheet, they might still try to insert the same project code concurrently.
+
+**Student:** The database UNIQUE constraint still protects the shared table.
+
+**Mentor:** Correct.
+
+Now you've connected the same concept to two different business situations: interactive form submission and batch data intake.
+
+A batch process may also need to report which rows were accepted, which were duplicates, and which failed for other reasons.
+
+That's an interesting future exercise, but we won't turn today's lesson into another large topic.
+
+---
+
+### 🐯 Step 12 — What have we actually learned?
+
+**Student:** Let me try to explain it.
+
+The project code represents the business project, while the numeric ID represents the database row.
+
+**Mentor:** Correct.
+
+**Student:** Before saving, Java might check whether the code already exists. But two simultaneous requests could both pass that check.
+
+**Mentor:** Exactly.
+
+**Student:** So the database needs a UNIQUE constraint.
+
+**Mentor:** Correct.
+
+**Student:** If MySQL rejects a duplicate, Java can identify that failure and return a meaningful conflict response.
+
+**Mentor:** Yes.
+
+**Student:** And if the first request succeeds but its response gets lost, that's a retry problem that may need idempotency handling.
+
+**Mentor:** Perfect. 🐯
+
+You've understood the difference between checking for a duplicate and **guaranteeing that duplicate business identities cannot be stored**.
+
+---
+
+## 🎯 Day 6 — Interview-ready answer
+
+**Student:** How should I answer if an interviewer asks, "How do you prevent duplicate records when two requests arrive simultaneously?"
+
+**Mentor:** You can explain the technical approach like this:
+
+<WritingBlock id="86142" variant="standard">In a Java application, I would first identify the business field that must be unique, such as a project code.
+
+The database may already have an auto-generated primary key, but that alone does not prevent two rows from having the same business project code.
+
+I would enforce the business uniqueness rule using a UNIQUE constraint in MySQL.
+
+An application-level existence check can be useful for validation or user feedback, but it is not sufficient by itself because two concurrent requests might both find that the record does not exist.
+
+The UNIQUE constraint allows the database to enforce the rule even when requests arrive simultaneously.
+
+The Java application can use JDBC and PreparedStatement to attempt the INSERT, then handle the specific duplicate-key error and return an appropriate response such as HTTP 409 Conflict.
+
+I would also normalize project codes when required by the business rules so values differing only in case or surrounding spaces are handled consistently.
+
+If clients may retry after timeouts, I would consider a separate idempotency mechanism to distinguish repeated attempts at the same operation from genuinely conflicting create requests.</WritingBlock>
+
+### 🧠 One-line memory trick
+
+**Project Code → Normalize → UNIQUE Constraint → Concurrent INSERT → One Succeeds → Duplicate Conflict → Safe Retry Design**
+
+---
+
+## 📘 Day 6 — Test your understanding
+
+**🐯 Mentor:** Before we move to our next lesson, I want you to answer three questions in your own words.
+
+Imagine I ask you these during a code review.
+
+{@body const questions=["Our projects table has an auto-generated primary key. Why can two rows still contain the same project code, and what database rule would prevent that?","Two employees check whether PRJ-201 exists. Both checks return false, and both employees then attempt INSERT. Why is the Java existence check not enough?","MySQL saves PRJ-301, but the browser times out before receiving the response. The employee clicks Save again. What problem does this create, and how is it different from two genuinely different requests using the same project code?"]}
+{@body const [answers,setAnswers]=DIL.useState(["","",""])}
+<box border radius="lg" padding={3} gap={3}>
+  {#each questions as q,i}
+    <box key={i} gap={2}>
+      <row align="start" gap={2}>
+        <box background="surface-secondary" radius="md" size="28px" align="center" justify="center">
+          <text size="sm" weight="medium">{i+1}</text>
+        </box>
+        <box flex={1}>
+          <text weight="medium" size="sm">{q}</text>
+        </box>
+      </row>
+      <textarea rows={3} placeholder="Explain in your own words..." value={answers[i]} onChange={v=>setAnswers(a=>a.map((x,j)=>j===i?v:x))}/>
+    </box>
+  {/each}
+  <button block disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Day 6 Scenario 006 — Please review my answers:\n\n"+questions.map((q,i)=>`${i+1}. ${q}\nMy answer: ${answers[i]}`).join("\n\n")+"\nReview my answers in our simple mentor–student style. Do not mark Day 6 complete until I explicitly confirm Understood.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+</box>
+
+## 📊 Your Experience World progress
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" justify="between">
+    **Current career year**
+    <text color="#38bdf8" weight="medium">Year 1 · 2018–2019</text>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Days 1–5</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 6 — Duplicates and concurrent requests</text>
+    <badge>Awaiting understanding</badge>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions introduced</text>
+    **6 / 1,000**
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions confirmed understood</text>
+    **5 / 1,000**
+  </row>
+</box>
+
+**🐯 Mentor:** That's Day 6. Now you know why duplicate prevention is not simply about writing an `if` condition in Java. We need a business identity rule and a database guarantee, especially when requests can run concurrently.
+
+Our next distinct lesson will examine **where validation belongs in a real application**—what the browser can check, what the backend must check, and what the database must enforce.
+
+For now, Day 6 is in progress. When you're satisfied, say **"Understood."** I'll preserve the entire conversation in GitHub, update both checklists, and advance to Question 007.
