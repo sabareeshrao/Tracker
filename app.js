@@ -127,6 +127,38 @@ for(const q of QUESTION.values()){
 const topicById=new Map(topics.map(t=>[t.id,t]));
 const empty=()=>({version:1,concepts:{},questions:{},notes:[]});
 let progress;try {const x=JSON.parse(localStorage.getItem(STORAGE)||'null');progress=x&&typeof x==='object'&&x.version===1?{...empty(),...x}:empty();}catch(e){progress=empty();}
+// Public, read-only GitHub study updates. Browser edits are stored locally.
+let githubBatch=null, githubUpdatedAt=null, githubSyncStatus='Browser-only until GitHub progress loads';
+async function loadGithubProgress(){
+ if(typeof fetch!=='function')return;
+ try {
+  const response=await fetch('./STUDY_PROGRESS.json?v='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('Progress file unavailable: '+response.status);
+  const remote=await response.json();
+  if(remote.version!==1||!remote.progress||remote.progress.version!==1)throw Error('Invalid GitHub progress version');
+  const p=remote.progress;
+  for(const [id,v] of Object.entries(p.concepts||{})){
+   if(topicById.has(id)&&Number.isInteger(v)&&v>=0&&v<=4)progress.concepts[id]=Math.max(cStage(id),v);
+  }
+  for(const [id,v] of Object.entries(p.questions||{})){
+   if(QUESTION.has(Number(id))&&Number.isInteger(v)&&v>=0&&v<=3)progress.questions[id]=Math.max(qStage(Number(id)),v);
+  }
+  // Website notes are local. Notes explicitly published to GitHub can appear too.
+  const localIds=new Set(progress.notes.map(note=>note.id));
+  for(const n of p.notes||[]){
+   if(n&&typeof n.id==='string'&&typeof n.text==='string'&&Array.isArray(n.tags)&&typeof n.date==='string'&&!localIds.has(n.id)){
+    progress.notes.push(n);localIds.add(n.id);
+   }
+  }
+  if(Array.isArray(remote.batches))githubBatch=remote.batches.find(b=>b.number===remote.activeBatch)||null;
+  githubUpdatedAt=remote.updatedAt||null;
+  githubSyncStatus='GitHub study updates loaded';
+  persist();
+  if(!drawer)render();else{renderMain();rerenderDrawer();}
+ }catch(e){
+  githubSyncStatus='Browser-only · GitHub progress unavailable';
+ }
+}
 let roadPhase='all';
 let view='overview',query='',groupFilter='All subjects',stageFilter='all',questionFilter='all',selectedSet=1,selectedTopic=topics[0].id,roadLimit=20,questionLimit=35,topicLimit=48,drawer=null,draft='',selectedTags=new Set(),tagsTouched=false;
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -167,7 +199,7 @@ function navHtml(){
  ].map(n=>'<button class="nav-button '+(view===n[0]?'active':'')+'" data-action="view" data-view="'+n[0]+'"><span class="nav-icon">'+icon(n[1])+'</span>'+n[2]+(n[0]==='journal'?'<span class="nav-number">'+progress.notes.length+'</span>':'')+'</button>').join('')+'</div>'+
  '<div class="nav-kicker nav-kicker-2">LEARNING STATUS</div>'+
  '<div class="sidebar-progress"><div class="mini-caption"><span>Concept coverage</span><strong>'+s.cPercent+'%</strong></div>'+meter(s.cPercent,'green')+'<div class="mini-caption dim"><span>'+s.cStarted+' of '+topics.length+' concepts started</span><span>Personal</span></div></div>'+
- '<div class="sidebar-bottom"><div class="save-indicator"><span class="live-dot"></span> Stored in this browser</div><a href="https://github.com/sabareeshrao/Tracker" target="_blank" rel="noopener noreferrer">View source repository '+icon('arrow')+'</a></div></aside>';
+ '<div class="sidebar-bottom"><div class="save-indicator"><span class="live-dot"></span> Browser + GitHub updates</div><a href="https://github.com/sabareeshrao/Tracker" target="_blank" rel="noopener noreferrer">View source repository '+icon('arrow')+'</a></div></aside>';
 }
 function topHtml(){
  return '<header class="topbar"><div class="topbar-left"><button class="mobile-menu icon-button" data-action="menu" aria-label="Toggle menu">☰</button><div class="breadcrumb">MY WORKSPACE <span>/</span> <strong>'+({overview:'Overview',roadmap:'Set roadmap',atlas:'Concept atlas',questions:'Question bank',journal:'Study journal'}[view])+'</strong></div></div><div class="topbar-right"><div class="search-shell"><span class="search-glyph">⌕</span><input id="global-search" placeholder="Search questions, sets, concepts..." aria-label="Global search" value="'+esc(query)+'"><kbd>/</kbd></div><button class="soft-button" data-action="export">⇩ Export</button><button class="icon-button upload" data-action="import" title="Import saved progress">⇧</button></div></header>';
@@ -202,6 +234,12 @@ function header(kicker,title,sub,action){
 function metric(label,value,description,color,svg){
  return '<div class="metric '+(color||'')+'"><div class="metric-top"><span>'+esc(label)+'</span><span class="metric-symbol">'+svg+'</span></div><div class="metric-value">'+esc(value)+'</div><div class="metric-desc">'+esc(description)+'</div></div>';
 }
+function batchHtml(){
+ if(!githubBatch||!Array.isArray(githubBatch.questionIds))return '';
+ const rows=githubBatch.questionIds.map(id=>QUESTION.get(id)).filter(Boolean);
+ const done=rows.filter(q=>qStage(q.id)>0).length;
+ return '<section class="panel table-panel" style="margin:0 0 18px"><div class="panel-top"><div><div class="eyebrow">YOUR CURRENT FIVE · GITHUB RECORD</div><h2>Batch '+String(githubBatch.number).padStart(3,'0')+' — '+done+' / '+rows.length+' questions touched</h2></div><a class="text-link" href="https://github.com/sabareeshrao/Tracker/blob/main/CURRENT_BATCH.md" target="_blank" rel="noopener noreferrer">Batch notes ↗</a></div><div class="set-preview">'+rows.map(q=>'<button class="set-row" data-action="batch-question" data-id="'+q.id+'"><span class="set-num">'+String(q.id).padStart(4,'0')+'</span><span class="set-summary"><strong>'+esc(q.text)+'</strong><small>Set '+q.refs[0][0]+' · '+qNames[qStage(q.id)]+'</small></span><span class="set-chevron">↗</span></button>').join('')+'</div><div style="padding:0 24px 19px;color:var(--muted);font-size:11px">Your chat-reported progress appears after GitHub is updated and this page refreshes. Local website edits remain on this browser.</div></section>';
+}
 function overviewHtml(){
  const s=stats();
  let domain=groups.slice(1).map(g=>{
@@ -215,6 +253,7 @@ function overviewHtml(){
  metric('QUESTIONS TOUCHED',s.qRead.toLocaleString(),'of '+s.qc.toLocaleString()+' unique questions','blue','☷')+
  metric('CONCEPTS STARTED',s.cStarted,'of '+topics.length+' concepts','violet','◈')+
  metric('INTERVIEW READY',s.cReady,'concepts at final milestone','orange','✧')+'</div>'+
+ batchHtml()+
  '<div class="dashboard-grid"><section class="panel focus-panel"><div class="panel-top"><div><div class="eyebrow">YOUR PROGRESS</div><h2>A clearer picture of what you know</h2></div><span class="tiny-mark">LIVE</span></div><div class="focus-content"><div class="donut" style="background:conic-gradient(var(--green) '+s.cPercent+'%,#24343a 0)"><div><b>'+s.cPercent+'%</b><small>concept coverage</small></div></div><div class="focus-detail"><div class="progress-row"><span><i class="bullet green-dot"></i> Interview ready</span><strong>'+s.cReady+' concepts</strong></div><div class="progress-row"><span><i class="bullet blue-dot"></i> In progress</span><strong>'+(s.cStarted-s.cReady)+' concepts</strong></div><div class="progress-row"><span><i class="bullet gray-dot"></i> Not started</span><strong>'+(topics.length-s.cStarted)+' concepts</strong></div><div class="fine-print">Coverage comes from your own study milestones, not from the source repository’s completed-set labels. Questions are tracked separately.</div></div></div></section>'+
  '<section class="panel"><div class="panel-top"><div><div class="eyebrow">KNOWLEDGE MAP</div><h2>Progress by subject</h2></div><button class="text-link" data-action="view" data-view="atlas">Explore atlas ↗</button></div><div class="domains">'+domain+'</div></section></div>'+
  '<div class="panel split-panel"><div class="split-copy"><div class="eyebrow">HOW TO START</div><h2>Your reading becomes visible progress.</h2><p>Paste a concept explanation, choose the detected topics, and save it. Your evidence is stored in the journal, and those concepts move to <strong>Notes captured · 50%</strong>. Practice and interview readiness remain your decisions.</p><button class="primary-button" data-action="view" data-view="journal">Open study journal ↗</button></div><div class="example-window"><div class="window-dots"><i></i><i></i><i></i><span>example / spring-boot</span></div><div class="example-quote">"Spring Boot uses auto-configuration to configure beans based on the classpath..."</div><div class="tag-row"><span class="tag recognized">✓ Spring Boot</span><span class="tag recognized">✓ Spring Core</span></div><div class="example-bottom"><span>Knowledge captured</span><strong>50% <span>▰▰▰▱</span></strong></div></div></div>'+
@@ -285,7 +324,7 @@ function renderMatches(){
 function journalHtml(){
  const notes=[...progress.notes].reverse();
  return header('PERSONAL KNOWLEDGE BASE','Study journal','Paste what you learned. The tracker proposes matching concepts, and saving your note gives selected concepts a 50% “Notes captured” milestone unless they are already further along.')+
- '<div class="journal-grid"><section class="panel composer"><div class="panel-top"><div><div class="eyebrow">CAPTURE NEW KNOWLEDGE</div><h2>What did you read today?</h2></div><span class="tiny-mark">YOUR WORDS</span></div><label for="knowledge-text">Paste an explanation, code insight, or interview answer</label><textarea id="knowledge-text" rows="9" placeholder="Example: The JVM loads compiled .class bytecode using class loaders. The JIT compiler can turn frequently executed bytecode into native machine code...">'+esc(draft)+'</textarea><div id="matches"></div><div class="composer-bottom"><span>Progress remains on this device until exported.</span><button class="primary-button" id="save-note" data-action="save-note">Save knowledge & update concepts ↗</button></div></section>'+
+ '<div class="journal-grid"><section class="panel composer"><div class="panel-top"><div><div class="eyebrow">CAPTURE NEW KNOWLEDGE</div><h2>What did you read today?</h2></div><span class="tiny-mark">YOUR WORDS</span></div><label for="knowledge-text">Paste an explanation, code insight, or interview answer</label><textarea id="knowledge-text" rows="9" placeholder="Example: The JVM loads compiled .class bytecode using class loaders. The JIT compiler can turn frequently executed bytecode into native machine code...">'+esc(draft)+'</textarea><div id="matches"></div><div class="composer-bottom"><span>Website notes stay local; chat updates load from GitHub.</span><button class="primary-button" id="save-note" data-action="save-note">Save knowledge & update concepts ↗</button></div></section>'+
  '<section class="panel journal-guide"><div class="eyebrow">PROGRESS MILESTONES</div><h2>What each bar means</h2><div class="milestone-list">'+stageNames.map((s,i)=>'<div class="milestone"><span class="milestone-dot '+stageColors[i]+'">'+i*25+'%</span><span><strong>'+esc(s)+'</strong><small>'+['No personal evidence recorded','You have started reading this concept','An explanation or notes have been captured','You have practiced or implemented it','You have checked your own interview readiness'][i]+'</small></span></div>').join('')+'</div><p class="guide-tip">Capturing a note does not certify every related question. Mark questions individually when you study them.</p></section></div>'+
  '<section class="panel note-history"><div class="panel-top"><div><div class="eyebrow">YOUR EVIDENCE</div><h2>Saved notes <span class="light-num">'+notes.length+'</span></h2></div></div>'+
  (notes.length?notes.map(n=>'<article class="note-entry"><div class="note-top"><span>'+new Date(n.date).toLocaleString()+'</span><button class="text-link danger" data-action="delete-note" data-id="'+esc(n.id)+'" aria-label="Delete note">Delete</button></div><p>'+esc(n.text)+'</p><div class="tag-row">'+(n.tags||[]).map(id=>'<button class="tag" data-action="topic" data-id="'+esc(id)+'">'+esc(topicById.get(id)?.name||id)+'</button>').join('')+'</div></article>').join(''):'<div class="empty">No notes yet. Paste a passage above to build your knowledge history.</div>')+'</section>';
@@ -336,6 +375,7 @@ document.addEventListener('click',e=>{
  if(action==='view'){setView(b.dataset.view);return;}
  if(action==='group'){groupFilter=b.dataset.group;setView('atlas');return;}
  if(action==='set'){openDrawer('set',Number(b.dataset.id));return;}
+ if(action==='batch-question'){openDrawer('set',QUESTION.get(Number(b.dataset.id)).refs[0][0]);return;}
  if(action==='topic'){openDrawer('topic',b.dataset.id);return;}
  if(action==='close'){closeDrawer();return;}
  if(action==='menu'){document.querySelector('.sidebar')?.classList.toggle('open');return;}
@@ -365,4 +405,5 @@ document.addEventListener('keydown',e=>{
 });
 function render(){layout(query.trim()?searchHtml():({overview:overviewHtml,roadmap:roadmapHtml,atlas:atlasHtml,questions:questionsHtml,journal:journalHtml}[view])());if(view==='journal'&&!query.trim())renderMatches();}
 render();
+loadGithubProgress();
 })();
