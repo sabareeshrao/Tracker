@@ -361,3 +361,56 @@ In this example, a successful single-record insert normally affects one row.
 
 **Mentor:** Sure. Here's a simplified Servlet using a MySQL connection configured through environment variables. Assume the `projects` table already exists and the JDBC driver has been configured.
 
+```java id="blu9dk"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String projectName =
+                request.getParameter("projectName");
+
+        if (projectName == null || projectName.isBlank()) {
+            response.sendError(400, "Project name is required");
+            return;
+        }
+
+        String sql =
+            "INSERT INTO projects (name, status) VALUES (?, ?)";
+
+        try (
+            Connection connection = DriverManager.getConnection(
+                System.getenv("DB_URL"),
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASSWORD")
+            );
+
+            PreparedStatement statement =
+                connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(1, projectName.trim());
+            statement.setString(2, "CREATED");
+
+            statement.executeUpdate();
+
+            response.sendRedirect(
+                request.getContextPath() + "/project-created.jsp"
+            );
+
+        } catch (SQLException ex) {
+
+            throw new ServletException(
+                "Unable to save project", ex
+            );
+        }
+    }
+}
+```
+
+<caption>Illustrative Servlet code using the classic Servlet API, JDBC and MySQL. Imports and deployment configuration are omitted to focus on the request flow.</caption>
+
