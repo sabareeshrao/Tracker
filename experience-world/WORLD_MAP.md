@@ -5,7 +5,7 @@ This is a **teaching roadmap**, not a declaration that the user used every liste
 | World | Period or theme | Business scenario starting point | Technical connections | Status |
 |---|---|---|---|---|
 | 0 | Ground zero | What does an aerial mapping company's Java application do, and who uses it? | business terms, GIS outputs, projects, QA, workflows | completed — Scenario 001, understood 2026-10-02 |
-| 1 | Internship (2018) | An operations user submits a new project through a form | Java object, HTTP, JSP/Servlet, JDBC, MySQL, CRUD, validation | in progress — Scenario 004 (Days 1–3 understood; Day 4/S004 introduced 2026-10-02) |
+| 1 | Internship (2018) | An operations user submits a new project through a form | Java object, HTTP, JSP/Servlet, JDBC, MySQL, CRUD, validation | in progress — Scenario 005 (Days 1–4 understood; Day 5/S005 introduced 2026-10-03) |
 | 2 | Backend (2018–2020) | Build a project-status endpoint for the QA/operations teams | Controller, Service, Repository, Spring Boot, SQL, errors, testing | queued |
 | 3 | Backend (2018–2020) | Validate and reconcile a batch of incoming records | Collections, duplicates, exception handling, SQL, automation, batches | queued |
 | 4 | Full Stack (2021–2023) | Show project statuses in a dashboard | React, REST integration, service APIs, Hibernate, pagination | queued |
@@ -16,7 +16,7 @@ This is a **teaching roadmap**, not a declaration that the user used every liste
 | 9 | Interview defense | Explain a project and answer increasingly deep follow-ups | architecture diagrams, STAR examples, evidence and uncertainty | queued |
 
 ## Selection rules
-- **Resume from the active scenario in [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json) and [MENTOR_TEACHING_CHECKLIST.md](MENTOR_TEACHING_CHECKLIST.md); do not default to Scenario 001 after it is completed.** As of 2026-10-02, Q001–Q003 are understood and Q004 is in progress.
+- **Resume from the active scenario in [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json) and [MENTOR_TEACHING_CHECKLIST.md](MENTOR_TEACHING_CHECKLIST.md); do not default to Scenario 001 after it is completed.** As of 2026-10-03, Q001–Q004 are understood and Q005 is in progress.
 - Expand from the student's questions and the last confirmed concepts; choose a missing prerequisite if the next scenario relies on it.
 - Avoid repeating previously confirmed explanations; read the mentor anti-repeat queue before selecting a new question. A revisit requires explicit student request, demonstrated prerequisite gap or genuinely deeper new business use case, not a paraphrase.
 - Do not assign specific invented microservice names, Kafka, cloud providers, containers, or deployment pipelines to the user's prior role.
