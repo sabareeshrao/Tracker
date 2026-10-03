@@ -225,3 +225,235 @@ And because we haven't removed Project 102, its related QA reviews can still ref
 
 ---
 
+### 🦊 Step 5 — Why does MySQL refuse to delete the project?
+
+**Student:** Why does MySQL care that QA Review 501 belongs to Project 102?
+
+**Mentor:** Because relational databases can enforce relationships between tables.
+
+Suppose the `quality_reviews.project_id` column has a **foreign key** referencing `projects.id`.
+
+```text id="dy6ory"
+quality_reviews.project_id
+             |
+             | references
+             ↓
+        projects.id
+```
+
+**Student:** So the foreign key tells the database that a QA review belongs to an existing project?
+
+**Mentor:** Correct!
+
+For this example, imagine we configured the relationship with `ON DELETE RESTRICT`.
+
+That means MySQL must not delete a project while dependent QA review records still reference it.
+
+**Student:** So the database protects the relationship?
+
+**Mentor:** Exactly.
+
+Imagine running:
+
+```sql id="pta96x"
+DELETE FROM projects
+WHERE id = 102;
+```
+
+If QA reviews still reference Project 102 through that restrictive foreign key, the database rejects the deletion.
+
+**Student:** But couldn't we configure it so MySQL deletes the QA reviews too?
+
+**Mentor:** Yes. Some relationships use `ON DELETE CASCADE`.
+
+But think about what that means.
+
+```text id="7baq56"
+Delete Project 102
+        ↓
+Delete QA Review 501
+        ↓
+Delete QA Review 502
+```
+
+**Student:** Oh! We might accidentally lose the QA history.
+
+**Mentor:** Exactly.
+
+Cascading deletion is useful when deleting the parent really should delete its dependents. But we shouldn't choose it without understanding the business requirement.
+
+**The foreign-key behavior must reflect what the business wants to preserve.**
+
+---
+
+### 🐨 Step 6 — The manager clarifies the requirement
+
+**Mentor:** I went back to the operations manager and asked:
+
+*"Do you want Project 102 permanently removed, or do you simply want it to disappear from your active-project list?"*
+
+The manager replied:
+
+*"We still need the project and its QA records for historical reporting. I only want it removed from the active list."*
+
+**Student:** Then archiving makes more sense for this scenario!
+
+**Mentor:** Correct. 🐨
+
+Now we've discovered why we need a soft-delete or archive feature.
+
+It's not because somebody asked us to memorize the term.
+
+It's because permanently deleting the record would solve the wrong problem.
+
+### 🐯 Step 7 — Design an archive column
+
+**Mentor:** Let's represent the archive decision in our database.
+
+We can add a column like this:
+
+```sql id="lh6rva"
+ALTER TABLE projects
+ADD COLUMN archived BOOLEAN NOT NULL DEFAULT FALSE;
+```
+
+**Student:** What does `DEFAULT FALSE` mean?
+
+**Mentor:** Newly inserted projects will not be archived unless we specify otherwise.
+
+In MySQL, `BOOLEAN` is represented using a `TINYINT(1)`-compatible type.
+
+For our simple example:
+
+```text id="gjwamj"
+archived = false → Active
+archived = true  → Archived
+```
+
+**Student:** But we already have a `status` column. Why not just set it to `ARCHIVED`?
+
+**Mentor:** We could design it that way, depending on the business requirements.
+
+But think about this situation.
+
+A project can be **completed** and also **archived**.
+
+Those describe different things.
+
+```text id="38tduo"
+status   = COMPLETED
+archived = true
+```
+
+**Student:** Oh! One tells us where the project is in its workflow. The other tells us whether it belongs in the active list.
+
+**Mentor:** Exactly.
+
+Separating those ideas can be useful when the business needs both.
+
+---
+
+### 🦊 Step 8 — Archive the project using SQL
+
+**Student:** How do we mark Project 102 as archived?
+
+**Mentor:** With an `UPDATE` statement.
+
+You already know the basic operation from Day 4, so we won't repeat that lesson.
+
+Here's the new business operation:
+
+```sql id="4w0kn9"
+UPDATE projects
+SET archived = TRUE
+WHERE id = 102
+  AND archived = FALSE;
+```
+
+**Student:** Why do we include `AND archived = FALSE`?
+
+**Mentor:** Because we only want to change a project that is currently active.
+
+If somebody tries to archive the same project again, it won't match that condition.
+
+Let's imagine the result.
+
+```text id="thw1a9"
+Before:
+Project 102 → archived = false
+
+First archive request:
+Project 102 → archived = true
+Affected rows = 1
+
+Second archive request:
+Project 102 → already archived
+Affected rows = 0
+```
+
+**Student:** So zero affected rows doesn't always mean the project never existed?
+
+**Mentor:** Excellent observation!
+
+In this particular query, zero rows can mean either:
+
+- The requested project ID doesn't exist.
+- The project exists but is already archived.
+
+If our application needs to distinguish those situations, we can perform an additional lookup or design an appropriate response.
+
+We shouldn't automatically claim that the project never existed.
+
+### 🐼 Step 9 — How does archiving affect the project list?
+
+**Student:** Okay, the project is archived. But how does it disappear from the active screen?
+
+**Mentor:** Imagine our operations dashboard normally retrieves projects using:
+
+```sql id="ipniu5"
+SELECT id, name, status
+FROM projects;
+```
+
+That query includes both active and archived projects.
+
+For the active-project screen, we can apply a condition:
+
+```sql id="xvrlai"
+SELECT id, name, status
+FROM projects
+WHERE archived = FALSE;
+```
+
+**Student:** So archived projects are excluded from the active list?
+
+**Mentor:** Correct.
+
+And a separate historical-project screen could retrieve them using:
+
+```sql id="pg342g"
+SELECT id, name, status
+FROM projects
+WHERE archived = TRUE;
+```
+
+**Student:** Oh! So we didn't delete any information. We changed which information the user sees.
+
+**Mentor:** Exactly. 🐯
+
+Notice how our original problem has now been solved.
+
+```text id="mpz6qo"
+Operations employee archives Project 102
+                  ↓
+         MySQL retains project
+                  ↓
+         QA records remain linked
+                  ↓
+     Active-project query excludes it
+                  ↓
+ Historical reporting can still access it
+```
+
+---
+
