@@ -29,13 +29,13 @@
 </div>
 <div class="stat-grid" aria-label="Experience progress summary">
   <div class="stat"><div class="label">Current career year</div><strong class="sky" id="yearValue">Year 1</strong><small id="yearRole">2018–2019 · Internship → Backend</small></div>
-  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">5 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
-  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">6 / 1,000</strong><small>Current question is not completed</small></div>
-  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 6</strong><small id="currentLesson">Duplicate project codes and retries</small></div>
+  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">6 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
+  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">7 / 1,000</strong><small>Current question is not completed</small></div>
+  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 7</strong><small id="currentLesson">Browser, Servlet and database validation</small></div>
 </div>
 <section class="panel" aria-label="Overall Experience World progress">
   <div class="head-row"><div><div class="eyebrow">Experience World</div><h2>1,000-question learning journey</h2></div><span class="tag done" id="githubStatus">Loading saved state…</span></div>
-  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="5" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
+  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="6" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
   <p class="footnote" id="progressCaption">The checkbox is ticked after you tell the mentor “Understood” and the GitHub file is updated. Your separate 2,719-question bank is not altered.</p>
 </section>
 <section aria-labelledby="yearsTitle">
@@ -55,6 +55,7 @@
   <a class="action" href="experience-world/scenarios/003-day-3-verbatim.txt">Read exact Day 3 ↗</a>
   <a class="action" href="experience-world/scenarios/004-day-4-verbatim.txt">Read exact Day 4 ↗</a>
   <a class="action" href="experience-world/scenarios/005-day-5-verbatim.txt">Read exact Day 5 ↗</a>
+  <a class="action" href="experience-world/scenarios/006-day-6-verbatim.txt">Read exact Day 6 ↗</a>
   <a class="action secondary" href="experience-world/scenarios/001-mapping-project-intake.md">View source transcript ↗</a>
 </section>
 <section class="panel" aria-label="How lessons get marked complete">
@@ -73,7 +74,7 @@
 <script>
 (function(){
 'use strict';
-var defaultState={completedScenarioIds:['001','002','003','004','005'],questionsConfirmedCompleted:5,questionsPresented:6,preparationTarget:1000,activeScenario:{id:'006',title:'How do we prevent duplicate mapping projects and safely handle repeated Save requests?',status:'in-progress'},currentCareerYear:1};
+var defaultState={completedScenarioIds:['001','002','003','004','005','006'],questionsConfirmedCompleted:6,questionsPresented:7,preparationTarget:1000,activeScenario:{id:'007',title:'Where must validation happen in frontend, Java backend, and MySQL?',status:'in-progress'},currentCareerYear:1};
 var chapters=[
 {id:1,period:'Jun 2018 – May 2019',role:'Internship → Backend',items:[
 {id:'001',title:'Day 1 · Why does the geospatial workflow application exist?',desc:'Business problem, tracking, Java object, validation',file:'experience-world/scenarios/001-day-1-verbatim.txt'},
@@ -81,7 +82,8 @@ var chapters=[
 {id:'003',title:'Day 3 · View Project: HTTP GET → Servlet → JDBC SELECT → JSP',desc:'Look up by ID, map ResultSet, handle missing data',file:'experience-world/scenarios/003-day-3-verbatim.txt'},
 {id:'004',title:'Day 4 · Update Project: JDBC UPDATE one saved record',desc:'Correct a status, validate inputs, handle 0 affected rows',file:'experience-world/scenarios/004-day-4-verbatim.txt'},
 {id:'005',title:'Day 5 · Delete or archive a project safely',desc:'Protect linked QA data; compare hard deletion and soft archive',file:'experience-world/scenarios/005-day-5-verbatim.txt'},
-{id:'006',title:'Day 6 · Prevent duplicate project codes and requests',desc:'Business uniqueness, MySQL UNIQUE, concurrency and retry outcomes'},
+{id:'006',title:'Day 6 · Prevent duplicate project codes and requests',desc:'Business uniqueness, MySQL UNIQUE, concurrency and retry outcomes',file:'experience-world/scenarios/006-day-6-verbatim.txt'},
+{id:'007',title:'Day 7 · Browser, Servlet and MySQL validation',desc:'Layered checks, bypassed forms and reliable field errors'},
 {title:'Build and explain a basic CRUD workflow',desc:'Planned lesson: not yet assigned'},
 {title:'Validate user input and use safe SQL parameters',desc:'Planned lesson: not yet assigned'}]},
 {id:2,period:'Jun 2019 – May 2020',role:'Java Backend Developer',items:[
