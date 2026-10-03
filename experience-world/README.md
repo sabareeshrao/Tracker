@@ -43,4 +43,4 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - [Knowledge state](KNOWLEDGE_STATE.json)
 - [Scenario archive](scenarios/README.md)
 
-**Current status:** Foundation scaffold created. Scenario 001 has not yet been studied or confirmed.
+**Current status:** Scenario 001 explicitly understood and [archived](scenarios/001-mapping-project-intake.md) on 2026-10-02; Scenario 002 in progress. Experience World priority target: **1/1,000 confirmed understood**, **2/1,000 presented**. This is distinct from the root 2,719-question tracker.
