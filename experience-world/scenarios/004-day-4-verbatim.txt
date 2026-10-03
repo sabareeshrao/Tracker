@@ -1,0 +1,299 @@
+# 🐼 Day 4 — Your First Database Update
+
+<text color="secondary" size="sm" weight="medium">5-YEAR JAVA EXPERIENCE WORLD · YEAR 1 · SCENARIO 004</text>
+
+**Today's interview question: How would you update an existing database record using Java, JDBC, and SQL UPDATE?**
+
+**Characters:** 🐯 Mentor — Java developer with five years of practical experience. 🐼 Student — recently graduated from college with no industry experience.
+
+<badge color="secondary">Educational scenario · Internship-era Java application</badge>
+
+---
+
+### 🐯 Step 1 — Your mentor gives you a new task
+
+**Mentor:** Good morning! The operations manager has reported an issue with our project-tracking application.
+
+**Student:** What happened?
+
+**Mentor:** Remember Project 102?
+
+Our database currently contains:
+
+| Project ID | Project Name | Status |
+|---|---|---|
+| 101 | Hyderabad Mapping | CREATED |
+| 102 | Chennai Survey | PROCESSING |
+| 103 | Bengaluru Mapping | COMPLETED |
+
+The manager says:
+
+*"The QA team has confirmed that Chennai Survey is completed, but our application still shows PROCESSING."*
+
+**Student:** So the information is outdated?
+
+**Mentor:** Exactly!
+
+The employee needs to correct the status of Project 102.
+
+```text id="tzwkhk"
+Project 102
+    |
+    | Current status
+    ↓
+ PROCESSING
+    |
+    | Employee corrects status
+    ↓
+ COMPLETED
+```
+
+**Student:** That's easy. Can't we just change the text on the screen?
+
+**Mentor:** Interesting idea!
+
+But imagine the employee changes the displayed status to `COMPLETED` without saving the change in MySQL.
+
+What happens when another employee opens the project?
+
+**Student:** They would still see `PROCESSING`.
+
+**Mentor:** Correct!
+
+The change needs to be saved in our database.
+
+Today we'll learn how to modify an existing record without creating another one.
+
+### 🦊 Step 2 — Try the employee's screen
+
+**Mentor:** Let's first understand what the employee expects.
+
+Imagine the following update screen.
+
+{@body const [status,setStatus]=DIL.useState("PROCESSING")}
+{@body const [project,setProject]=DIL.useState("102")}
+{@body const [stored,setStored]=DIL.useState({101:"CREATED",102:"PROCESSING",103:"COMPLETED"})}
+{@body const [result,setResult]=DIL.useState(null)}
+{@body const choices=[{value:"CREATED",label:"CREATED"},{value:"PROCESSING",label:"PROCESSING"},{value:"COMPLETED",label:"COMPLETED"}]}
+<box border radius="lg" padding={3} gap={3}>
+  <row align="center" justify="between">
+    <text color="secondary" weight="medium" size="xs">PROJECT STATUS CORRECTION · DEMO</text>
+    <icon name="pencil" color="#38bdf8" size="lg"/>
+  </row>
+  <box gap={1}>
+    <label>Project ID</label>
+    <input value={project} onChange={v=>{setProject(v);setResult(null)}} placeholder="102"/>
+  </box>
+  <box gap={1}>
+    <label>New Status</label>
+    <select block pill={false} value={status} options={choices} onChange={v=>{setStatus(v);setResult(null)}}/>
+  </box>
+  <button block onClick={()=>{
+    if(!/^[1-9][0-9]*$/.test(project.trim())){setResult({type:"error",message:"HTTP 400 — Invalid project ID. No data changed."});return;}
+    const id=String(Number(project.trim()));
+    if(!Object.prototype.hasOwnProperty.call(stored,id)){setResult({type:"missing",message:"HTTP 404 — Project does not exist. 0 rows updated."});return;}
+    setStored(prev=>({...prev,[id]:status}));setResult({type:"success",message:`Project ${id} updated. 1 row matched the update.`});
+  }}>Update Project</button>
+  {#if result!==null}
+    <box background="surface-secondary" radius="md" padding={3} gap={2}>
+      <row gap={2} align="center">
+        <icon name={result.type==="success"?"check-circle":"alert-circle"} color={result.type==="success"?"success":"danger"}/>
+        <text size="sm" color={result.type==="success"?"success":"danger"} weight="medium">{result.message}</text>
+      </row>
+      {#if result.type==="success"}
+        <table>
+          <table-row><table-cell>Project ID</table-cell><table-cell>{project}</table-cell></table-row>
+          <table-row><table-cell>Stored status</table-cell><table-cell>**{stored[String(Number(project.trim()))]}**</table-cell></table-row>
+        </table>
+      {/if}
+    </box>
+  {/if}
+  <button size="sm" color="secondary" variant="outline" onClick={()=>{setProject("102");setStatus("PROCESSING");setStored({101:"CREATED",102:"PROCESSING",103:"COMPLETED"});setResult(null)}}>Reset demo</button>
+  <caption>This screen simulates an update in memory. It does not connect to the real GitHub project or MySQL database.</caption>
+</box>
+
+**Student:** I selected Project 102, changed the status to `COMPLETED`, and clicked Update.
+
+**Mentor:** Excellent. Now let's understand how the Java application performs that change.
+
+### 🐨 Step 3 — Why can't we use INSERT again?
+
+**Student:** Yesterday, we used SQL INSERT to save a project. Can't I use INSERT again with the new status?
+
+**Mentor:** Think carefully.
+
+INSERT creates a **new row**.
+
+We already have Project 102.
+
+If we insert another row, we might create a duplicate or receive a primary-key constraint error.
+
+**Student:** Oh! We don't want another project. We want to modify the existing one.
+
+**Mentor:** Exactly!
+
+That's why SQL provides `UPDATE`.
+
+```sql id="qb1mqe"
+UPDATE projects
+SET status = 'COMPLETED'
+WHERE id = 102;
+```
+
+**Student:** What exactly is happening here?
+
+**Mentor:** Let's break it down.
+
+```text id="n9e2cf"
+UPDATE projects
+       ↓
+Choose the projects table
+
+SET status = 'COMPLETED'
+       ↓
+Change the status column
+
+WHERE id = 102
+       ↓
+Only target Project 102
+```
+
+**Student:** So the project name and ID remain unchanged?
+
+**Mentor:** Correct. Our SQL changes only the specified `status` column.
+
+Other columns remain unchanged by this statement, unless the database has additional behavior such as triggers.
+
+---
+
+### 🐯 Step 4 — Your first dangerous database mistake
+
+**Mentor:** Suppose you accidentally write:
+
+```sql id="rzo88o"
+UPDATE projects
+SET status = 'COMPLETED';
+```
+
+Notice anything missing?
+
+**Student:** The `WHERE` condition!
+
+**Mentor:** Exactly. 🐯
+
+Now imagine the result.
+
+<grid columns={2} gap={2}>
+  <grid-item>
+    <box border radius="lg" padding={3} gap={2}>
+      <text size="sm" weight="medium">Before update</text>
+      <table>
+        <table-row><table-cell>101</table-cell><table-cell>CREATED</table-cell></table-row>
+        <table-row><table-cell>102</table-cell><table-cell>PROCESSING</table-cell></table-row>
+        <table-row><table-cell>103</table-cell><table-cell>COMPLETED</table-cell></table-row>
+      </table>
+    </box>
+  </grid-item>
+  <grid-item>
+    <box border={{size:1,color:"#d97777"}} radius="lg" padding={3} gap={2}>
+      <text size="sm" weight="medium">After UPDATE without WHERE</text>
+      <table>
+        <table-row><table-cell>101</table-cell><table-cell><text color="danger">COMPLETED</text></table-cell></table-row>
+        <table-row><table-cell>102</table-cell><table-cell><text color="danger">COMPLETED</text></table-cell></table-row>
+        <table-row><table-cell>103</table-cell><table-cell><text color="danger">COMPLETED</text></table-cell></table-row>
+      </table>
+    </box>
+  </grid-item>
+</grid>
+
+**Student:** Oh! It updates every row in the table!
+
+**Mentor:** Correct. A `WHERE` clause specifies which rows should be updated.
+
+In our application, `id` is assumed to be the table's primary key, so identifying Project 102 targets at most one row.
+
+**Student:** So I must be careful when writing UPDATE statements.
+
+**Mentor:** Absolutely.
+
+This is especially important when you're working with business data.
+
+A database operation may execute successfully while making a change you never intended.
+
+### 🦊 Step 5 — How does the request reach Java?
+
+**Student:** Okay. But how does the employee's screen call our Java code?
+
+**Mentor:** Let's create a small HTML form.
+
+```html id="e3wxnq"
+<form action="/projects/status" method="post">
+
+    <input name="projectId" value="102">
+
+    <select name="newStatus">
+        <option value="PROCESSING">PROCESSING</option>
+        <option value="COMPLETED">COMPLETED</option>
+    </select>
+
+    <button type="submit">Update Project</button>
+
+</form>
+```
+
+**Student:** Wait. We're using POST again?
+
+**Mentor:** Yes.
+
+The employee is submitting a request that changes information on the server.
+
+We shouldn't use a GET request to perform this update.
+
+**Student:** And why is the URL `/projects/status`?
+
+**Mentor:** That's our chosen endpoint for the educational example.
+
+It tells the application that we're submitting a project-status change.
+
+Our Servlet receives:
+
+```text id="we9478"
+POST /projects/status
+
+projectId = 102
+newStatus = COMPLETED
+```
+
+**Student:** So we need another Servlet?
+
+**Mentor:** We can create a `ProjectStatusServlet` to handle this operation.
+
+```java id="jhem7l"
+@WebServlet("/projects/status")
+public class ProjectStatusServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String projectId =
+                request.getParameter("projectId");
+
+        String newStatus =
+                request.getParameter("newStatus");
+    }
+}
+```
+
+**Student:** So now Java receives both values.
+
+**Mentor:** Exactly.
+
+But we shouldn't update the database immediately.
+
+There's another problem we need to solve.
+
+---
+
