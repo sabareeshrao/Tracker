@@ -10,7 +10,9 @@ After GitHub Pages is enabled for this repository: **https://sabareeshrao.github
 
 In the GitHub repository, go to **Settings → Pages → Build and deployment → Deploy from a branch**. Select **main** and **/(root)**, then save. Pages will publish the root `index.html`.
 
-You can also open `index.html` locally in a browser, keeping `data.js` and `app.js` beside it.
+**Standalone/offline use:** Download only [`index.html`](index.html) using GitHub’s **Raw → Download** option. The entire question catalog and application are embedded directly in that file, so opening it with `file://` works without `data.js` or `app.js`. The last known GitHub progress cannot load in offline/file mode, but the browser-based study tracker still runs and saves local progress. Re-download `index.html` whenever the repository version changes.
+
+**If https://sabareeshrao.github.io/Tracker/ shows 404:** The HTML file being committed is not sufficient to activate GitHub Pages. Visit [Settings → Pages](https://github.com/sabareeshrao/Tracker/settings/pages) → Source **Deploy from a branch** → branch **main** → folder **/(root)** → **Save**. Wait for the publishing job, then refresh the link. The GitHub integration available to this assistant cannot change that repository setting.
 
 ## Resume-driven interview batches
 
