@@ -1,0 +1,209 @@
+# 🐼 Day 3 — Your First Project Search Feature
+
+<text color="secondary" size="sm" weight="medium">5-YEAR JAVA EXPERIENCE WORLD · YEAR 1 · SCENARIO 003</text>
+
+**Today's interview question: How would you retrieve an existing record from MySQL using Java Servlets and JDBC, and display it on a web page?**
+
+**Characters:** 🐯 Mentor — a Java developer with five years of experience. 🐼 Student — recently graduated from college, with no industry experience.
+
+<badge color="secondary">Educational scenario based on your internship technologies</badge>
+
+---
+
+### 🐯 Step 1 — Your mentor assigns a new task
+
+**Mentor:** Good morning! Yesterday, you developed a feature that saves a new mapping project into MySQL.
+
+Today, the operations manager has another requirement.
+
+**Student:** What's the requirement?
+
+**Mentor:** Imagine we already have these projects stored in our database.
+
+| Project ID | Project Name | Status |
+|---|---|---|
+| 101 | Hyderabad Mapping | CREATED |
+| 102 | Chennai Survey | PROCESSING |
+| 103 | Bengaluru Mapping | COMPLETED |
+
+The manager asks:
+
+*"I want to enter a project ID and see that project's details."*
+
+**Student:** So we need a search screen?
+
+**Mentor:** Exactly! But this time we're not creating anything.
+
+We need to **retrieve information that already exists**.
+
+Here's what the employee should see.
+
+{@body const [projectId,setProjectId]=DIL.useState("101")}
+{@body const [searchedId,setSearchedId]=DIL.useState(null)}
+{@body const records={"101":{name:"Hyderabad Mapping",status:"CREATED"},"102":{name:"Chennai Survey",status:"PROCESSING"},"103":{name:"Bengaluru Mapping",status:"COMPLETED"}}}
+{@body const normalizedId=searchedId!==null&&/^\d+$/.test(searchedId.trim())?String(Number(searchedId.trim())):null}
+<box border radius="lg" padding={3} gap={3}>
+  <row align="center" justify="between">
+    <text color="secondary" weight="medium" size="xs">PROJECT LOOKUP</text>
+    <icon name="search" color="#38bdf8" size="lg"/>
+  </row>
+  <box gap={1}>
+    <label>Project ID</label>
+    <input value={projectId} onChange={v=>{setProjectId(v);setSearchedId(null)}} placeholder="Enter project ID"/>
+  </box>
+  <button block onClick={()=>setSearchedId(projectId)}>View Project</button>
+  {#if searchedId!==null}
+    {#if normalizedId!==null&&records[normalizedId]}
+      <box background="surface-secondary" radius="md" padding={3} gap={2}>
+        <row align="center" gap={2}>
+          <icon name="check-circle" color="success"/>
+          <text size="sm" weight="medium" color="success">Project found — HTTP 200</text>
+        </row>
+        <divider color="subtle"/>
+        <row align="center" justify="between">
+          <text color="secondary" size="sm">Project ID</text>
+          **{normalizedId}**
+        </row>
+        <row align="center" justify="between">
+          <text color="secondary" size="sm">Project Name</text>
+          **{records[normalizedId].name}**
+        </row>
+        <row align="center" justify="between">
+          <text color="secondary" size="sm">Status</text>
+          **{records[normalizedId].status}**
+        </row>
+      </box>
+    {:else if normalizedId===null||Number(normalizedId)<=0}
+      <row align="center" gap={2}>
+        <icon name="alert-circle" color="danger"/>
+        <text color="danger" size="sm">HTTP 400 — Enter a valid positive project ID.</text>
+      </row>
+    {:else}
+      <row align="center" gap={2}>
+        <icon name="search-x" color="danger"/>
+        <text color="danger" size="sm">HTTP 404 — Project not found.</text>
+      </row>
+    {/if}
+  {/if}
+  <caption>Interactive simulation. Try IDs 101, 102, 103, 999, and abc. No real database is connected.</caption>
+</box>
+
+**Student:** This looks similar to yesterday's screen.
+
+**Mentor:** It looks similar, but there's an important difference.
+
+Yesterday, the employee was sending information **into** the database.
+
+Today, the employee wants information **from** the database.
+
+**Student:** So what changes in our Java application?
+
+**Mentor:** Excellent question! That's exactly what we're going to discover.
+
+### 🦊 Step 2 — Understand GET versus POST
+
+**Mentor:** Remember yesterday's request?
+
+```text id="cfexm1"
+POST /projects
+```
+
+We used POST to submit a new project.
+
+Today, the user only wants to see an existing project.
+
+For that, we can use GET.
+
+```text id="w4v4vg"
+GET /projects?id=101
+```
+
+**Student:** Why does the URL contain `?id=101`?
+
+**Mentor:** Because we need to tell the server which project the employee wants.
+
+Look at the URL:
+
+```text id="05c5hz"
+/projects?id=101
+    ↑      ↑
+    |      |
+    |      └── Project ID = 101
+    |
+    └───────── Resource path
+```
+
+The question mark separates the URL path from its query parameters.
+
+**Student:** So `id=101` tells our Java application to retrieve Project 101?
+
+**Mentor:** Correct!
+
+| Yesterday | Today |
+|---|---|
+| POST | GET |
+| Create a project | Retrieve a project |
+| SQL `INSERT` | SQL `SELECT` |
+| `doPost()` | `doGet()` |
+
+**Student:** Does GET change the database?
+
+**Mentor:** A normal read-only GET request should not change business data. In HTTP design, GET is a safe method.
+
+Our Servlet will retrieve the requested project without modifying it.
+
+Now let's see how Java receives that request.
+
+### 🐨 Step 3 — The request reaches our Servlet
+
+**Mentor:** Suppose the employee requests:
+
+```text id="apv7a4"
+GET /projects?id=101
+```
+
+Our Servlet container routes that request to `ProjectServlet`.
+
+**Student:** But yesterday we used `doPost()`.
+
+**Mentor:** Correct. Today we're handling GET, so we use `doGet()`.
+
+```java id="cb166c"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String id = request.getParameter("id");
+
+    }
+}
+```
+
+**Student:** Wait. We have `request.getParameter()` again?
+
+**Mentor:** Yes! Yesterday we retrieved `projectName` from the submitted form.
+
+Today we're retrieving `id` from the URL query string.
+
+```text id="zy3th3"
+Browser sends:
+GET /projects?id=101
+                ↓
+Servlet reads:
+request.getParameter("id")
+                ↓
+Java receives:
+"101"
+```
+
+**Student:** So now Java knows which project to search for.
+
+**Mentor:** Exactly. 🐯
+
+But there's a small problem.
+
