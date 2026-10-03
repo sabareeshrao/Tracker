@@ -414,3 +414,5 @@ public class ProjectServlet extends HttpServlet {
 
 <caption>Illustrative Servlet code using the classic Servlet API, JDBC and MySQL. Imports and deployment configuration are omitted to focus on the request flow.</caption>
 
+**Student:** I understand most of it. But why do we use `try` with parentheses?
+
