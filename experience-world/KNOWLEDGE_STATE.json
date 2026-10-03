@@ -3,12 +3,14 @@
   "updatedAt": "2026-10-02",
   "track": "five-year-experience-world",
   "publicRepository": true,
-  "status": "initialized",
+  "status": "in-progress",
   "completedScenarioIds": [],
   "activeScenario": {
     "id": "001",
     "title": "A mapping project enters an internal tracking application",
-    "status": "queued"
+    "status": "in-progress",
+    "startedAt": "2026-10-02",
+    "anchorQuestion": "What business problem did your geospatial workflow application solve?"
   },
   "concepts": {},
   "unknowns": [
@@ -18,6 +20,9 @@
   ],
   "latestConfirmedLesson": null,
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Start Scenario 001 in mentor (five-year experienced) vs student (college Java graduate) conversation style; do not mark learned before confirmation.",
-  "syncedToRootTracker": false
+  "nextAction": "Present Day 1 Scenario 001. Await explicit user 'Understood' before saving completed lesson and moving to Scenario 002.",
+  "syncedToRootTracker": false,
+  "questionsPresented": 1,
+  "questionsConfirmedCompleted": 0,
+  "preparationTarget": 1000
 }
