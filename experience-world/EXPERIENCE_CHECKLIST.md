@@ -1,6 +1,7 @@
 # Experience World — Career-Year Checklist
 
 **Source of truth:** [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json)  
+**Mentor's separate teaching queue:** [MENTOR_TEACHING_CHECKLIST.md](MENTOR_TEACHING_CHECKLIST.md) — what has been explained, what must not be repeated, and the next unique interview scenario.  
 **View on the website:** [Experience tracker](../experience.html)  
 **Priority study target:** 1,000 scenario-led interview questions, **1 understood / 1,000**, with 2 introduced as of 2026-10-02.  
 **Current simulated career year:** **Year 1 — June 2018 to May 2019 (internship → backend)**.  
@@ -48,7 +49,7 @@
 
 When the user explicitly confirms **Understood**:
 1. Save that day's entire user-visible assistant response **verbatim, without a rewrite**, in `scenarios/NNN-day-N-verbatim.txt` and update the numbered Markdown scenario archive.
-2. Update `KNOWLEDGE_STATE.json` and then tick exactly that scenario here.
+2. Update `KNOWLEDGE_STATE.json`, tick exactly that scenario here, and update `MENTOR_TEACHING_CHECKLIST.md` with the completed concept, anti-repeat notes, and next unique question.
 3. Update the current simulated career-year label **only when the curriculum reaches another year**.
 4. Never silently tick the independent root `QUESTION_CHECKLIST.md`.
 5. Do not publish secrets or confidential business data to this public repo.
