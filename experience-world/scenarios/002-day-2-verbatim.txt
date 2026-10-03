@@ -416,3 +416,34 @@ public class ProjectServlet extends HttpServlet {
 
 **Student:** I understand most of it. But why do we use `try` with parentheses?
 
+**Mentor:** That's Java's **try-with-resources**.
+
+The JDBC connection and prepared statement are automatically closed after use, including when an exception happens.
+
+We'll examine database resource management in greater depth when we reach that scenario.
+
+**Student:** And what does `sendRedirect()` do?
+
+**Mentor:** It tells the browser to navigate to another page after the save succeeds.
+
+Notice the important difference: saving the project happens on the server; displaying the success page happens in the browser.
+
+---
+
+### 🦁 Step 7 — Your first production-style failure
+
+**Mentor:** Now imagine the employee clicks Save, but the MySQL database is unavailable.
+
+What happens?
+
+**Student:** The JDBC operation will fail.
+
+**Mentor:** Correct.
+
+```text id="aozntt"
+Browser        → SUCCESS: Request submitted
+Servlet        → SUCCESS: Request received
+Validation     → SUCCESS: Project name valid
+Database       → FAILED: Connection unavailable
+```
+
