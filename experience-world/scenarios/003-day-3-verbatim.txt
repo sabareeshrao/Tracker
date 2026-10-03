@@ -207,3 +207,267 @@ Java receives:
 
 But there's a small problem.
 
+### 🐯 Step 4 — The project ID is a String
+
+**Mentor:** Look carefully at this line.
+
+```java id="rth5jz"
+String id = request.getParameter("id");
+```
+
+What is the data type?
+
+**Student:** `String`.
+
+**Mentor:** Correct.
+
+But suppose our MySQL project ID column is an integer.
+
+We need to convert the received text into an integer.
+
+```java id="8i8b6n"
+int projectId = Integer.parseInt(id);
+```
+
+**Student:** That's easy!
+
+**Mentor:** What if someone enters this URL?
+
+```text id="fbwyjm"
+/projects?id=abc
+```
+
+**Student:** `Integer.parseInt("abc")` will throw a `NumberFormatException`.
+
+**Mentor:** Exactly.
+
+So let's handle that before querying the database.
+
+```java id="34zemp"
+String rawId = request.getParameter("id");
+
+int projectId;
+
+try {
+    projectId = Integer.parseInt(rawId);
+
+    if (projectId <= 0) {
+        response.sendError(400, "Invalid project ID");
+        return;
+    }
+
+} catch (NumberFormatException ex) {
+
+    response.sendError(400, "Invalid project ID");
+    return;
+}
+```
+
+**Student:** Why do we use `return`?
+
+**Mentor:** Because we must stop processing an invalid request.
+
+There's no reason to ask MySQL to search for a project using an invalid ID.
+
+```text id="qf2s5b"
+GET /projects?id=abc
+           ↓
+     Java Servlet
+           ↓
+   Convert ID to int
+           ↓
+        FAILED
+           ↓
+ Return HTTP 400
+           ↓
+   No SQL executed
+```
+
+**Student:** I understand. But what if the ID is a valid number and the project doesn't exist?
+
+**Mentor:** Excellent! We'll handle that shortly.
+
+First, let's learn how to retrieve a record from MySQL.
+
+---
+
+### 🦊 Step 5 — Our first SQL SELECT
+
+**Student:** We used SQL INSERT yesterday. What should we use today?
+
+**Mentor:** `SELECT`.
+
+Imagine our MySQL table contains:
+
+```text id="u96irv"
+projects
+------------------------------------
+id    name                 status
+------------------------------------
+101   Hyderabad Mapping    CREATED
+102   Chennai Survey       PROCESSING
+103   Bengaluru Mapping    COMPLETED
+```
+
+We need Project 101.
+
+We can write:
+
+```sql id="38u1l7"
+SELECT id, name, status
+FROM projects
+WHERE id = 101;
+```
+
+**Student:** So `WHERE id = 101` filters the records?
+
+**Mentor:** Correct!
+
+Without `WHERE`, the query could return all projects.
+
+With `WHERE`, we're asking for the record matching the supplied ID.
+
+**Student:** How do we execute this SQL from Java?
+
+**Mentor:** Using JDBC, which you already learned yesterday.
+
+And we'll use a `PreparedStatement` again.
+
+```java id="0lhph0"
+String sql =
+    "SELECT id, name, status FROM projects WHERE id = ?";
+
+PreparedStatement statement =
+    connection.prepareStatement(sql);
+
+statement.setInt(1, projectId);
+```
+
+**Student:** We used `setString()` yesterday. Why are we using `setInt()` today?
+
+**Mentor:** Because the project ID is an integer.
+
+The prepared statement should bind the value using the appropriate SQL-compatible data type.
+
+**Student:** Okay. How do we execute SELECT?
+
+**Mentor:** Yesterday, you used:
+
+```java id="vww329"
+statement.executeUpdate();
+```
+
+That was appropriate for our INSERT.
+
+Today, we use:
+
+```java id="soynsd"
+ResultSet resultSet = statement.executeQuery();
+```
+
+**Student:** What's a ResultSet?
+
+**Mentor:** Excellent. Now we've reached today's most important new concept.
+
+### 🐼 Step 6 — Understanding ResultSet
+
+**Mentor:** Imagine MySQL executes the SELECT and returns this result:
+
+```text id="96qi78"
+id    name                status
+-----------------------------------
+101   Hyderabad Mapping   CREATED
+```
+
+Java needs a way to read the returned columns.
+
+JDBC provides a `ResultSet` for that.
+
+**Student:** So ResultSet contains the result of the SQL query?
+
+**Mentor:** Exactly.
+
+But here's something important.
+
+When a new ResultSet is created, its cursor starts **before the first row**.
+
+You call `next()` to move to the next available row.
+
+```java id="e8svjm"
+if (resultSet.next()) {
+
+    int id = resultSet.getInt("id");
+
+    String name = resultSet.getString("name");
+
+    String status = resultSet.getString("status");
+}
+```
+
+**Student:** What does `resultSet.next()` return?
+
+**Mentor:** It returns `true` if it moves to a valid row.
+
+If there are no more rows, it returns `false`.
+
+<box border radius="lg" padding={3} gap={2}>
+  <text weight="medium" size="sm">Try moving a ResultSet cursor</text>
+  {@body const [cursor,setCursor]=DIL.useState(-1)}
+  {@body const rows=[{id:101,name:"Hyderabad Mapping",status:"CREATED"},{id:102,name:"Chennai Survey",status:"PROCESSING"}]}
+  <box background="surface-secondary" radius="md" padding={2} gap={1}>
+    <row justify="between" align="center">
+      <text color="secondary" size="xs">CURSOR POSITION</text>
+      <text size="xs" color="#38bdf8" weight="medium">{cursor<0?"Before first row":cursor>=rows.length?"After last row":`Row ${cursor+1}`}</text>
+    </row>
+    {#each rows as r,i}
+      <box key={r.id} background={cursor===i?"rgba(56,189,248,0.14)":"surface"} border={{size:1,color:cursor===i?"#38bdf8":"subtle"}} radius="md" padding={2}>
+        <row align="center" justify="between">
+          <box flex={1} gap="2px">
+            <text size="sm" weight="medium">{r.id} — {r.name}</text>
+            <text size="xs" color="secondary">{r.status}</text>
+          </box>
+          {#if cursor===i}
+            <icon name="arrow-left" color="#38bdf8"/>
+          {/if}
+        </row>
+      </box>
+    {/each}
+    {#if cursor>=rows.length}
+      <text size="sm" color="secondary">No additional row. `next()` returns false.</text>
+    {/if}
+  </box>
+  <row gap={2}>
+    <box flex={1}>
+      <button block onClick={()=>setCursor(v=>Math.min(v+1,rows.length))} disabled={cursor>=rows.length}>Call next()</button>
+    </box>
+    <button color="secondary" variant="outline" onClick={()=>setCursor(-1)}>Reset</button>
+  </row>
+  <caption>This demonstration uses two sample rows to illustrate cursor movement. Our actual project lookup query is expected to return at most one row when ID is unique.</caption>
+</box>
+
+**Student:** Oh! So `next()` helps Java read the returned rows one by one.
+
+**Mentor:** Correct. 🐨
+
+And once we retrieve the columns, we can create a Java object using those values.
+
+```java id="1setr1"
+Project project = new Project(
+    resultSet.getInt("id"),
+    resultSet.getString("name"),
+    resultSet.getString("status")
+);
+```
+
+**Student:** So SQL data becomes a Java object?
+
+**Mentor:** Exactly!
+
+We read the database record and represent it using our Java `Project` class.
+
+**Student:** But what if no row is returned?
+
+**Mentor:** That's our next problem.
+
+---
+
