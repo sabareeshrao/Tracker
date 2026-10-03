@@ -150,6 +150,7 @@ function matchingTopics(s){
  const note=s.toLowerCase().trim();if(note.length<4)return[];
  const scores=[];
  topics.forEach(t=>{
+ if(t.id.startsWith('source-')&&!note.includes(t.name.toLowerCase().split(' · set ')[0]))return;
  let score=0;const match=note.match(t.regex);if(match)score+=4+Math.min(4,match[0].length/8);
  const literal=t.name.toLowerCase().replace(/[&,]/g,' ').replace(/\s+/g,' ').trim();
  if(literal.length>6&&note.includes(literal))score+=5;
