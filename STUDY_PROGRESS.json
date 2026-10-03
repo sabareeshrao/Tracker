@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-02",
+  "source": "GitHub study updates issued by ChatGPT in response to user messages",
+  "progress": {
+    "version": 1,
+    "concepts": {},
+    "questions": {},
+    "notes": []
+  },
+  "activeBatch": 1,
+  "batches": [
+    {
+      "number": 1,
+      "status": "in-progress",
+      "issuedAt": "2026-10-02",
+      "questionIds": [
+        2537,
+        1596,
+        1928,
+        1531,
+        347
+      ],
+      "completed": []
+    }
+  ],
+  "completedCount": 0
+}
