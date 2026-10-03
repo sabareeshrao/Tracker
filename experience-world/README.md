@@ -47,7 +47,7 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - [Experience checklist (Markdown)](EXPERIENCE_CHECKLIST.md) — career-year and scenario-by-scenario status.
 - [Live Experience World page](../experience.html) — high-contrast sky-blue tracker linked from the main dashboard sidebar.
 - [Day 1 exact original conversation](scenarios/001-day-1-verbatim.txt) — original source text, not an edited summary.
-- **Current teaching year: Year 1 (June 2018–May 2019), internship → backend.** Days 1–3 understood (self-reported); Day 4 in progress; Experience World count 3/1,000.
+- **Current teaching year: Year 1 (June 2018–May 2019), internship → backend.** Days 1–4 understood (self-reported); Day 5 in progress; Experience World count 4/1,000.
 - Save future completed Day conversations **verbatim**, including original wording, code, diagrams and source formatting. Preserve chat-specific UI components as literal source; GitHub Markdown cannot execute them.
 - Keep completion metadata, question/year labels, and source-of-truth notes in separate files; never insert a rewritten synopsis in place of the original lesson.
 
@@ -56,4 +56,4 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - [Knowledge state](KNOWLEDGE_STATE.json)
 - [Scenario archive](scenarios/README.md)
 
-**Current status:** Scenarios 001–003 understood and archived verbatim: [Day 1](scenarios/001-day-1-verbatim.txt), [Day 2](scenarios/002-day-2-verbatim.txt), [Day 3](scenarios/003-day-3-verbatim.txt). Scenario 004 in progress. Priority target: **3/1,000 confirmed understood**, **4/1,000 presented**; separate from root interview bank. This is distinct from the root 2,719-question tracker.
+**Current status:** Scenarios 001–004 understood and archived verbatim: [Day 1](scenarios/001-day-1-verbatim.txt), [Day 2](scenarios/002-day-2-verbatim.txt), [Day 3](scenarios/003-day-3-verbatim.txt), [Day 4](scenarios/004-day-4-verbatim.txt). Scenario 005 in progress. Priority target: **4/1,000 confirmed understood**, **5/1,000 presented**; separate from root interview bank. This is distinct from the root 2,719-question tracker.
