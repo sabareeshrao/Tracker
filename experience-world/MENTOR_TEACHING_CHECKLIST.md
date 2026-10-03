@@ -4,22 +4,22 @@
 
 **Last reviewed:** 2026-10-03  
 **Current simulated year:** **Year 1 — June 2018–May 2019 (Internship → Backend)**  
-**Experience World questions:** **5 / 1,000 explicitly understood**; **6 / 1,000 introduced**  
-**One active lesson:** **Scenario 006 / Day 6 / Q006 — Duplicate project codes and repeated Save requests**  
+**Experience World questions:** **6 / 1,000 explicitly understood**; **7 / 1,000 introduced**  
+**One active lesson:** **Scenario 007 / Day 7 / Q007 — Validate project data in browser, Java and MySQL**  
 **Root 2,719-question interview bank:** Independent; do not tick anything there based merely on understanding an Experience World scenario.
 
 ## 1. Mentor's quick-resume card (READ FIRST)
 
 | Check | Recorded state | Mentor action |
 |---|---|---|
-| **Last confirmed scenario** | **005 / Day 5 / Q005** | Do not reteach Q001–Q005 as new lessons |
+| **Last confirmed scenario** | **006 / Day 6 / Q006** | Do not reteach Q001–Q006 as new lessons |
 | **Day 1 question** | What business problem did a geospatial workflow application solve? | Build on this, only reference in 1–2 sentences when necessary |
 | **Day 1 learned themes** | Centralized GIS/QA/operations status; application purpose; basic Project class; in-memory Java objects versus database persistence; frontend → backend → database overview; required-name validation | Assume these were **self-reported understood**, not performance-tested |
 | **Evidence and wording** | User explicitly said **"I understood"**; full original [Day 1 transcript](scenarios/001-day-1-verbatim.txt) is archived | Don't recreate/rewrite or replace it |
-| **Current unfinished scenario** | **006 / Day 6 / Q006** | Prevent duplicates through business identity, database constraints and retry handling |
+| **Current unfinished scenario** | **007 / Day 7 / Q007** | New challenge: coordinated validation across user form, Servlet and MySQL |
 | **Day 2 material already introduced** | The **complete rewritten Day 2** was explicitly understood and [archived without rewriting](scenarios/002-day-2-verbatim.txt): HTML POST, doPost, request parameters, validation/400, JDBC prepared INSERT, resource closing, redirect and database-failure case | **Never re-teach as a new question.** Only briefly refer back to contrast GET versus POST or SELECT versus INSERT |
 | **Day 3 understood content** | [Verbatim Q003](scenarios/003-day-3-verbatim.txt): GET, doGet, validated id, PreparedStatement SELECT, ResultSet mapping, JSP forwarding/output escaping, 400 and 404 | User explicitly understood; build only on it when teaching UPDATE |
-| **Next after completing Day 6** | **007 / Day 7 / Q007: Where should deeper frontend/backend input validation occur?** | Teach new validation tradeoffs after confirmed duplicate handling |
+| **Next after completing Day 7** | **008 / Day 8 / Q008: Operational reporting via SQL filters, joins and aggregation** | Teach after Day 7 user confirmation |
 
 ## 2. What I must not teach as if new (anti-loop memory)
 
@@ -30,7 +30,8 @@
 - [x] **Q003 — GET /projects?id=101 → doGet → SELECT → ResultSet → JSP.** **UNDERSTOOD (self-reported, 2026-10-02).** Original [Day 3 transcript](scenarios/003-day-3-verbatim.txt) archived. Do not repeat as a new question.
 - [x] **Q004 — Change an existing project status using parameterized UPDATE.** **UNDERSTOOD (self-reported 2026-10-03).** [Verbatim Day 4 source](scenarios/004-day-4-verbatim.txt): WHERE clause, allowlisted status, executeUpdate row count, missing record, safe redirect, DB failure. Do not repeat as a new question.
 - [x] **Q005 — Decide DELETE vs soft archive for a project.** **UNDERSTOOD (self-reported 2026-10-03).** [Original Day 5 dialogue](scenarios/005-day-5-verbatim.txt) covers foreign key RESTRICT/CASCADE, soft archive flag, active/historical filtering, permissions and HTTP error distinctions. Do not reteach as a new question.
-- [ ] **Q006 — Duplicate project codes and repeated Save requests.** **IN PROGRESS, not understood.** New teaching: database ID versus projectCode, UNIQUE constraint, checking before insert vs concurrent race, specific duplicate-key error handling, HTTP 409, retries/idempotency introduction.
+- [x] **Q006 — Duplicate project codes and repeated Save requests.** **UNDERSTOOD (self-reported 2026-10-03).** [Verbatim Day 6 archive](scenarios/006-day-6-verbatim.txt): surrogate ID vs business code, concurrent race, UNIQUE DB constraint, 1062 conflict and retry/idempotency intro. Do not reteach as new material.
+- [ ] **Q007 — Validation at UI, Java backend and MySQL layers.** **IN PROGRESS.** New task: corrupted mapping intake field values, bypassed browser checks, reliable server rules, DB CHECK/NOT NULL constraints, field-specific error responses; no duplicate of basic Day 1 required-name or Day 6 UNIQUE explanations.
 
 **Crucial:** checked items above mean *teaching material that need not be repeated*, not production proficiency. Revisit an item **only when the user requests review, demonstrates a missing prerequisite, or needs a clearly different production/implementation depth.** Label the revisit as a deliberate follow-up, not a brand-new question.
 
@@ -43,8 +44,8 @@
 | Q003 / S003 | Year 1 | Employee opens an existing project: how does **Read Project** work? | GET, doGet, query parameter, SELECT, ResultSet, response/JSP rendering | **✅ UNDERSTOOD** |
 | Q004 / S004 | Year 1 | Employee edits a project: how is an **Update** different from Create? | UPDATE, affected row count, missing ID, input validation | **✅ UNDERSTOOD** |
 | Q005 / S005 | Year 1 | Employee removes or archives a project: how do we design **Delete** safely? | DELETE vs soft-delete decision, authorization idea, foreign keys | **✅ UNDERSTOOD** |
-| Q006 / S006 | Year 1 | Two requests use the same project ID: what happens to **duplicates**? | unique key, detecting collisions, SQL constraints, meaningful error response | **🟠 IN PROGRESS** |
-| Q007 / S007 | Year 1 | A form includes missing/invalid fields: where should **validation** run? | frontend vs backend validation, error messages, consistency; builds on Q001 | ☐ QUEUED |
+| Q006 / S006 | Year 1 | Two requests use the same project ID: what happens to **duplicates**? | unique key, detecting collisions, SQL constraints, meaningful error response | **✅ UNDERSTOOD** |
+| Q007 / S007 | Year 1 | A form includes missing/invalid fields: where should **validation** run? | frontend vs backend validation, error messages, consistency; builds on Q001 | **🟠 IN PROGRESS** |
 | Q008 / S008 | Year 1 | A manager needs a simple project report: how do **SQL filters, joins and aggregates** help? | SELECT/JOIN/GROUP BY, Excel export only if useful | ☐ QUEUED |
 | Q009 / S009 | Year 1 | A SQL operation fails halfway: how do local **transactions and rollback** work? | JDBC transaction boundaries, commit/rollback, error path | ☐ QUEUED |
 | Q010 / S010 | Year 1 | A basic app becomes harder to maintain: why separate **Controller/Service/DAO** responsibilities? | separation of concerns, same domain, refactor not duplicate intro | ☐ QUEUED |
@@ -69,9 +70,11 @@
 
 ## 5. Single-sentence next instruction (update this after each confirmation)
 
-**NOW: Teach Q006 / Day 6 / Year 1 as NEW business case: an Excel intake contains the same project code twice, and/or two employees submit it simultaneously. Distinguish database primary key (generated ID) from unique business project code; show duplicate request, unsafe check-then-insert race, database UNIQUE constraint as final guardrail, parameterized INSERT and MySQL duplicate-key condition, HTTP 409, and a network timeout after insert (retry uncertainty; introduce idempotency, reserve deep implementation). Include a new interactive example, mentor–student discovery, short illustrative Java code, interview answer, one-line memory chain, understanding test. Do not count Q006 complete until explicit Understood; Q007 deeper validation next. Do not reteach Day 1–5.**
+**NOW: Teach Q007 / Day 7 / Year 1. Operations imports project data from a web form and external Excel/CSV where project codes, due dates and geospatial CRS identifiers can be invalid. Explain three distinct responsibilities: browser fast user feedback; Servlet authoritative business/semantic validation; MySQL NOT NULL, length/CHECK and FOREIGN KEY constraints as last defense. Show a direct request bypassing HTML validation, structured field-specific 400 messages, domain-specific due date/CRS rule and one useful servlet example, then test understanding. Never confuse database integrity enforcement with authorization. No retelling Day 1 basic blank names or Q006 duplicate-code prevention beyond brief continuity. Await Understood before marking Q007; Q008 reports next.**
 
 ## 6. Change record
+
+- **2026-10-03:** Q006 explicitly understood and complete original Day 6 archived; Q007 validation layers opened as next unique question. 6 understood, 7 presented, Year 1 unchanged. Independent root question bank unaffected.
 
 - **2026-10-03:** Day 5 explicitly understood and archived verbatim; Day 6/Q006 duplicates and retries now active. Five understood and six introduced, Year 1 remains current. Root question bank unchanged.
 
