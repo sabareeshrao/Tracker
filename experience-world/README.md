@@ -15,12 +15,14 @@ A scenario-by-scenario mentor–student learning track, separate from the existi
 5. This repository is PUBLIC: avoid secrets, identifiable colleague/client details, confidential data, and sensitive notes.
 
 ## Teaching protocol
+
+**Required FIRST read for every lesson:** [Mentor-only anti-repeat checklist](MENTOR_TEACHING_CHECKLIST.md) → [canonical knowledge state](KNOWLEDGE_STATE.json) → [student career checklist](EXPERIENCE_CHECKLIST.md) → last relevant verbatim lesson. Never pick a lesson from memory alone; obey the single active question, and use new scenario IDs only for new material.
 1. Pick one business scenario and one anchor interview question. Prioritize prerequisites before implementation.
 2. Write an easy conversational exchange: Mentor (five years experienced) ↔ Student (college Java graduate). Start at ground zero, discuss why, follow the request/data flow, show minimal accurate Java code if useful, include one failure case, and end with an interview-ready summary and one-line memory chain.
 3. At the end, ask for the student's understanding or a practical explanation. **Do not mark complete until the user explicitly says "understood", or otherwise confirms completion.**
-4. On confirmation, write the reviewed lesson to `scenarios/` and update `KNOWLEDGE_STATE.json` **in that same user-requested chat turn**. Preserve question, dialogue knowledge, key implementation points, misconceptions, verified-vs-illustrative evidence, and suggested next prerequisite.
+4. On confirmation, preserve the **complete unmodified original lesson** in `scenarios/`, then update `KNOWLEDGE_STATE.json`, `MENTOR_TEACHING_CHECKLIST.md`, the student `EXPERIENCE_CHECKLIST.md` and relevant world roadmap **in the same user-requested chat turn**. Keep the lesson text verbatim; progress metadata and follow-ups belong in the separate tracker files.
 5. `understood` means **self-reported comprehension only**. It does not mean hands-on practice, verified expertise, interview-readiness, or completion of an independently assigned roadmap question.
-6. At the start of a new chat, read `KNOWLEDGE_STATE.json`, `WORLD_MAP.md` and most recent scenario files before choosing the next lesson. Do not depend on chat context alone.
+6. At the start of a new chat, read `MENTOR_TEACHING_CHECKLIST.md` first, then `KNOWLEDGE_STATE.json`, `EXPERIENCE_CHECKLIST.md`, `WORLD_MAP.md` and recent scenario files before choosing the next lesson. Do not depend on chat context alone.
 7. Keep this track **separate** from root-level `STUDY_PROGRESS.json`, `CURRENT_BATCH.md`, `BATCH_HISTORY.md`, and `QUESTION_CHECKLIST.md`. Only update those existing files when the user explicitly confirms the corresponding specific roadmap question or requests synchronization.
 8. If GitHub writes fail, report that immediately; never claim a lesson or progress has been saved without a successful write.
 
@@ -39,6 +41,8 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - Prefer clarity over covering many topics in one lesson. Maintain technical correctness: a local `@Transactional` does not automatically span two independent databases and Kafka; an outbox guarantees atomic local write plus event intent, not instantaneous global atomicity.
 
 ## Verbatim archive and career-year checklist
+
+- [Mentor-only teaching checklist](MENTOR_TEACHING_CHECKLIST.md) — explicit anti-repeat record, unfinished material, unique lesson IDs and next teaching action. The student-facing checklist and this mentor checklist have different purposes.
 
 - [Experience checklist (Markdown)](EXPERIENCE_CHECKLIST.md) — career-year and scenario-by-scenario status.
 - [Live Experience World page](../experience.html) — high-contrast sky-blue tracker linked from the main dashboard sidebar.
