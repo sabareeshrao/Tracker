@@ -471,3 +471,191 @@ We read the database record and represent it using our Java `Project` class.
 
 ---
 
+### 🦁 Step 7 — What happens when a project doesn't exist?
+
+**Mentor:** Suppose the employee enters Project ID `999`.
+
+Our database only has Projects 101, 102, and 103.
+
+What happens when Java executes the SELECT?
+
+**Student:** MySQL doesn't find a matching record.
+
+**Mentor:** Correct.
+
+And this check returns false:
+
+```java id="pogj2y"
+if (!resultSet.next()) {
+
+    response.sendError(
+        404,
+        "Project not found"
+    );
+
+    return;
+}
+```
+
+**Student:** Why HTTP 404?
+
+**Mentor:** Because the requested project resource wasn't found.
+
+Compare these cases.
+
+| Request | Meaning | Response |
+|---|---|---|
+| `/projects?id=101` | Valid ID, existing project | 200 OK |
+| `/projects?id=999` | Valid ID, project absent | 404 Not Found |
+| `/projects?id=abc` | Invalid ID format | 400 Bad Request |
+
+**Student:** So `400` and `404` mean different things.
+
+**Mentor:** Exactly.
+
+A malformed request is different from a valid request for something that doesn't exist.
+
+There's also a third failure worth understanding: if MySQL is unavailable, that's a server-side failure, not proof that the project doesn't exist. We shouldn't incorrectly return 404 in that situation.
+
+---
+
+### 🐯 Step 8 — Connect the complete Java code
+
+**Student:** Can you show me how all of this fits inside one Servlet?
+
+**Mentor:** Absolutely. We'll add a GET handler to our existing conceptual `ProjectServlet`.
+
+Assume the JDBC driver is configured, the database has a `projects` table, and the `Project` class has a constructor and getters.
+
+```java id="6mq11n"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String rawId = request.getParameter("id");
+
+        int projectId;
+
+        try {
+            projectId = Integer.parseInt(rawId);
+
+            if (projectId <= 0) {
+                response.sendError(400, "Invalid project ID");
+                return;
+            }
+
+        } catch (NumberFormatException ex) {
+            response.sendError(400, "Invalid project ID");
+            return;
+        }
+
+        String sql =
+            "SELECT id, name, status FROM projects WHERE id = ?";
+
+        Project project;
+
+        try (
+            Connection connection = DriverManager.getConnection(
+                System.getenv("DB_URL"),
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASSWORD")
+            );
+
+            PreparedStatement statement =
+                connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, projectId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                if (!resultSet.next()) {
+                    response.sendError(404, "Project not found");
+                    return;
+                }
+
+                project = new Project(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("status")
+                );
+            }
+
+        } catch (SQLException ex) {
+
+            throw new ServletException(
+                "Unable to retrieve project", ex
+            );
+        }
+
+        request.setAttribute("project", project);
+
+        request.getRequestDispatcher(
+            "/WEB-INF/views/project-details.jsp"
+        ).forward(request, response);
+    }
+}
+```
+
+<caption>Illustrative Servlet code. Imports and deployment configuration are omitted. The `Project` model, JDBC setup, and JSP view are assumed to exist; this is not a verified company implementation.</caption>
+
+**Student:** There is one new line near the bottom.
+
+```java id="uz7hnj"
+request.setAttribute("project", project);
+```
+
+What does that do?
+
+**Mentor:** Excellent observation.
+
+We've retrieved the project from MySQL, but the employee still needs to see it on the webpage.
+
+`setAttribute()` places our Java object in the request so the JSP can access it.
+
+**Student:** What is the next line doing?
+
+```java id="6joa0m"
+request.getRequestDispatcher(
+    "/WEB-INF/views/project-details.jsp"
+).forward(request, response);
+```
+
+**Mentor:** It forwards the request internally to our JSP view.
+
+The JSP can then display the project information.
+
+For example, with a configured legacy JSTL library:
+
+```jsp id="c05f35"
+<%@ taglib prefix="c"
+    uri="http://java.sun.com/jsp/jstl/core" %>
+
+<h1>
+    <c:out value="${project.name}" />
+</h1>
+
+<p>
+    Status: <c:out value="${project.status}" />
+</p>
+```
+
+**Student:** What's `c:out`?
+
+**Mentor:** It displays a value with HTML escaping by default.
+
+That's important because data stored in a database might contain user-provided text. We shouldn't insert that text directly into HTML without appropriate escaping.
+
+**Student:** So the Servlet retrieves the data and the JSP displays it?
+
+**Mentor:** Exactly.
+
+Notice how we separated two responsibilities: retrieving project data and presenting it to the employee.
+
+---
+
