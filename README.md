@@ -18,6 +18,7 @@ In the GitHub repository, go to **Settings → Pages → Build and deployment �
 
 - **[Resume experience reference](docs/RESUME_EXPERIENCE.md)** — the user's exact stated responsibilities, roles and results (user-reported; not externally verified).
 - **[Current five-question batch](CURRENT_BATCH.md)** — the five assigned questions, reasons for choosing them, and their original roadmap references.
+- **[Permanent batch history](BATCH_HISTORY.md)** — an append-only record of Batch 001, Batch 002, Batch 003 and every later five-question assignment, including their completion checkboxes.
 - **[Permanent completion checklist](QUESTION_CHECKLIST.md)** — the 2,719 distinct question IDs; only mark a question checked after the user reports finishing it.
 - **[GitHub study progress](STUDY_PROGRESS.json)** — concept milestones, individual question stages and the active batch. The static page **reads** this file when refreshed; the assistant updates it when the user submits study notes or confirms completing questions in chat.
 
@@ -54,6 +55,7 @@ If you want the assistant to use your progress later, provide the exported JSON 
 |---|---|
 | `index.html` | GitHub Pages-ready responsive interface |
 | `CURRENT_BATCH.md` | Active five-question interview assignment |
+| `BATCH_HISTORY.md` | Cumulative, ordered history of every five-question batch |
 | `STUDY_PROGRESS.json` | GitHub-side question and concept milestones read by the website |
 | `docs/RESUME_EXPERIENCE.md` | User-provided career reference |
 | `QUESTION_CHECKLIST.md` | Permanent per-question completion checkboxes |
