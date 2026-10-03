@@ -52,7 +52,7 @@
     "archiveType": "verbatim original assistant response; chat-specific components are source-only on GitHub"
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Continue Day 2 Scenario 002 for current simulated Year 1 (2018–2019). Only when the user confirms Understood, preserve the full Day 2 response verbatim, tick the Experience checklist, and advance progress; root question checklist stays separate.",
+  "nextAction": "Continue Year 1 Q002 already introduced. Teach the new concrete HTTP POST → Servlet doPost → request parameters → JDBC PreparedStatement INSERT → MySQL and one failure path; do not repeat Q001. After user confirms, archive Day 2 verbatim and update mentor checklist, knowledge state, student checklist and roadmap.",
   "syncedToRootTracker": false,
   "questionsPresented": 2,
   "questionsConfirmedCompleted": 1,
@@ -62,5 +62,11 @@
   "currentCareerRole": "Java Software Development Intern → Java Backend Developer",
   "experienceChecklistPath": "experience-world/EXPERIENCE_CHECKLIST.md",
   "experienceWebPagePath": "experience.html",
-  "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving."
+  "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving.",
+  "mentorTeachingChecklistPath": "experience-world/MENTOR_TEACHING_CHECKLIST.md",
+  "nextQuestionId": "Q002",
+  "lastConfirmedQuestionId": "Q001",
+  "nextPlannedQuestionIdAfterActive": "Q003",
+  "avoidRepeatingConfirmedConcepts": true,
+  "mentorResumeProtocol": "Before each new lesson, read MENTOR_TEACHING_CHECKLIST.md, this state JSON, student's EXPERIENCE_CHECKLIST.md, and relevant verbatim archive; continue active Q002 without recapping Q001. Only advance when student explicitly confirms understood. Keep checklist, JSON and archive synchronized."
 }
