@@ -29,13 +29,13 @@
 </div>
 <div class="stat-grid" aria-label="Experience progress summary">
   <div class="stat"><div class="label">Current career year</div><strong class="sky" id="yearValue">Year 1</strong><small id="yearRole">2018–2019 · Internship → Backend</small></div>
-  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">1 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
-  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">2 / 1,000</strong><small>Current question is not completed</small></div>
-  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 2</strong><small id="currentLesson">Save Project — form to database</small></div>
+  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">2 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
+  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">3 / 1,000</strong><small>Current question is not completed</small></div>
+  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 3</strong><small id="currentLesson">View Project — GET to MySQL</small></div>
 </div>
 <section class="panel" aria-label="Overall Experience World progress">
   <div class="head-row"><div><div class="eyebrow">Experience World</div><h2>1,000-question learning journey</h2></div><span class="tag done" id="githubStatus">Loading saved state…</span></div>
-  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="1" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
+  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="2" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
   <p class="footnote" id="progressCaption">The checkbox is ticked after you tell the mentor “Understood” and the GitHub file is updated. Your separate 2,719-question bank is not altered.</p>
 </section>
 <section aria-labelledby="yearsTitle">
@@ -69,7 +69,7 @@
 <script>
 (function(){
 'use strict';
-var defaultState={completedScenarioIds:['001'],questionsConfirmedCompleted:1,questionsPresented:2,preparationTarget:1000,activeScenario:{id:'002',title:'How does Save Project travel from HTML/JSP to Servlet, JDBC and MySQL?',status:'in-progress'},currentCareerYear:1};
+var defaultState={completedScenarioIds:['001','002'],questionsConfirmedCompleted:2,questionsPresented:3,preparationTarget:1000,activeScenario:{id:'003',title:'How does an employee retrieve an existing project using HTTP GET, Servlet, JDBC, and MySQL?',status:'in-progress'},currentCareerYear:1};
 var chapters=[
 {id:1,period:'Jun 2018 – May 2019',role:'Internship → Backend',items:[
 {id:'001',title:'Day 1 · Why does the geospatial workflow application exist?',desc:'Business problem, tracking, Java object, validation',file:'experience-world/scenarios/001-day-1-verbatim.txt'},
