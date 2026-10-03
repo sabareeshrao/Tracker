@@ -75,7 +75,7 @@ const rawTopics = [
  ['GIS & system design','architecture','System design & architecture','\\b(system design|architecture|high.level design|low.level design|design a |scale a )\\b'],
  ['AI & emerging','llm','LLMs & prompting','\\b(llm|large language model|prompt|tokens?|context window|generative ai)\\b'],
  ['AI & emerging','rag','RAG & embeddings','\\b(rag|retrieval.augmented|embedding|vector database|semantic search|vector search)\\b'],
- ['AI & emerging','spring-ai','Spring AI & agents','\\b(spring ai|ai agents?|agentic|tool calling|function calling)\\b']
+ ['AI & emerging','spring-ai','Spring AI & agents','\\b(spring ai|ai agents?|agentic|tool calling|function calling)\\b'],
  ["Java fundamentals","immutability","Immutability & immutable classes","\\b(immutab|immutable|defensive cop|unmodifiable)\\b"],
  ["Java fundamentals","enum","Enums","\\b(enums?|enumeration)\\b"],
  ["Java fundamentals","java-versions","Java 8, 11, 17 & 21 features","\\b(java\\s*(?:8|11|17|21)|record class|sealed class|virtual thread|switch expression|text block)\\b"],
