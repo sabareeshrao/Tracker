@@ -50,7 +50,11 @@ If you want the assistant to use your progress later, provide the exported JSON 
 
 | File | Purpose |
 |---|---|
-| `index.html` | GitHub Pages-ready responsive interface |\n| `CURRENT_BATCH.md` | Active five-question interview assignment |\n| `STUDY_PROGRESS.json` | GitHub-side question and concept milestones read by the website |\n| `docs/RESUME_EXPERIENCE.md` | User-provided career reference |\n| `QUESTION_CHECKLIST.md` | Permanent per-question completion checkboxes |
+| `index.html` | GitHub Pages-ready responsive interface |
+| `CURRENT_BATCH.md` | Active five-question interview assignment |
+| `STUDY_PROGRESS.json` | GitHub-side question and concept milestones read by the website |
+| `docs/RESUME_EXPERIENCE.md` | User-provided career reference |
+| `QUESTION_CHECKLIST.md` | Permanent per-question completion checkboxes |
 | `app.js` | Study journal, topic matching, milestone logic, question tracking and backup |
 | `data.js` | Generated all-question catalog with source references |
 | `docs/questions/roadmap/ALL_SETS_001_390.md` | Unmodified original question roadmap |
