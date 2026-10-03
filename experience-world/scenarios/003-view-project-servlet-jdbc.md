@@ -1,0 +1,805 @@
+# 🐼 Day 3 — Your First Project Search Feature
+
+<text color="secondary" size="sm" weight="medium">5-YEAR JAVA EXPERIENCE WORLD · YEAR 1 · SCENARIO 003</text>
+
+**Today's interview question: How would you retrieve an existing record from MySQL using Java Servlets and JDBC, and display it on a web page?**
+
+**Characters:** 🐯 Mentor — a Java developer with five years of experience. 🐼 Student — recently graduated from college, with no industry experience.
+
+<badge color="secondary">Educational scenario based on your internship technologies</badge>
+
+---
+
+### 🐯 Step 1 — Your mentor assigns a new task
+
+**Mentor:** Good morning! Yesterday, you developed a feature that saves a new mapping project into MySQL.
+
+Today, the operations manager has another requirement.
+
+**Student:** What's the requirement?
+
+**Mentor:** Imagine we already have these projects stored in our database.
+
+| Project ID | Project Name | Status |
+|---|---|---|
+| 101 | Hyderabad Mapping | CREATED |
+| 102 | Chennai Survey | PROCESSING |
+| 103 | Bengaluru Mapping | COMPLETED |
+
+The manager asks:
+
+*"I want to enter a project ID and see that project's details."*
+
+**Student:** So we need a search screen?
+
+**Mentor:** Exactly! But this time we're not creating anything.
+
+We need to **retrieve information that already exists**.
+
+Here's what the employee should see.
+
+{@body const [projectId,setProjectId]=DIL.useState("101")}
+{@body const [searchedId,setSearchedId]=DIL.useState(null)}
+{@body const records={"101":{name:"Hyderabad Mapping",status:"CREATED"},"102":{name:"Chennai Survey",status:"PROCESSING"},"103":{name:"Bengaluru Mapping",status:"COMPLETED"}}}
+{@body const normalizedId=searchedId!==null&&/^\d+$/.test(searchedId.trim())?String(Number(searchedId.trim())):null}
+<box border radius="lg" padding={3} gap={3}>
+  <row align="center" justify="between">
+    <text color="secondary" weight="medium" size="xs">PROJECT LOOKUP</text>
+    <icon name="search" color="#38bdf8" size="lg"/>
+  </row>
+  <box gap={1}>
+    <label>Project ID</label>
+    <input value={projectId} onChange={v=>{setProjectId(v);setSearchedId(null)}} placeholder="Enter project ID"/>
+  </box>
+  <button block onClick={()=>setSearchedId(projectId)}>View Project</button>
+  {#if searchedId!==null}
+    {#if normalizedId!==null&&records[normalizedId]}
+      <box background="surface-secondary" radius="md" padding={3} gap={2}>
+        <row align="center" gap={2}>
+          <icon name="check-circle" color="success"/>
+          <text size="sm" weight="medium" color="success">Project found — HTTP 200</text>
+        </row>
+        <divider color="subtle"/>
+        <row align="center" justify="between">
+          <text color="secondary" size="sm">Project ID</text>
+          **{normalizedId}**
+        </row>
+        <row align="center" justify="between">
+          <text color="secondary" size="sm">Project Name</text>
+          **{records[normalizedId].name}**
+        </row>
+        <row align="center" justify="between">
+          <text color="secondary" size="sm">Status</text>
+          **{records[normalizedId].status}**
+        </row>
+      </box>
+    {:else if normalizedId===null||Number(normalizedId)<=0}
+      <row align="center" gap={2}>
+        <icon name="alert-circle" color="danger"/>
+        <text color="danger" size="sm">HTTP 400 — Enter a valid positive project ID.</text>
+      </row>
+    {:else}
+      <row align="center" gap={2}>
+        <icon name="search-x" color="danger"/>
+        <text color="danger" size="sm">HTTP 404 — Project not found.</text>
+      </row>
+    {/if}
+  {/if}
+  <caption>Interactive simulation. Try IDs 101, 102, 103, 999, and abc. No real database is connected.</caption>
+</box>
+
+**Student:** This looks similar to yesterday's screen.
+
+**Mentor:** It looks similar, but there's an important difference.
+
+Yesterday, the employee was sending information **into** the database.
+
+Today, the employee wants information **from** the database.
+
+**Student:** So what changes in our Java application?
+
+**Mentor:** Excellent question! That's exactly what we're going to discover.
+
+### 🦊 Step 2 — Understand GET versus POST
+
+**Mentor:** Remember yesterday's request?
+
+```text id="cfexm1"
+POST /projects
+```
+
+We used POST to submit a new project.
+
+Today, the user only wants to see an existing project.
+
+For that, we can use GET.
+
+```text id="w4v4vg"
+GET /projects?id=101
+```
+
+**Student:** Why does the URL contain `?id=101`?
+
+**Mentor:** Because we need to tell the server which project the employee wants.
+
+Look at the URL:
+
+```text id="05c5hz"
+/projects?id=101
+    ↑      ↑
+    |      |
+    |      └── Project ID = 101
+    |
+    └───────── Resource path
+```
+
+The question mark separates the URL path from its query parameters.
+
+**Student:** So `id=101` tells our Java application to retrieve Project 101?
+
+**Mentor:** Correct!
+
+| Yesterday | Today |
+|---|---|
+| POST | GET |
+| Create a project | Retrieve a project |
+| SQL `INSERT` | SQL `SELECT` |
+| `doPost()` | `doGet()` |
+
+**Student:** Does GET change the database?
+
+**Mentor:** A normal read-only GET request should not change business data. In HTTP design, GET is a safe method.
+
+Our Servlet will retrieve the requested project without modifying it.
+
+Now let's see how Java receives that request.
+
+### 🐨 Step 3 — The request reaches our Servlet
+
+**Mentor:** Suppose the employee requests:
+
+```text id="apv7a4"
+GET /projects?id=101
+```
+
+Our Servlet container routes that request to `ProjectServlet`.
+
+**Student:** But yesterday we used `doPost()`.
+
+**Mentor:** Correct. Today we're handling GET, so we use `doGet()`.
+
+```java id="cb166c"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String id = request.getParameter("id");
+
+    }
+}
+```
+
+**Student:** Wait. We have `request.getParameter()` again?
+
+**Mentor:** Yes! Yesterday we retrieved `projectName` from the submitted form.
+
+Today we're retrieving `id` from the URL query string.
+
+```text id="zy3th3"
+Browser sends:
+GET /projects?id=101
+                ↓
+Servlet reads:
+request.getParameter("id")
+                ↓
+Java receives:
+"101"
+```
+
+**Student:** So now Java knows which project to search for.
+
+**Mentor:** Exactly. 🐯
+
+But there's a small problem.
+
+### 🐯 Step 4 — The project ID is a String
+
+**Mentor:** Look carefully at this line.
+
+```java id="rth5jz"
+String id = request.getParameter("id");
+```
+
+What is the data type?
+
+**Student:** `String`.
+
+**Mentor:** Correct.
+
+But suppose our MySQL project ID column is an integer.
+
+We need to convert the received text into an integer.
+
+```java id="8i8b6n"
+int projectId = Integer.parseInt(id);
+```
+
+**Student:** That's easy!
+
+**Mentor:** What if someone enters this URL?
+
+```text id="fbwyjm"
+/projects?id=abc
+```
+
+**Student:** `Integer.parseInt("abc")` will throw a `NumberFormatException`.
+
+**Mentor:** Exactly.
+
+So let's handle that before querying the database.
+
+```java id="34zemp"
+String rawId = request.getParameter("id");
+
+int projectId;
+
+try {
+    projectId = Integer.parseInt(rawId);
+
+    if (projectId <= 0) {
+        response.sendError(400, "Invalid project ID");
+        return;
+    }
+
+} catch (NumberFormatException ex) {
+
+    response.sendError(400, "Invalid project ID");
+    return;
+}
+```
+
+**Student:** Why do we use `return`?
+
+**Mentor:** Because we must stop processing an invalid request.
+
+There's no reason to ask MySQL to search for a project using an invalid ID.
+
+```text id="qf2s5b"
+GET /projects?id=abc
+           ↓
+     Java Servlet
+           ↓
+   Convert ID to int
+           ↓
+        FAILED
+           ↓
+ Return HTTP 400
+           ↓
+   No SQL executed
+```
+
+**Student:** I understand. But what if the ID is a valid number and the project doesn't exist?
+
+**Mentor:** Excellent! We'll handle that shortly.
+
+First, let's learn how to retrieve a record from MySQL.
+
+---
+
+### 🦊 Step 5 — Our first SQL SELECT
+
+**Student:** We used SQL INSERT yesterday. What should we use today?
+
+**Mentor:** `SELECT`.
+
+Imagine our MySQL table contains:
+
+```text id="u96irv"
+projects
+------------------------------------
+id    name                 status
+------------------------------------
+101   Hyderabad Mapping    CREATED
+102   Chennai Survey       PROCESSING
+103   Bengaluru Mapping    COMPLETED
+```
+
+We need Project 101.
+
+We can write:
+
+```sql id="38u1l7"
+SELECT id, name, status
+FROM projects
+WHERE id = 101;
+```
+
+**Student:** So `WHERE id = 101` filters the records?
+
+**Mentor:** Correct!
+
+Without `WHERE`, the query could return all projects.
+
+With `WHERE`, we're asking for the record matching the supplied ID.
+
+**Student:** How do we execute this SQL from Java?
+
+**Mentor:** Using JDBC, which you already learned yesterday.
+
+And we'll use a `PreparedStatement` again.
+
+```java id="0lhph0"
+String sql =
+    "SELECT id, name, status FROM projects WHERE id = ?";
+
+PreparedStatement statement =
+    connection.prepareStatement(sql);
+
+statement.setInt(1, projectId);
+```
+
+**Student:** We used `setString()` yesterday. Why are we using `setInt()` today?
+
+**Mentor:** Because the project ID is an integer.
+
+The prepared statement should bind the value using the appropriate SQL-compatible data type.
+
+**Student:** Okay. How do we execute SELECT?
+
+**Mentor:** Yesterday, you used:
+
+```java id="vww329"
+statement.executeUpdate();
+```
+
+That was appropriate for our INSERT.
+
+Today, we use:
+
+```java id="soynsd"
+ResultSet resultSet = statement.executeQuery();
+```
+
+**Student:** What's a ResultSet?
+
+**Mentor:** Excellent. Now we've reached today's most important new concept.
+
+### 🐼 Step 6 — Understanding ResultSet
+
+**Mentor:** Imagine MySQL executes the SELECT and returns this result:
+
+```text id="96qi78"
+id    name                status
+-----------------------------------
+101   Hyderabad Mapping   CREATED
+```
+
+Java needs a way to read the returned columns.
+
+JDBC provides a `ResultSet` for that.
+
+**Student:** So ResultSet contains the result of the SQL query?
+
+**Mentor:** Exactly.
+
+But here's something important.
+
+When a new ResultSet is created, its cursor starts **before the first row**.
+
+You call `next()` to move to the next available row.
+
+```java id="e8svjm"
+if (resultSet.next()) {
+
+    int id = resultSet.getInt("id");
+
+    String name = resultSet.getString("name");
+
+    String status = resultSet.getString("status");
+}
+```
+
+**Student:** What does `resultSet.next()` return?
+
+**Mentor:** It returns `true` if it moves to a valid row.
+
+If there are no more rows, it returns `false`.
+
+<box border radius="lg" padding={3} gap={2}>
+  <text weight="medium" size="sm">Try moving a ResultSet cursor</text>
+  {@body const [cursor,setCursor]=DIL.useState(-1)}
+  {@body const rows=[{id:101,name:"Hyderabad Mapping",status:"CREATED"},{id:102,name:"Chennai Survey",status:"PROCESSING"}]}
+  <box background="surface-secondary" radius="md" padding={2} gap={1}>
+    <row justify="between" align="center">
+      <text color="secondary" size="xs">CURSOR POSITION</text>
+      <text size="xs" color="#38bdf8" weight="medium">{cursor<0?"Before first row":cursor>=rows.length?"After last row":`Row ${cursor+1}`}</text>
+    </row>
+    {#each rows as r,i}
+      <box key={r.id} background={cursor===i?"rgba(56,189,248,0.14)":"surface"} border={{size:1,color:cursor===i?"#38bdf8":"subtle"}} radius="md" padding={2}>
+        <row align="center" justify="between">
+          <box flex={1} gap="2px">
+            <text size="sm" weight="medium">{r.id} — {r.name}</text>
+            <text size="xs" color="secondary">{r.status}</text>
+          </box>
+          {#if cursor===i}
+            <icon name="arrow-left" color="#38bdf8"/>
+          {/if}
+        </row>
+      </box>
+    {/each}
+    {#if cursor>=rows.length}
+      <text size="sm" color="secondary">No additional row. `next()` returns false.</text>
+    {/if}
+  </box>
+  <row gap={2}>
+    <box flex={1}>
+      <button block onClick={()=>setCursor(v=>Math.min(v+1,rows.length))} disabled={cursor>=rows.length}>Call next()</button>
+    </box>
+    <button color="secondary" variant="outline" onClick={()=>setCursor(-1)}>Reset</button>
+  </row>
+  <caption>This demonstration uses two sample rows to illustrate cursor movement. Our actual project lookup query is expected to return at most one row when ID is unique.</caption>
+</box>
+
+**Student:** Oh! So `next()` helps Java read the returned rows one by one.
+
+**Mentor:** Correct. 🐨
+
+And once we retrieve the columns, we can create a Java object using those values.
+
+```java id="1setr1"
+Project project = new Project(
+    resultSet.getInt("id"),
+    resultSet.getString("name"),
+    resultSet.getString("status")
+);
+```
+
+**Student:** So SQL data becomes a Java object?
+
+**Mentor:** Exactly!
+
+We read the database record and represent it using our Java `Project` class.
+
+**Student:** But what if no row is returned?
+
+**Mentor:** That's our next problem.
+
+---
+
+### 🦁 Step 7 — What happens when a project doesn't exist?
+
+**Mentor:** Suppose the employee enters Project ID `999`.
+
+Our database only has Projects 101, 102, and 103.
+
+What happens when Java executes the SELECT?
+
+**Student:** MySQL doesn't find a matching record.
+
+**Mentor:** Correct.
+
+And this check returns false:
+
+```java id="pogj2y"
+if (!resultSet.next()) {
+
+    response.sendError(
+        404,
+        "Project not found"
+    );
+
+    return;
+}
+```
+
+**Student:** Why HTTP 404?
+
+**Mentor:** Because the requested project resource wasn't found.
+
+Compare these cases.
+
+| Request | Meaning | Response |
+|---|---|---|
+| `/projects?id=101` | Valid ID, existing project | 200 OK |
+| `/projects?id=999` | Valid ID, project absent | 404 Not Found |
+| `/projects?id=abc` | Invalid ID format | 400 Bad Request |
+
+**Student:** So `400` and `404` mean different things.
+
+**Mentor:** Exactly.
+
+A malformed request is different from a valid request for something that doesn't exist.
+
+There's also a third failure worth understanding: if MySQL is unavailable, that's a server-side failure, not proof that the project doesn't exist. We shouldn't incorrectly return 404 in that situation.
+
+---
+
+### 🐯 Step 8 — Connect the complete Java code
+
+**Student:** Can you show me how all of this fits inside one Servlet?
+
+**Mentor:** Absolutely. We'll add a GET handler to our existing conceptual `ProjectServlet`.
+
+Assume the JDBC driver is configured, the database has a `projects` table, and the `Project` class has a constructor and getters.
+
+```java id="6mq11n"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String rawId = request.getParameter("id");
+
+        int projectId;
+
+        try {
+            projectId = Integer.parseInt(rawId);
+
+            if (projectId <= 0) {
+                response.sendError(400, "Invalid project ID");
+                return;
+            }
+
+        } catch (NumberFormatException ex) {
+            response.sendError(400, "Invalid project ID");
+            return;
+        }
+
+        String sql =
+            "SELECT id, name, status FROM projects WHERE id = ?";
+
+        Project project;
+
+        try (
+            Connection connection = DriverManager.getConnection(
+                System.getenv("DB_URL"),
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASSWORD")
+            );
+
+            PreparedStatement statement =
+                connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, projectId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                if (!resultSet.next()) {
+                    response.sendError(404, "Project not found");
+                    return;
+                }
+
+                project = new Project(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("status")
+                );
+            }
+
+        } catch (SQLException ex) {
+
+            throw new ServletException(
+                "Unable to retrieve project", ex
+            );
+        }
+
+        request.setAttribute("project", project);
+
+        request.getRequestDispatcher(
+            "/WEB-INF/views/project-details.jsp"
+        ).forward(request, response);
+    }
+}
+```
+
+<caption>Illustrative Servlet code. Imports and deployment configuration are omitted. The `Project` model, JDBC setup, and JSP view are assumed to exist; this is not a verified company implementation.</caption>
+
+**Student:** There is one new line near the bottom.
+
+```java id="uz7hnj"
+request.setAttribute("project", project);
+```
+
+What does that do?
+
+**Mentor:** Excellent observation.
+
+We've retrieved the project from MySQL, but the employee still needs to see it on the webpage.
+
+`setAttribute()` places our Java object in the request so the JSP can access it.
+
+**Student:** What is the next line doing?
+
+```java id="6joa0m"
+request.getRequestDispatcher(
+    "/WEB-INF/views/project-details.jsp"
+).forward(request, response);
+```
+
+**Mentor:** It forwards the request internally to our JSP view.
+
+The JSP can then display the project information.
+
+For example, with a configured legacy JSTL library:
+
+```jsp id="c05f35"
+<%@ taglib prefix="c"
+    uri="http://java.sun.com/jsp/jstl/core" %>
+
+<h1>
+    <c:out value="${project.name}" />
+</h1>
+
+<p>
+    Status: <c:out value="${project.status}" />
+</p>
+```
+
+**Student:** What's `c:out`?
+
+**Mentor:** It displays a value with HTML escaping by default.
+
+That's important because data stored in a database might contain user-provided text. We shouldn't insert that text directly into HTML without appropriate escaping.
+
+**Student:** So the Servlet retrieves the data and the JSP displays it?
+
+**Mentor:** Exactly.
+
+Notice how we separated two responsibilities: retrieving project data and presenting it to the employee.
+
+---
+
+### 🐨 Step 9 — Understand the complete request flow
+
+**Mentor:** Now picture the entire process.
+
+<box border radius="lg" padding={3} gap={1} align="center">
+  {#each [{name:"1. Operations employee",desc:"Clicks View Project 101",ic:"user-round"},{name:"2. Browser",desc:"Sends GET /projects?id=101",ic:"monitor"},{name:"3. ProjectServlet",desc:"doGet() reads and validates the ID",ic:"code-2"},{name:"4. JDBC",desc:"Executes a parameterized SELECT",ic:"database"},{name:"5. MySQL",desc:"Returns the matching record",ic:"hard-drive"},{name:"6. ResultSet",desc:"Java reads the returned columns",ic:"rows-3"},{name:"7. Project object",desc:"Holds the retrieved values",ic:"box"},{name:"8. JSP",desc:"Displays safely escaped project details",ic:"file-code-2"},{name:"9. Employee",desc:"Sees the requested project",ic:"check-circle"}] as step,i}
+    <box background="surface-secondary" radius="md" width="100%" padding={3}>
+      <row align="center" gap={3}>
+        <icon name={step.ic} color="#38bdf8" size="lg"/>
+        <box flex={1} gap="2px">
+          **{step.name}**
+          <text size="sm" color="secondary">{step.desc}</text>
+        </box>
+      </row>
+    </box>
+    {#if i<8}
+      <icon name="arrow-down" color="secondary"/>
+    {/if}
+  {/each}
+</box>
+
+**Student:** I think I understand. Yesterday we saved a project, and today we're retrieving it.
+
+**Mentor:** Correct.
+
+But tell me, why did we create a `Project` object after reading the database?
+
+**Student:** Because Java code works with objects, so we use the returned database columns to construct a project object.
+
+**Mentor:** Exactly.
+
+And why do we forward it to JSP?
+
+**Student:** Because the employee needs to see the information in the browser.
+
+**Mentor:** Perfect. 🐯
+
+You've now connected HTML, HTTP, Java Servlets, JDBC, MySQL, Java objects, and JSP through one real-world business requirement.
+
+### 🦊 Step 10 — Connect this with your internship
+
+**Student:** Does this match the Java work described in my resume?
+
+**Mentor:** Your reported internship experience includes Java, JDBC, Servlets/JSP, MySQL, project record management, search screens, filtering, and operational reporting.
+
+This scenario helps you understand the mechanics behind that category of work.
+
+However, our Project 101 example and the exact code above are educational. They don't establish which query, Servlet, or JSP file existed at your employer.
+
+As we connect more lessons to actual source code or implementation details you confirm, we'll distinguish your real contributions from our practice examples.
+
+---
+
+## 🎯 Today's interview-ready answer
+
+**Student:** What should I say if an interviewer asks, "How did you retrieve database records using Servlets and JDBC?"
+
+**Mentor:** You can explain the general technical process like this:
+
+<WritingBlock id="83512" variant="standard">In a traditional Java web application, we can retrieve records from a relational database using Java Servlets and JDBC.
+
+When a user requests an existing record, the browser sends an HTTP GET request with the required identifier.
+
+The Servlet handles that request through its doGet() method and retrieves the identifier using HttpServletRequest.
+
+After validating the identifier, JDBC executes a parameterized SQL SELECT query using PreparedStatement.
+
+The returned database records are read through a ResultSet. We can then map the column values into Java objects.
+
+If the requested record does not exist, the application can return HTTP 404. If the request contains invalid input, it can return HTTP 400.
+
+When the record is found, the Servlet can pass the Java object to a JSP using request attributes and RequestDispatcher.
+
+The JSP then displays the retrieved information to the user, with proper output escaping.
+
+This separates database retrieval from presentation and allows the application to handle missing records and database failures appropriately.</WritingBlock>
+
+### 🧠 One-line memory trick
+
+**Browser → HTTP GET → Servlet `doGet()` → JDBC `SELECT` → ResultSet → Java Object → JSP → Browser**
+
+---
+
+## 📘 Day 3 — Test your understanding
+
+**🐯 Mentor:** Before we move to updating records tomorrow, I want you to explain today's task in your own words.
+
+Imagine I review your code and ask these three questions.
+
+{@body const quiz=["Yesterday we used doPost() and INSERT. Why are we using doGet() and SELECT today?","We execute SELECT using JDBC. What does ResultSet.next() do, and how do we read the project's name?","An employee requests Project 999, which does not exist. What should the Servlet do, and why?"]}
+{@body const [responses,setResponses]=DIL.useState(["","",""])}
+<box border radius="lg" padding={3} gap={3}>
+  {#each quiz as q,i}
+    <box key={i} gap={2}>
+      <row align="start" gap={2}>
+        <box background="surface-secondary" radius="md" size="28px" align="center" justify="center">
+          <text size="sm" weight="medium">{i+1}</text>
+        </box>
+        <box flex={1}>
+          <text size="sm" weight="medium">{q}</text>
+        </box>
+      </row>
+      <textarea rows={3} placeholder="Explain in your own words..." value={responses[i]} onChange={v=>setResponses(prev=>prev.map((a,j)=>i===j?v:a))}/>
+    </box>
+  {/each}
+  <button block disabled={!responses.every(v=>v.trim())} onClick={()=>GenUI.issueNewTurn("Day 3 Scenario 003 — Please review my understanding-test answers:\n\n"+quiz.map((q,i)=>`${i+1}. ${q}\nMy answer: ${responses[i]}`).join("\n\n")+"\nExplain any mistakes in our simple mentor–student style. Do not mark Day 3 completed until I explicitly say Understood.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+</box>
+
+## 📊 Your Experience World progress
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" justify="between">
+    **Current career year**
+    <text color="#38bdf8" weight="medium">Year 1 · 2018–2019</text>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 1 — Business understanding</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 2 — Save Project</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 3 — View Project</text>
+    <badge>Awaiting understanding</badge>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions introduced</text>
+    **3 / 1,000**
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions confirmed understood</text>
+    **2 / 1,000**
+  </row>
+</box>
+
+**🐯 Mentor:** That's your third day. You've now learned how a Java application can save a new project and retrieve an existing project.
+
+Our next challenge will be different: an employee notices that a project's status is incorrect and wants to change it. We'll discover why we need SQL `UPDATE`, how to identify the correct record, and what happens when an update fails.
+
+For now, Day 3 remains in progress. When you say **"Understood,"** I'll save this complete lesson to GitHub and update both our checklists before proceeding to Question 004.
