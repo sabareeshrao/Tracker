@@ -447,3 +447,25 @@ Validation     → SUCCESS: Project name valid
 Database       → FAILED: Connection unavailable
 ```
 
+**Student:** Then should we display "Project saved successfully"?
+
+**Mentor:** Absolutely not.
+
+We must not tell the user the project was saved when the database operation failed.
+
+In our example, the SQL exception is wrapped in a `ServletException`, which the server handles as a failure. A production application would also log the problem appropriately and return a safe, user-friendly error response.
+
+**Student:** What if the user clicks Save again?
+
+**Mentor:** Excellent question.
+
+We need to understand whether retrying might create duplicate projects, and what makes a project unique.
+
+That's a separate design problem we'll cover later.
+
+The important lesson today is:
+
+**A successful HTTP request does not automatically mean the database operation succeeded.**
+
+---
+
