@@ -29,13 +29,13 @@
 </div>
 <div class="stat-grid" aria-label="Experience progress summary">
   <div class="stat"><div class="label">Current career year</div><strong class="sky" id="yearValue">Year 1</strong><small id="yearRole">2018–2019 · Internship → Backend</small></div>
-  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">3 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
-  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">4 / 1,000</strong><small>Current question is not completed</small></div>
-  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 4</strong><small id="currentLesson">Update Project — SQL UPDATE</small></div>
+  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">4 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
+  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">5 / 1,000</strong><small>Current question is not completed</small></div>
+  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 5</strong><small id="currentLesson">Delete or archive project</small></div>
 </div>
 <section class="panel" aria-label="Overall Experience World progress">
   <div class="head-row"><div><div class="eyebrow">Experience World</div><h2>1,000-question learning journey</h2></div><span class="tag done" id="githubStatus">Loading saved state…</span></div>
-  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="3" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
+  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="4" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
   <p class="footnote" id="progressCaption">The checkbox is ticked after you tell the mentor “Understood” and the GitHub file is updated. Your separate 2,719-question bank is not altered.</p>
 </section>
 <section aria-labelledby="yearsTitle">
@@ -53,6 +53,7 @@
   <a class="action" href="experience-world/scenarios/001-day-1-verbatim.txt">Read exact Day 1 ↗</a>
   <a class="action" href="experience-world/scenarios/002-day-2-verbatim.txt">Read exact Day 2 ↗</a>
   <a class="action" href="experience-world/scenarios/003-day-3-verbatim.txt">Read exact Day 3 ↗</a>
+  <a class="action" href="experience-world/scenarios/004-day-4-verbatim.txt">Read exact Day 4 ↗</a>
   <a class="action secondary" href="experience-world/scenarios/001-mapping-project-intake.md">View source transcript ↗</a>
 </section>
 <section class="panel" aria-label="How lessons get marked complete">
@@ -71,13 +72,14 @@
 <script>
 (function(){
 'use strict';
-var defaultState={completedScenarioIds:['001','002','003'],questionsConfirmedCompleted:3,questionsPresented:4,preparationTarget:1000,activeScenario:{id:'004',title:'Update an existing project status using SQL UPDATE',status:'in-progress'},currentCareerYear:1};
+var defaultState={completedScenarioIds:['001','002','003','004'],questionsConfirmedCompleted:4,questionsPresented:5,preparationTarget:1000,activeScenario:{id:'005',title:'Should a project be deleted or archived when a user no longer needs it?',status:'in-progress'},currentCareerYear:1};
 var chapters=[
 {id:1,period:'Jun 2018 – May 2019',role:'Internship → Backend',items:[
 {id:'001',title:'Day 1 · Why does the geospatial workflow application exist?',desc:'Business problem, tracking, Java object, validation',file:'experience-world/scenarios/001-day-1-verbatim.txt'},
 {id:'002',title:'Day 2 · Click Save Project: HTML/JSP → Servlet → JDBC → MySQL',desc:'HTTP request, server processing and database persistence',file:'experience-world/scenarios/002-day-2-verbatim.txt'},
 {id:'003',title:'Day 3 · View Project: HTTP GET → Servlet → JDBC SELECT → JSP',desc:'Look up by ID, map ResultSet, handle missing data',file:'experience-world/scenarios/003-day-3-verbatim.txt'},
-{id:'004',title:'Day 4 · Update Project: JDBC UPDATE one saved record',desc:'Correct a status, validate inputs, handle 0 affected rows'},
+{id:'004',title:'Day 4 · Update Project: JDBC UPDATE one saved record',desc:'Correct a status, validate inputs, handle 0 affected rows',file:'experience-world/scenarios/004-day-4-verbatim.txt'},
+{id:'005',title:'Day 5 · Delete or archive a project safely',desc:'Protect linked QA data; compare hard deletion and soft archive'},
 {title:'Build and explain a basic CRUD workflow',desc:'Planned lesson: not yet assigned'},
 {title:'Validate user input and use safe SQL parameters',desc:'Planned lesson: not yet assigned'}]},
 {id:2,period:'Jun 2019 – May 2020',role:'Java Backend Developer',items:[
