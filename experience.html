@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080e15">
+<meta name="description" content="Experience World: five-year Java career learning checklist with exact lesson archives and GitHub-synced progress.">
+<title>Experience World | TRACE Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#080e15;--surface:#111d2b;--surface2:#13283c;--border:#34516a;--muted:#aac5d9;--text:#f3fbff;--sky:#72d8ff;--sky2:#91e5ff;--quiet:#81a5bf}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(ellipse at 72% -12%,#154365 0,transparent 53%),var(--bg);font-size:15px;line-height:1.5}a{color:var(--sky2)}a:hover{color:#fff}button{font:inherit}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--sky);outline-offset:3px}.wrap{max-width:1210px;margin:auto;padding:26px 24px 80px}.bar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:0 0 26px;border-bottom:1px solid var(--border);flex-wrap:wrap}.brand{font-weight:850;letter-spacing:3px;text-decoration:none;color:var(--text);font-size:19px}.brand span{color:var(--sky)}.bar nav{display:flex;flex-wrap:wrap;gap:9px}.pill-link{border:1px solid var(--border);border-radius:10px;color:#e2f6ff;text-decoration:none;padding:9px 13px;background:#132538;min-height:42px;display:inline-flex;align-items:center;gap:6px}.pill-link:hover{border-color:var(--sky);background:#19415a}.pill-link.selected{background:#16405b;border-color:#72d8ff;color:#fff}.eyebrow{color:var(--sky);font-size:12px;letter-spacing:2.1px;font-weight:800;text-transform:uppercase}.hero{padding:39px 0 22px}.hero h1{font-size:clamp(30px,4.1vw,56px);line-height:1.09;letter-spacing:-1.8px;max-width:900px;margin:9px 0 16px}.hero p{max-width:780px;color:#c5d8e7;margin:0;font-size:16px}.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:24px 0}.stat{border-radius:17px;border:1px solid var(--border);background:linear-gradient(145deg,#13263a,#101b2a);padding:21px 19px;min-height:138px}.stat .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.3px;font-weight:750}.stat strong{font-size:27px;line-height:1.35;display:block;margin:9px 0 5px;font-weight:800;letter-spacing:-.6px}.stat small{color:#b6cfdf;font-size:12px;display:block}.stat .sky{color:var(--sky)}.panel{background:linear-gradient(154deg,#132538,#0d1a29);border:1px solid var(--border);border-radius:19px;padding:23px;margin:17px 0}.head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}.panel h2{font-size:22px;letter-spacing:-.6px;line-height:1.25;margin:7px 0 8px}.panel p{color:#bdcedd;margin:0 0 16px}.tag{border-radius:99px;background:#123d58;border:1px solid #4088b1;color:#bcecff;font-size:12px;font-weight:750;padding:6px 11px;white-space:nowrap}.tag.done{background:#133f50;color:#a3f0ff;border-color:#3f98ac}.tag.now{background:#1a395b;color:#d4edff;border-color:#569bd4}.tag.soon{background:#1b2a37;color:#b1c9da;border-color:#3a5062}.bartrack{height:10px;border-radius:50px;background:#203448;overflow:hidden;margin-top:18px}.barfill{height:100%;background:linear-gradient(90deg,#3db8ee,#8be8ff);min-width:4px;border-radius:inherit;width:.1%}.footnote{color:var(--muted);font-size:12px;margin:13px 0 0}.years{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0}.yearbox{border:1px solid #38536b;background:#0d1d2d;border-radius:14px;padding:14px 12px;min-height:112px;display:flex;flex-direction:column;justify-content:space-between;gap:7px;color:#dceefb;text-decoration:none}.yearbox.current{background:linear-gradient(150deg,#184b6b,#10304b);border-color:var(--sky);box-shadow:0 0 0 1px #72d8ff33}.yearbox b{font-size:19px}.yearbox span{font-size:12px;color:#b0cddd}.yearbox small{font-size:11px;font-weight:750;color:var(--sky2);letter-spacing:.4px}.yearbox:not(.current) small{color:#809eb4}.yearbox:hover{border-color:var(--sky)}.stage{border:1px solid var(--border);background:#101f30;border-radius:15px;margin:12px 0;overflow:hidden;scroll-margin-top:18px}.stage[open]{border-color:#4a7694}.stage summary{list-style:none;display:flex;align-items:center;gap:12px;padding:18px 18px;cursor:pointer}.stage summary::-webkit-details-marker{display:none}.stage summary:after{content:"⌄";color:var(--sky2);font-size:22px;margin-left:auto}.stage[open] summary:after{content:"⌃"}.year-index{display:grid;place-items:center;min-width:52px;height:52px;background:#183b55;border-radius:11px;color:var(--sky);font-weight:850}.stage-title{flex:1;min-width:0}.stage-title strong{display:block;font-size:16px}.stage-title span{display:block;color:var(--muted);font-size:12px;margin-top:2px}.items{padding:0 19px 17px 19px}.task{display:flex;align-items:start;gap:13px;padding:14px 0;border-top:1px solid #283d50}.task input{accent-color:#6bd7ff;width:18px;height:18px;margin:2px 0 0;flex-shrink:0;opacity:1;pointer-events:none}.task .body{flex:1;min-width:0}.task .body strong{font-size:14px;line-height:1.35;display:block}.task .body small{display:block;color:var(--muted);font-size:12px;margin-top:3px}.task .body a{display:inline-block;margin-top:5px;font-size:13px;font-weight:700}.right{margin-left:auto}.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:15px}.action{display:inline-block;padding:11px 15px;text-decoration:none;border:1px solid #5cbfea;background:#175272;color:#f2fbff;border-radius:11px;font-weight:750;margin:5px 8px 0 0}.action.secondary{background:#162c40;border-color:#375a74}.action:hover{background:#246b90}.live{color:#afc7d8;font-size:12px}.live:before{content:"●";margin-right:7px;color:#71d3fb}.timeline-note{background:#0b2235;border:1px solid #2b668a;border-radius:10px;padding:12px;color:#cee6f5;font-size:13px}.checklist-title{margin:27px 0 7px;font-size:24px;letter-spacing:-.6px}.missing{color:#ffd6a6}.legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:13px}.legend b{color:#ddf4ff}@media(max-width:850px){.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.years{grid-template-columns:repeat(3,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}@media(max-width:510px){.wrap{padding:18px 14px 56px}.stat-grid,.years{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:15px;min-height:122px}.stat strong{font-size:23px}.hero{padding-top:27px}.hero p{font-size:14px}.panel{padding:16px}.stage summary{padding:13px}.items{padding:0 13px 13px}.year-index{min-width:40px;height:45px}.tag{font-size:10px;padding:5px 8px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="bar">
+  <a class="brand" href="index.html">TRACE <span>· EXPERIENCE WORLD</span></a>
+  <nav aria-label="Tracker navigation">
+    <a href="index.html" class="pill-link">← Main Tracker</a>
+    <a href="experience.html" class="pill-link selected" aria-current="page">Experience checklist</a>
+    <a href="experience-world/EXPERIENCE_CHECKLIST.md" class="pill-link">Markdown checklist ↗</a>
+  </nav>
+</header>
+<div class="hero">
+  <div class="eyebrow">Scenario-based · Mentor / Student</div>
+  <h1>Track the developer you are learning to become.</h1>
+  <p>Five career years, real business scenarios, and your exact saved conversations. This page reads the same GitHub learning state used when you say <strong>“Understood.”</strong></p>
+</div>
+<div class="stat-grid" aria-label="Experience progress summary">
+  <div class="stat"><div class="label">Current career year</div><strong class="sky" id="yearValue">Year 1</strong><small id="yearRole">2018–2019 · Internship → Backend</small></div>
+  <div class="stat"><div class="label">Experience questions understood</div><strong id="completedValue">1 / 1,000</strong><small>Self-reported comprehension, not interview readiness</small></div>
+  <div class="stat"><div class="label">Questions introduced</div><strong id="presentedValue">2 / 1,000</strong><small>Current question is not completed</small></div>
+  <div class="stat"><div class="label">Current lesson</div><strong id="dayValue">Day 2</strong><small id="currentLesson">Save Project — form to database</small></div>
+</div>
+<section class="panel" aria-label="Overall Experience World progress">
+  <div class="head-row"><div><div class="eyebrow">Experience World</div><h2>1,000-question learning journey</h2></div><span class="tag done" id="githubStatus">Loading saved state…</span></div>
+  <div class="bartrack" role="progressbar" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="1" aria-label="Questions understood"><div class="barfill" id="progressBar"></div></div>
+  <p class="footnote" id="progressCaption">The checkbox is ticked after you tell the mentor “Understood” and the GitHub file is updated. Your separate 2,719-question bank is not altered.</p>
+</section>
+<section aria-labelledby="yearsTitle">
+  <h2 class="checklist-title" id="yearsTitle">Career-year checklist</h2>
+  <p style="color:#bed5e4;margin:0 0 6px">We are currently in <strong id="yearInSentence" style="color:#8de5ff">Year 1</strong> of the simulated career timeline. Expand any year to see completed lessons and what's coming next.</p>
+  <div class="years" id="yearNav" aria-label="Five career years"></div>
+  <div class="timeline-note">Your resume covers June 2018 to November 2023 (approximately five years and five months). These are teaching-year blocks, not claims about specific work completed in each month. The final months of 2023 are included separately.</div>
+  <div id="yearChecklist"></div>
+</section>
+<div class="two-col">
+<section class="panel" aria-label="Current lesson and archived transcript">
+  <div class="eyebrow">Archive</div>
+  <h2>Day 1 — original conversation</h2>
+  <p>Saved word-for-word, including the mentor/student dialogue, code blocks, diagrams, interview answer, and the original checkpoint. The source includes chat-specific elements that GitHub Markdown does not render as live controls.</p>
+  <a class="action" href="experience-world/scenarios/001-day-1-verbatim.txt">Read exact Day 1 ↗</a>
+  <a class="action secondary" href="experience-world/scenarios/001-mapping-project-intake.md">View source transcript ↗</a>
+</section>
+<section class="panel" aria-label="How lessons get marked complete">
+  <div class="eyebrow">Progress rules</div><h2>When you say “Understood”</h2>
+  <p>We archive the conversation exactly as written, update the experience knowledge state, tick the matching lesson, then introduce the next question.</p>
+  <p class="footnote">GitHub is the source of truth. This page shows read-only checkboxes so a browser click cannot accidentally claim a topic was mastered.</p>
+  <a class="action secondary" href="experience-world/KNOWLEDGE_STATE.json">Open knowledge state ↗</a>
+</section>
+</div>
+<footer style="margin-top:27px;border-top:1px solid var(--border);padding-top:20px;color:#9cbbd0;font-size:13px">
+  TRACE · Experience World &nbsp;•&nbsp; <a href="index.html">Question tracker</a> &nbsp;•&nbsp; <a href="experience-world/WORLD_MAP.md">Learning roadmap</a>
+  <span style="display:block;margin-top:6px" id="syncState" class="live" role="status">Reading latest GitHub state…</span>
+</footer>
+</div>
+<script>
+(function(){
+'use strict';
+var defaultState={completedScenarioIds:['001'],questionsConfirmedCompleted:1,questionsPresented:2,preparationTarget:1000,activeScenario:{id:'002',title:'How does Save Project travel from HTML/JSP to Servlet, JDBC and MySQL?',status:'in-progress'},currentCareerYear:1};
+var chapters=[
+{id:1,period:'Jun 2018 – May 2019',role:'Internship → Backend',items:[
+{id:'001',title:'Day 1 · Why does the geospatial workflow application exist?',desc:'Business problem, tracking, Java object, validation',file:'experience-world/scenarios/001-day-1-verbatim.txt'},
+{id:'002',title:'Day 2 · Click Save Project: HTML/JSP → Servlet → JDBC → MySQL',desc:'HTTP request, server processing and database persistence'},
+{title:'Build and explain a basic CRUD workflow',desc:'Planned lesson: not yet assigned'},
+{title:'Validate user input and use safe SQL parameters',desc:'Planned lesson: not yet assigned'}]},
+{id:2,period:'Jun 2019 – May 2020',role:'Java Backend Developer',items:[
+{title:'Create a Spring Boot project-status REST endpoint',desc:'Planned lesson: HTTP, controller, service and repository'},
+{title:'Explain backend business logic and persistence',desc:'Planned lesson: Java, JDBC/JPA and SQL'},
+{title:'Investigate a validation or SQL query defect',desc:'Planned lesson: problem → diagnosis → fix'}]},
+{id:3,period:'Jun 2020 – May 2021',role:'Backend → Full Stack',items:[
+{title:'Track processing stages and failed records',desc:'Planned lesson: workflow statuses and exception handling'},
+{title:'Run batch validation and reconciliation',desc:'Planned lesson: collections, SQL and automation'},
+{title:'Introduce frontend project-status monitoring',desc:'Planned lesson: React and REST APIs'}]},
+{id:4,period:'Jun 2021 – May 2022',role:'Full Stack Java Developer',items:[
+{title:'Trace one dashboard request end to end',desc:'Planned lesson: React → REST → Spring Boot → SQL'},
+{title:'Explain cooperating microservices',desc:'Planned lesson: actual boundaries to be verified'},
+{title:'Review QA exceptions using role-based screens',desc:'Planned lesson: business rules and permissions'}]},
+{id:5,period:'Jun 2022 – May 2023',role:'Full Stack Java Developer',items:[
+{title:'Investigate slow REST APIs and SQL queries',desc:'Planned lesson: profiling, indexes, and response time'},
+{title:'Handle a multi-component workflow failure',desc:'Planned lesson: transaction boundaries and recovery'},
+{title:'Practice real-vs-simulated production incidents',desc:'Planned lesson: troubleshooting and evidence'}]},
+{id:6,period:'Jun – Nov 2023',role:'Final months / Career synthesis',items:[
+{title:'Explain Agile delivery, testing and production support',desc:'Planned lesson: actual responsibilities'},
+{title:'Defend a complete recent-project interview walkthrough',desc:'Planned lesson: technical follow-up questions'}]}
+];
+var state=defaultState;
+function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;}
+function number(v,fallback){var n=Number(v);return Number.isFinite(n)&&n>=0?Math.floor(n):fallback;}
+function update(){
+var complete=Array.isArray(state.completedScenarioIds)?state.completedScenarioIds.map(String):[];
+var total=number(state.preparationTarget,1000),done=number(state.questionsConfirmedCompleted,complete.length);
+var presented=number(state.questionsPresented,Math.max(2,done)),active=(state.activeScenario&&String(state.activeScenario.id))||'002';
+var year=number(state.currentCareerYear,1);
+if(year<1||year>6)year=1;
+var chap=chapters.filter(function(x){return x.id===year;})[0]||chapters[0];
+document.getElementById('yearValue').textContent=year<6?'Year '+year:'Final months';
+document.getElementById('yearInSentence').textContent=year<6?'Year '+year:'final months';
+document.getElementById('yearRole').textContent=chap.period+' · '+chap.role;
+document.getElementById('completedValue').textContent=done.toLocaleString()+' / '+total.toLocaleString();
+document.getElementById('presentedValue').textContent=presented.toLocaleString()+' / '+total.toLocaleString();
+document.getElementById('dayValue').textContent='Day '+number(active,2);
+document.getElementById('currentLesson').textContent=state.activeScenario&&state.activeScenario.title?state.activeScenario.title:'Next scenario pending';
+var percent=total?Math.min(100,done/total*100):0;
+document.getElementById('progressBar').style.width=Math.max(percent,.1)+'%';
+document.querySelector('[role=progressbar]').setAttribute('aria-valuemax',String(total));
+document.querySelector('[role=progressbar]').setAttribute('aria-valuenow',String(done));
+var yr=document.getElementById('yearNav'),list=document.getElementById('yearChecklist');yr.replaceChildren();list.replaceChildren();
+chapters.forEach(function(ch){
+var isNow=ch.id===year;
+var nav=el('a','yearbox'+(isNow?' current':''));nav.href='#career-year-'+ch.id;
+nav.appendChild(el('b',null,ch.id===6?'Final':'Year '+ch.id));
+nav.appendChild(el('span',null,ch.period));
+nav.appendChild(el('small',null,isNow?'● CURRENT':ch.id<year?'PREVIOUS':'UPCOMING'));
+yr.appendChild(nav);
+var d=el('details','stage');d.id='career-year-'+ch.id;if(isNow)d.open=true;
+var summary=el('summary');summary.appendChild(el('span','year-index',ch.id===6?'+' :String(ch.id)));
+var heading=el('span','stage-title');heading.appendChild(el('strong',null,(ch.id===6?'Final months':'Year '+ch.id)+' · '+ch.role));heading.appendChild(el('span',null,ch.period));summary.appendChild(heading);
+summary.appendChild(el('span','tag '+(isNow?'now':'soon'),isNow?'CURRENT YEAR':ch.id<year?'EARLIER':'UPCOMING'));
+d.appendChild(summary);
+var items=el('div','items');
+ch.items.forEach(function(item){
+var ok=Boolean(item.id&&complete.indexOf(item.id)>=0);
+var now=Boolean(item.id&&item.id===active&&!ok);
+var line=el('div','task');
+var cb=el('input');cb.type='checkbox';cb.disabled=true;cb.checked=ok;cb.setAttribute('aria-label',(ok?'Completed: ':'Not completed: ')+item.title);line.appendChild(cb);
+var body=el('div','body');body.appendChild(el('strong',null,item.title));body.appendChild(el('small',null,item.desc));
+if(item.file){var a=el('a',null,'Read Day 1 — exact saved text ↗');a.href=item.file;body.appendChild(a);}
+line.appendChild(body);
+line.appendChild(el('span','tag right '+(ok?'done':now?'now':'soon'),ok?'UNDERSTOOD':now?'IN PROGRESS':'PLANNED'));
+items.appendChild(line);
+});
+d.appendChild(items);list.appendChild(d);
+});
+}
+async function refresh(){
+try{
+var response=await fetch('experience-world/KNOWLEDGE_STATE.json',{cache:'no-store'});
+if(!response.ok)throw Error('HTTP '+response.status);
+var live=await response.json();if(!live||!Array.isArray(live.completedScenarioIds))throw Error('Unexpected progress structure');
+state=live;update();
+document.getElementById('githubStatus').textContent='✓ GitHub sync available';
+document.getElementById('syncState').textContent='Showing current Experience World state from GitHub. Refresh after a new lesson is confirmed.';
+}catch(err){
+update();document.getElementById('githubStatus').textContent='Local snapshot · offline';
+document.getElementById('syncState').textContent='Could not fetch latest GitHub progress. Displaying the last built-in snapshot; the repository remains authoritative.';
+}}
+update();refresh();
+})();
+</script>
+</body>
+</html>
