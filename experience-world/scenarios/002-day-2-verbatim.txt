@@ -1,2 +1,120 @@
 # 🐼 Day 2 — Your First Real Java Development Task
 
+<text color="secondary" size="sm" weight="medium">5-YEAR JAVA EXPERIENCE WORLD · YEAR 1 · SCENARIO 002</text>
+
+**Today's interview question: How does a user request travel from an HTML form through a Java Servlet and JDBC into a MySQL database?**
+
+**Characters:** 🐯 Mentor — 5 years of Java development experience. 🐼 Student — recently graduated from college, with no industry experience.
+
+<badge color="secondary">Educational scenario based on your internship technologies</badge>
+
+---
+
+### 🐯 Step 1 — Your mentor assigns your first task
+
+**Mentor:** Good morning! Yesterday, we understood why our company needs a project-tracking application.
+
+Today, I'm assigning you your first development task.
+
+**Student:** My first real task? What should I build?
+
+**Mentor:** Our operations team needs a screen where employees can register new mapping projects.
+
+Imagine an employee opens this screen:
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" justify="between">
+    <text size="xs" weight="medium" color="secondary">PROJECT REGISTRATION</text>
+    <icon name="folder-plus" color="#38bdf8" size="lg"/>
+  </row>
+  {@body const [projectName,setProjectName] = DIL.useState("Hyderabad Mapping")}
+  {@body const [demoResult,setDemoResult] = DIL.useState("idle")}
+  <box gap={1}>
+    <label>Project Name</label>
+    <input value={projectName} onChange={v=>{setProjectName(v);setDemoResult("idle")}} placeholder="Enter project name"/>
+  </box>
+  <box gap={1}>
+    <label>Initial Status</label>
+    <input value="CREATED" disabled/>
+  </box>
+  <button block onClick={()=>setDemoResult(projectName.trim()?"success":"error")}>Save Project</button>
+  {#if demoResult==="success"}
+    <box background="surface-secondary" padding={2} radius="md" gap={1}>
+      <row align="center" gap={2}>
+        <icon name="check-circle" color="success"/>
+        <text color="success" weight="medium" size="sm">Simulated request successful</text>
+      </row>
+      <text size="sm">Project: {projectName.trim()}</text>
+      <text size="sm">Status: CREATED</text>
+    </box>
+  {:else if demoResult==="error"}
+    <row gap={2} align="center">
+      <icon name="alert-circle" color="danger"/>
+      <text color="danger" size="sm">Project name is required.</text>
+    </row>
+  {/if}
+  <caption>Interactive demonstration only. No real database is connected.</caption>
+</box>
+
+**Student:** This looks simple. We need to collect a project name and save it.
+
+**Mentor:** Exactly. But here's my question.
+
+When the employee clicks **Save Project**, where does the information go?
+
+**Student:** Into Java?
+
+**Mentor:** Eventually, yes. But the browser and the Java application are different parts of our system.
+
+We need a way for them to communicate.
+
+### 🦊 Step 2 — Understand the browser's problem
+
+**Mentor:** You learned HTML in college, correct?
+
+**Student:** Yes. I can create a form with text boxes and buttons.
+
+**Mentor:** Great! Imagine you write this:
+
+```html id="17pzsl"
+<form action="/projects" method="post">
+
+    <input name="projectName">
+
+    <button type="submit">Save Project</button>
+
+</form>
+```
+
+**Student:** Okay. But what does `action="/projects"` mean?
+
+**Mentor:** It tells the browser where to send the form information.
+
+And `method="post"` tells it to send an HTTP POST request.
+
+When the employee enters:
+
+```text id="kuhhy5"
+Project Name: Hyderabad Mapping
+```
+
+The browser sends the value to the server.
+
+```text id="3wo74t"
+Browser
+   |
+   | POST /projects
+   |
+   | projectName=Hyderabad Mapping
+   ↓
+Java Application
+```
+
+**Student:** So HTML doesn't directly insert anything into MySQL?
+
+**Mentor:** Correct! HTML collects the information. The browser sends an HTTP request, and our server-side code decides what to do with it.
+
+**Student:** But how does Java know someone sent a request?
+
+**Mentor:** Excellent! Now we have a reason to introduce a Servlet.
+
