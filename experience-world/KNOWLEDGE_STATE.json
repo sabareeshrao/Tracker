@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-02",
+  "track": "five-year-experience-world",
+  "publicRepository": true,
+  "status": "initialized",
+  "completedScenarioIds": [],
+  "activeScenario": {
+    "id": "001",
+    "title": "A mapping project enters an internal tracking application",
+    "status": "queued"
+  },
+  "concepts": {},
+  "unknowns": [
+    "Whether the reported five microservices belonged to one platform or multiple applications",
+    "Actual API/DB names, integrations and deployment topology",
+    "Actual source code or repo for past work"
+  ],
+  "latestConfirmedLesson": null,
+  "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
+  "nextAction": "Start Scenario 001 in mentor (five-year experienced) vs student (college Java graduate) conversation style; do not mark learned before confirmation.",
+  "syncedToRootTracker": false
+}
