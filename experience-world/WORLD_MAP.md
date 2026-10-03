@@ -5,7 +5,7 @@ This is a **teaching roadmap**, not a declaration that the user used every liste
 | World | Period or theme | Business scenario starting point | Technical connections | Status |
 |---|---|---|---|---|
 | 0 | Ground zero | What does an aerial mapping company's Java application do, and who uses it? | business terms, GIS outputs, projects, QA, workflows | completed — Scenario 001, understood 2026-10-02 |
-| 1 | Internship (2018) | An operations user submits a new project through a form | Java object, HTTP, JSP/Servlet, JDBC, MySQL, CRUD, validation | in progress — Scenario 006 (Days 1–5 understood; Day 6/S006 introduced 2026-10-03) |
+| 1 | Internship (2018) | An operations user submits a new project through a form | Java object, HTTP, JSP/Servlet, JDBC, MySQL, CRUD, validation | in progress — Scenario 007 (Days 1–5 understood; Day 6/S006 introduced 2026-10-03) |
 | 2 | Backend (2018–2020) | Build a project-status endpoint for the QA/operations teams | Controller, Service, Repository, Spring Boot, SQL, errors, testing | queued |
 | 3 | Backend (2018–2020) | Validate and reconcile a batch of incoming records | Collections, duplicates, exception handling, SQL, automation, batches | queued |
 | 4 | Full Stack (2021–2023) | Show project statuses in a dashboard | React, REST integration, service APIs, Hibernate, pagination | queued |
