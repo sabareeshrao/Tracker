@@ -457,3 +457,204 @@ Operations employee archives Project 102
 
 ---
 
+### 🦁 Step 10 — The authorization problem
+
+**Mentor:** There's another important question.
+
+Should every employee be allowed to archive projects?
+
+**Student:** Probably not. What if an employee accidentally archives an important project?
+
+**Mentor:** Exactly.
+
+The application must check whether the current user is authorized to perform the operation.
+
+For example, imagine only employees with an `OPERATIONS_ADMIN` role can archive projects.
+
+In a properly configured Servlet application, the request could check the user's role:
+
+```java id="ydwzv0"
+if (!request.isUserInRole("OPERATIONS_ADMIN")) {
+    response.sendError(403, "Not authorized");
+    return;
+}
+```
+
+**Student:** What does HTTP 403 mean?
+
+**Mentor:** It means the server understood the request but refuses to authorize it.
+
+Remember the difference:
+
+| Response | Meaning |
+|---|---|
+| 400 Bad Request | Submitted input is invalid |
+| 403 Forbidden | User is not authorized |
+| 404 Not Found | Requested active resource is unavailable or not found |
+| 409 Conflict | An operation conflicts with the current data state or business rules |
+| 500 Internal Server Error | Unexpected server-side failure |
+
+**Student:** So the application should check permission before making the database change?
+
+**Mentor:** Correct.
+
+And for a browser-based state-changing form, a real application should also have appropriate CSRF protection. Checking a role alone doesn't provide that protection.
+
+---
+
+### 🐯 Step 11 — Put the archive logic together
+
+**Student:** Can we see the complete Java code now?
+
+**Mentor:** Yes. Here's a simplified Servlet showing the new archive operation.
+
+We assume the database connection is configured, the `projects` table has an `archived` column, and authentication and role mapping have already been set up.
+
+```java id="8gkcbo"
+@WebServlet("/projects/archive")
+public class ProjectArchiveServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        if (!request.isUserInRole("OPERATIONS_ADMIN")) {
+            response.sendError(403, "Not authorized");
+            return;
+        }
+
+        int projectId;
+
+        try {
+            projectId = Integer.parseInt(
+                request.getParameter("projectId")
+            );
+
+            if (projectId <= 0) {
+                response.sendError(400, "Invalid project ID");
+                return;
+            }
+
+        } catch (NumberFormatException ex) {
+            response.sendError(400, "Invalid project ID");
+            return;
+        }
+
+        String sql =
+            "UPDATE projects "
+            + "SET archived = TRUE "
+            + "WHERE id = ? AND archived = FALSE";
+
+        try (
+            Connection connection = DriverManager.getConnection(
+                System.getenv("DB_URL"),
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASSWORD")
+            );
+
+            PreparedStatement statement =
+                connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, projectId);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                response.sendError(
+                    404,
+                    "No active project found for this ID"
+                );
+                return;
+            }
+
+            response.sendRedirect(
+                request.getContextPath()
+                + "/project-archived.jsp"
+            );
+
+        } catch (SQLException ex) {
+
+            throw new ServletException(
+                "Unable to archive project", ex
+            );
+        }
+    }
+}
+```
+
+<caption>Educational implementation, not code verified from your employer. This example omits application configuration, logging, CSRF protection, and additional workflow checks. The success JSP is assumed to exist.</caption>
+
+**Student:** So this code doesn't permanently delete anything?
+
+**Mentor:** Correct!
+
+It changes the archive flag for a matching active project.
+
+**Student:** And if no active project matches, it returns an error?
+
+**Mentor:** Yes. Our example returns `404` with a message saying that no *active* project was found. It doesn't claim the record never existed.
+
+In another design, we might return a successful no-op for a repeated archive request. That depends on the behavior expected by the application.
+
+---
+
+### 🐨 Step 12 — But what if permanent deletion really is required?
+
+**Student:** So should we always use soft delete instead of DELETE?
+
+**Mentor:** No. That's another important distinction.
+
+Sometimes the requirement really is permanent removal.
+
+For example, a company may have approved retention rules that require certain information to be deleted.
+
+In that case, we might execute:
+
+```sql id="krldp1"
+DELETE FROM projects
+WHERE id = ?;
+```
+
+But before doing that, we must understand whether related records exist and what our database constraints require.
+
+**Student:** So if QA reviews still reference the project, what happens?
+
+**Mentor:** With the restrictive foreign key from our example, MySQL refuses to delete the parent project.
+
+The Java application should handle that database constraint failure appropriately instead of pretending the delete succeeded.
+
+**Student:** Could we return HTTP 409?
+
+**Mentor:** Yes, when we've identified that the request conflicts with the current business or data state—for example, the project cannot be deleted while its QA reviews still exist.
+
+But we must not convert *every* database exception into `409`. A connection outage is a different failure.
+
+**Student:** And if permanent deletion is approved?
+
+**Mentor:** Then the deletion strategy must explicitly address dependent records, permissions, retention requirements, and transaction boundaries.
+
+That's a deeper operation than simply running `DELETE`.
+
+---
+
+### 🦊 Step 13 — How this connects with your internship
+
+**Student:** How does this scenario connect with the CRUD screens mentioned in my resume?
+
+**Mentor:** Your reported internship involved Java, Servlets/JSP, JDBC, MySQL, CRUD screens, and database record management.
+
+This lesson helps you understand the difference between deleting a record and archiving one.
+
+It also introduces how a relational database protects relationships between records.
+
+Our Project 102, QA Review 501, archive column, and role names are educational examples. They should not be presented as exact details of your former employer unless you confirm them.
+
+**Student:** So the important skill is understanding what the business actually means before choosing a database operation?
+
+**Mentor:** Exactly. That's a big part of real software development.
+
+---
+
