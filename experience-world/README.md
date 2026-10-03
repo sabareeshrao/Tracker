@@ -38,9 +38,18 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - Stop and re-explain when the student is confused. An explicit "Understood" triggers the separate GitHub knowledge-saving protocol.
 - Prefer clarity over covering many topics in one lesson. Maintain technical correctness: a local `@Transactional` does not automatically span two independent databases and Kafka; an outbox guarantees atomic local write plus event intent, not instantaneous global atomicity.
 
+## Verbatim archive and career-year checklist
+
+- [Experience checklist (Markdown)](EXPERIENCE_CHECKLIST.md) — career-year and scenario-by-scenario status.
+- [Live Experience World page](../experience.html) — high-contrast sky-blue tracker linked from the main dashboard sidebar.
+- [Day 1 exact original conversation](scenarios/001-day-1-verbatim.txt) — original source text, not an edited summary.
+- **Current teaching year: Year 1 (June 2018–May 2019), internship → backend.** Day 1 understood (self-reported); Day 2 in progress; Experience World count 1/1,000.
+- Save future completed Day conversations **verbatim**, including original wording, code, diagrams and source formatting. Preserve chat-specific UI components as literal source; GitHub Markdown cannot execute them.
+- Keep completion metadata, question/year labels, and source-of-truth notes in separate files; never insert a rewritten synopsis in place of the original lesson.
+
 ## Start here
 - [World roadmap](WORLD_MAP.md)
 - [Knowledge state](KNOWLEDGE_STATE.json)
 - [Scenario archive](scenarios/README.md)
 
-**Current status:** Scenario 001 explicitly understood and [archived](scenarios/001-mapping-project-intake.md) on 2026-10-02; Scenario 002 in progress. Experience World priority target: **1/1,000 confirmed understood**, **2/1,000 presented**. This is distinct from the root 2,719-question tracker.
+**Current status:** Scenario 001 explicitly understood and [archived verbatim](scenarios/001-day-1-verbatim.txt) on 2026-10-02; Scenario 002 in progress. Experience World priority target: **1/1,000 confirmed understood**, **2/1,000 presented**. This is distinct from the root 2,719-question tracker.
