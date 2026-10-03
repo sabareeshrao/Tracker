@@ -5,14 +5,15 @@
   "publicRepository": true,
   "status": "in-progress",
   "completedScenarioIds": [
-    "001"
+    "001",
+    "002"
   ],
   "activeScenario": {
-    "id": "002",
-    "title": "How does Save Project travel from HTML/JSP to Servlet, JDBC and MySQL?",
+    "id": "003",
+    "title": "How does an employee retrieve an existing project using HTTP GET, Servlet, JDBC, and MySQL?",
     "status": "in-progress",
     "startedAt": "2026-10-02",
-    "anchorQuestion": "What happens from clicking Save Project to storing it in MySQL?"
+    "anchorQuestion": "What happens when a user opens an existing project: how does GET read MySQL data and display it?"
   },
   "concepts": {
     "geospatial-workflow-business-context": {
@@ -26,6 +27,48 @@
     "business-validation-basics": {
       "status": "understood-self-reported",
       "evidence": "Scenario 001 explicit user confirmation"
+    },
+    "html-http-form-post": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "HTML form action and HTTP POST"
+    },
+    "java-servlet-dopost-request": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "Servlet doPost and request.getParameter"
+    },
+    "jdbc-preparedstatement-insert": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "JDBC PreparedStatement inserting into MySQL"
+    },
+    "request-validation-http400": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "Required project-name check with HTTP 400"
+    },
+    "sql-injection-defense-intro": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "Parameter binding vs SQL string concatenation"
+    },
+    "jdbc-resource-cleanup": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "JDBC connection and statement try-with-resources"
+    },
+    "save-success-failure-path": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 002 explicitly confirmed 2026-10-02",
+      "lesson": "002",
+      "description": "Redirect on successful save versus database error"
     }
   },
   "unknowns": [
@@ -34,28 +77,36 @@
     "Actual source code or repo for past work"
   ],
   "latestConfirmedLesson": {
-    "id": "001",
-    "title": "Why a geospatial workflow application exists",
+    "id": "002",
+    "title": "HTML form POST through Servlet, validation, JDBC PreparedStatement and MySQL",
     "date": "2026-10-02",
-    "confirmation": "User explicitly said 'understood'",
+    "confirmation": "User explicitly said 'understood day 2 push and proceed with day 3'",
     "evidenceLevel": "self-reported comprehension only",
-    "archivePath": "experience-world/scenarios/001-mapping-project-intake.md",
-    "learnedConcepts": [
-      "GIS/QA/operations workflow visibility",
-      "centralized project status",
-      "basic Java Project domain object",
-      "volatile in-memory object vs persisted database record",
-      "frontend–backend–database request flow",
-      "required-field validation"
+    "verbatimArchivePath": "experience-world/scenarios/002-day-2-verbatim.txt",
+    "archivePath": "experience-world/scenarios/002-save-project-servlet-jdbc.md",
+    "coveredConcepts": [
+      "HTML form action and POST",
+      "HTTP request into Servlet container",
+      "doPost method",
+      "request.getParameter",
+      "server-side validation and HTTP 400",
+      "JDBC and MySQL persistence",
+      "PreparedStatement parameter binding / SQL injection defense",
+      "executeUpdate",
+      "try-with-resources",
+      "redirect only after successful save",
+      "failure when MySQL unavailable"
     ],
-    "verbatimArchivePath": "experience-world/scenarios/001-day-1-verbatim.txt",
-    "archiveType": "verbatim original assistant response; chat-specific components are source-only on GitHub"
+    "unresolvedOrDeferred": [
+      "retry/duplicate protection",
+      "reading projects from MySQL via doGet, SELECT and ResultSet"
+    ]
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Continue Year 1 Q002 already introduced. Teach the new concrete HTTP POST → Servlet doPost → request parameters → JDBC PreparedStatement INSERT → MySQL and one failure path; do not repeat Q001. After user confirms, archive Day 2 verbatim and update mentor checklist, knowledge state, student checklist and roadmap.",
+  "nextAction": "Continue Day 3 Year 1 Q003 with a NEW requirement: employee views existing Project 101 using GET /projects?id=101, Servlet doGet, validated id, JDBC parameterized SELECT, ResultSet mapping, JSP rendering with HTML escaping, 404 missing record and failure when MySQL unavailable. Do not repeat POST INSERT, which Q002 covered. Await explicit understood before marking Q003 complete; plan Q004 UPDATE next.",
   "syncedToRootTracker": false,
-  "questionsPresented": 2,
-  "questionsConfirmedCompleted": 1,
+  "questionsPresented": 3,
+  "questionsConfirmedCompleted": 2,
   "preparationTarget": 1000,
   "currentCareerYear": 1,
   "currentCareerPeriod": "June 2018 – May 2019",
@@ -64,9 +115,55 @@
   "experienceWebPagePath": "experience.html",
   "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving.",
   "mentorTeachingChecklistPath": "experience-world/MENTOR_TEACHING_CHECKLIST.md",
-  "nextQuestionId": "Q002",
-  "lastConfirmedQuestionId": "Q001",
-  "nextPlannedQuestionIdAfterActive": "Q003",
+  "nextQuestionId": "Q003",
+  "lastConfirmedQuestionId": "Q002",
+  "nextPlannedQuestionIdAfterActive": "Q004",
   "avoidRepeatingConfirmedConcepts": true,
-  "mentorResumeProtocol": "Before each new lesson, read MENTOR_TEACHING_CHECKLIST.md, this state JSON, student's EXPERIENCE_CHECKLIST.md, and relevant verbatim archive; continue active Q002 without recapping Q001. Only advance when student explicitly confirms understood. Keep checklist, JSON and archive synchronized."
+  "mentorResumeProtocol": "Read MENTOR_TEACHING_CHECKLIST.md, KNOWLEDGE_STATE.json and EXPERIENCE_CHECKLIST.md before teaching. Q001 and Q002 are understood self-reported; Q003 introduced/in progress. Avoid repeating them as new lessons. Preserve each full original conversation verbatim on confirmation and update both checklists, roadmap and canonical state.",
+  "confirmedLessons": [
+    {
+      "id": "001",
+      "title": "Why a geospatial workflow application exists",
+      "date": "2026-10-02",
+      "confirmation": "User explicitly said 'understood'",
+      "evidenceLevel": "self-reported comprehension only",
+      "archivePath": "experience-world/scenarios/001-mapping-project-intake.md",
+      "learnedConcepts": [
+        "GIS/QA/operations workflow visibility",
+        "centralized project status",
+        "basic Java Project domain object",
+        "volatile in-memory object vs persisted database record",
+        "frontend–backend–database request flow",
+        "required-field validation"
+      ],
+      "verbatimArchivePath": "experience-world/scenarios/001-day-1-verbatim.txt",
+      "archiveType": "verbatim original assistant response; chat-specific components are source-only on GitHub"
+    },
+    {
+      "id": "002",
+      "title": "HTML form POST through Servlet, validation, JDBC PreparedStatement and MySQL",
+      "date": "2026-10-02",
+      "confirmation": "User explicitly said 'understood day 2 push and proceed with day 3'",
+      "evidenceLevel": "self-reported comprehension only",
+      "verbatimArchivePath": "experience-world/scenarios/002-day-2-verbatim.txt",
+      "archivePath": "experience-world/scenarios/002-save-project-servlet-jdbc.md",
+      "coveredConcepts": [
+        "HTML form action and POST",
+        "HTTP request into Servlet container",
+        "doPost method",
+        "request.getParameter",
+        "server-side validation and HTTP 400",
+        "JDBC and MySQL persistence",
+        "PreparedStatement parameter binding / SQL injection defense",
+        "executeUpdate",
+        "try-with-resources",
+        "redirect only after successful save",
+        "failure when MySQL unavailable"
+      ],
+      "unresolvedOrDeferred": [
+        "retry/duplicate protection",
+        "reading projects from MySQL via doGet, SELECT and ResultSet"
+      ]
+    }
+  ]
 }
