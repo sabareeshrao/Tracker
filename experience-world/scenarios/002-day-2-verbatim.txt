@@ -118,3 +118,136 @@ Java Application
 
 **Mentor:** Excellent! Now we have a reason to introduce a Servlet.
 
+### 🐨 Step 3 — Why do we need a Servlet?
+
+**Mentor:** Think of a Servlet as a Java component that handles incoming HTTP requests.
+
+Our web server and Servlet container route the request to the appropriate Servlet.
+
+For this example:
+
+```text id="hqlqft"
+Browser sends POST /projects
+             ↓
+      Servlet Container
+             ↓
+        ProjectServlet
+             ↓
+        Java code runs
+```
+
+**Student:** So I need to create a Java class?
+
+**Mentor:** Exactly.
+
+In this educational example, we write:
+
+```java id="lstxoq"
+@WebServlet("/projects")
+public class ProjectServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String projectName =
+                request.getParameter("projectName");
+    }
+}
+```
+
+**Student:** Wait! What is `doPost()`?
+
+**Mentor:** When an HTTP POST request reaches this Servlet, the container invokes its `doPost()` method.
+
+**Student:** And what is `getParameter()` doing?
+
+**Mentor:** Remember our HTML input?
+
+```html id="valuab"
+<input name="projectName">
+```
+
+The submitted field is named `projectName`.
+
+So Java retrieves its value using:
+
+```java id="bha77c"
+String projectName =
+        request.getParameter("projectName");
+```
+
+If the employee submitted `Hyderabad Mapping`, that's the string we receive.
+
+**Student:** Oh! So the HTML input name and Java parameter name must match?
+
+**Mentor:** Exactly. 🐯
+
+Now we're connecting frontend information to backend Java code.
+
+### 🐼 Step 4 — Something goes wrong
+
+**Mentor:** Before inserting the project into MySQL, let's consider another situation.
+
+An employee submits this:
+
+```text id="5kqe0u"
+Project Name: [EMPTY]
+```
+
+**Student:** We should reject it.
+
+**Mentor:** Correct.
+
+The browser might prevent an empty submission if we use HTML's `required` attribute, but can we trust every request to come through our HTML form?
+
+**Student:** No. Someone could send a request directly to the server.
+
+**Mentor:** Exactly!
+
+That's why the backend must also validate the input.
+
+```java id="dq4s38"
+if (projectName == null || projectName.isBlank()) {
+
+    response.sendError(
+        400,
+        "Project name is required"
+    );
+
+    return;
+}
+```
+
+**Student:** What does `400` mean?
+
+**Mentor:** It's an HTTP status code. `400 Bad Request` tells the client that its request is invalid.
+
+And `return` stops this method from continuing to the database insert.
+
+**Student:** So invalid information won't be saved?
+
+**Mentor:** Correct, provided we perform the check before the database operation.
+
+Notice what we're learning:
+
+```text id="xb0na6"
+User submits project
+         ↓
+   Servlet receives
+         ↓
+    Validate input
+         ↓
+   Is name present?
+       /      \
+     YES       NO
+      |         |
+  Continue    Return 400
+```
+
+Now let's save valid information.
+
+---
+
