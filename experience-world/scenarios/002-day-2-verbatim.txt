@@ -513,3 +513,28 @@ This is the basic request-to-database flow used in traditional Java web applicat
 
 ---
 
+## 📘 Day 2 — Test your understanding
+
+**🐯 Mentor:** Before we move forward, I want to check whether you understand how these components communicate.
+
+Imagine I'm sitting beside you in the office, reviewing your first task. Answer these three questions in your own words.
+
+{@body const questions=["An employee enters a project name and clicks Save. Explain how that name reaches the Java Servlet.","Why do we use JDBC and PreparedStatement instead of directly joining the project name into an SQL query?","The project name is valid, but the MySQL database is unavailable. Should the application display a success message? Why?"]}
+{@body const [answers,setAnswers]=DIL.useState(["","",""])}
+<box border radius="lg" padding={3} gap={3}>
+  {#each questions as q,i}
+    <box gap={2} key={i}>
+      <row gap={2} align="start">
+        <box background="surface-secondary" radius="md" size="28px" align="center" justify="center">
+          <text weight="medium" size="sm">{i+1}</text>
+        </box>
+        <box flex={1}>
+          <text weight="medium" size="sm">{q}</text>
+        </box>
+      </row>
+      <textarea value={answers[i]} onChange={v=>setAnswers(prev=>prev.map((a,j)=>i===j?v:a))} placeholder="Explain in your own words..." rows={3}/>
+    </box>
+  {/each}
+  <button block disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Day 2 Scenario 002 — Here are my understanding-test answers:\n\n"+questions.map((q,i)=>`${i+1}. ${q}\nMy answer: ${answers[i]}`).join("\n\n")+"\nPlease review them in our simple mentor-student style and correct any gaps. Do not mark Day 2 understood until I explicitly confirm.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+</box>
+
