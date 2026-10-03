@@ -4,29 +4,30 @@
 
 **Last reviewed:** 2026-10-02  
 **Current simulated year:** **Year 1 — June 2018–May 2019 (Internship → Backend)**  
-**Experience World questions:** **1 / 1,000 explicitly understood**; **2 / 1,000 introduced**  
-**One active lesson:** **Scenario 002 / Day 2 / Q002 — HTML/JSP form → HTTP request → Servlet → JDBC → MySQL**  
+**Experience World questions:** **2 / 1,000 explicitly understood**; **3 / 1,000 introduced**  
+**One active lesson:** **Scenario 003 / Day 3 / Q003 — HTTP GET → Servlet doGet → JDBC SELECT/ResultSet → JSP display**  
 **Root 2,719-question interview bank:** Independent; do not tick anything there based merely on understanding an Experience World scenario.
 
 ## 1. Mentor's quick-resume card (READ FIRST)
 
 | Check | Recorded state | Mentor action |
 |---|---|---|
-| **Last confirmed scenario** | **001 / Day 1 / Q001** | Do **not** deliver Day 1 again as a new lesson |
+| **Last confirmed scenario** | **002 / Day 2 / Q002** | Do **not** deliver Day 1 or Day 2 again as new lessons |
 | **Day 1 question** | What business problem did a geospatial workflow application solve? | Build on this, only reference in 1–2 sentences when necessary |
 | **Day 1 learned themes** | Centralized GIS/QA/operations status; application purpose; basic Project class; in-memory Java objects versus database persistence; frontend → backend → database overview; required-name validation | Assume these were **self-reported understood**, not performance-tested |
 | **Evidence and wording** | User explicitly said **"I understood"**; full original [Day 1 transcript](scenarios/001-day-1-verbatim.txt) is archived | Don't recreate/rewrite or replace it |
-| **Current unfinished scenario** | **002 / Day 2 / Q002** | **CONTINUE** where Day 2 stopped, do not restart from the definition of business need |
-| **Day 2 material already introduced** | A Save Project screen and the high-level **HTML form → HTTP request → Servlet → JDBC → MySQL** diagram; Servlet receives HTTP; JDBC executes SQL; blank-name validation | Resume at **the detailed implementation of one POST**, new information: request parameters, Servlet's doPost, validation, parameterized INSERT with PreparedStatement, resource handling, success/error response |
-| **Day 2 unconfirmed points** | Concrete Servlet/JDBC code, prepared statements, SQL injection risk, execution/exception path, student's confirmation of understanding | **Do not tick Q002** until user explicitly confirms this lesson |
-| **Next after completing Day 2** | **003 / Day 3 / Q003: Read an existing project with a GET request, Servlet, JDBC, and MySQL** | Pick this next **unless** new uncertainty/user request makes another prerequisite materially necessary |
+| **Current unfinished scenario** | **003 / Day 3 / Q003** | **CONTINUE** with looking up an already-saved record, not another POST insert lesson |
+| **Day 2 material already introduced** | The **complete rewritten Day 2** was explicitly understood and [archived without rewriting](scenarios/002-day-2-verbatim.txt): HTML POST, doPost, request parameters, validation/400, JDBC prepared INSERT, resource closing, redirect and database-failure case | **Never re-teach as a new question.** Only briefly refer back to contrast GET versus POST or SELECT versus INSERT |
+| **Day 3 new teaching points** | GET route and query parameter; doGet; validate numeric id; JDBC parameterized SELECT; ResultSet mapping; JSP display; missing record/404; HTML escaping | Present one realistic retrieval task and check understanding; **do not tick Q003** until the user confirms |
+| **Next after completing Day 3** | **004 / Day 4 / Q004: Update an existing project via UPDATE rather than INSERT or SELECT** | Pick next after confirmation, unless the student requests a different prerequisite |
 
 ## 2. What I must not teach as if new (anti-loop memory)
 
 - [x] **Q001 — Why a geospatial workflow tracking system exists.** Confirmed *understood* 2026-10-02. Distinguish illustrative "three Excel sheets" from any verified claim about user's employer. Don't reuse that same scenario as the headline of another lesson.
 - [x] **Q001 — Object in JVM memory versus data saved in a database.** Covered at beginner level within Q001. A **new** lesson about SQL durability, transaction isolation, or ORM is allowed **only with a new question and new reasoning**, not the same one-paragraph explanation.
 - [x] **Q001 — Basic required-field validation as a business concept.** Covered at beginner level. Later in Q002 it is fine to teach **how** validation executes inside an HTTP handler and how errors return to the browser; do not repeat **what** validation means as a whole lesson.
-- [ ] **Q002 — HTML/JSP → HTTP POST → Servlet → JDBC → MySQL.** **Presented, NOT understood yet**. The short Day 2 conversation already introduced Servlet and JDBC at a conceptual level. Resume with actual mechanics and failure handling, not another long overview.
+- [x] **Q002 — HTML/JSP → HTTP POST → Servlet → JDBC → MySQL.** **UNDERSTOOD (self-reported, 2026-10-02).** Full rewritten Day 2 covered `doPost`, `getParameter`, validation/400, parameterized INSERT/`executeUpdate`, SQL injection, resource cleanup, success redirect, and MySQL error. [Original transcript](scenarios/002-day-2-verbatim.txt). Do not repeat as a new lesson.
+- [ ] **Q003 — GET /projects?id=101 → doGet → SELECT → ResultSet → JSP.** **IN PROGRESS, NOT UNDERSTOOD.** New requirement: retrieve existing data, map rows to Java, handle malformed IDs and 404, render safely. Review explicit understanding before ticking.
 
 **Crucial:** checked items above mean *teaching material that need not be repeated*, not production proficiency. Revisit an item **only when the user requests review, demonstrates a missing prerequisite, or needs a clearly different production/implementation depth.** Label the revisit as a deliberate follow-up, not a brand-new question.
 
@@ -35,8 +36,8 @@
 | Experience question ID | Career year | New business challenge / interview anchor | Teach *new* material; avoid duplicating Q001 | State |
 |---|---|---|---|---|
 | Q001 / S001 | Year 1 | Why does a geospatial workflow tracking system exist? | Business need, Java object, why database, basic validation | **✅ UNDERSTOOD** |
-| Q002 / S002 | Year 1 | Employee clicks **Save Project**: what happens through HTML/JSP, Servlet, JDBC, and MySQL? | POST, doPost, request parameters, PreparedStatement INSERT, validation, success/failure | **🟠 IN PROGRESS** |
-| Q003 / S003 | Year 1 | Employee opens an existing project: how does **Read Project** work? | GET, doGet, query parameter, SELECT, ResultSet, response/JSP rendering | ☐ QUEUED |
+| Q002 / S002 | Year 1 | Employee clicks **Save Project**: what happens through HTML/JSP, Servlet, JDBC, and MySQL? | POST, doPost, request parameters, PreparedStatement INSERT, validation, success/failure | **✅ UNDERSTOOD** |
+| Q003 / S003 | Year 1 | Employee opens an existing project: how does **Read Project** work? | GET, doGet, query parameter, SELECT, ResultSet, response/JSP rendering | **🟠 IN PROGRESS** |
 | Q004 / S004 | Year 1 | Employee edits a project: how is an **Update** different from Create? | UPDATE, affected row count, missing ID, input validation | ☐ QUEUED |
 | Q005 / S005 | Year 1 | Employee removes or archives a project: how do we design **Delete** safely? | DELETE vs soft-delete decision, authorization idea, foreign keys | ☐ QUEUED |
 | Q006 / S006 | Year 1 | Two requests use the same project ID: what happens to **duplicates**? | unique key, detecting collisions, SQL constraints, meaningful error response | ☐ QUEUED |
@@ -65,8 +66,9 @@
 
 ## 5. Single-sentence next instruction (update this after each confirmation)
 
-**NOW: Continue Q002 / Day 2 / Year 1 from the already introduced HTML form → Servlet/JDBC overview, by tracing an actual Save Project POST request, safely inserting with PreparedStatement, showing one validation/error path, and ending with the interview answer and memory chain. Wait for "Understood." Do not repeat Q001.**
+**NOW: Teach Q003 / Day 3 / Year 1 as an entirely new task: operations clicks View on already-saved Project 101; trace HTTP GET `/projects?id=101` → `ProjectServlet.doGet()` → validated `id` → JDBC `PreparedStatement` SELECT → `ResultSet`/Java `Project` → JSP output (escaped) or 404; distinguish SELECT from already-covered Q002 POST/INSERT in one sentence, include one failure case and a comprehension test. Wait for "Understood" before marking Q003 complete. Next planned Q004 UPDATE.**
 
 ## 6. Change record
 
+- **2026-10-02:** Day 2/Q002 confirmed understood explicitly and its original full lesson archived; Q003 opened as a distinct GET/SELECT task, counters now 2 understood / 3 presented. Do not reteach Q002. Root question bank unchanged.
 - **2026-10-02:** Initial mentor-only ledger created. Q001 marked self-reported understood from user's explicit confirmation; Q002 remains introduced/in progress. Q003 reserved as a distinct read-project scenario. Existing separate root question bank untouched.
