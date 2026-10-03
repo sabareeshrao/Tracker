@@ -177,8 +177,21 @@ function layout(body){
  search.addEventListener('input',e=>{query=e.target.value;roadLimit=20;topicLimit=48;questionLimit=35;renderMain();});
  document.getElementById('import-input').addEventListener('change',importData);
 }
+function searchHtml(){
+ const term=query.toLowerCase().trim();
+ const foundTopics=topics.filter(t=>(t.name+' '+t.group).toLowerCase().includes(term)).slice(0,8);
+ const foundSets=[...SET.values()].filter(s=>('set '+s.id+' '+s.title).toLowerCase().includes(term)).slice(0,10);
+ const foundQuestions=[...QUESTION.values()].filter(q=>q.text.toLowerCase().includes(term)).slice(0,35);
+ return header('GLOBAL SEARCH','Search results for “'+query+'”','Search covers the complete question bank, all 390 sets, and every concept.')+
+ '<div class="result-line">Matching concepts, source sets and deduplicated questions</div>'+
+ '<section class="panel table-panel"><div class="panel-top"><h2>Concept matches · '+foundTopics.length+'</h2></div><div class="topic-grid" style="padding:0 20px 20px">'+foundTopics.map(topicCard).join('')+'</div></section>'+
+ '<section class="panel table-panel"><div class="panel-top"><h2>Source sets · '+foundSets.length+'</h2></div><div class="set-preview">'+foundSets.map(setCompact).join('')+'</div></section>'+
+ '<section class="panel table-panel"><div class="panel-top"><h2>Questions · showing '+foundQuestions.length+' of '+data.questions.filter(q=>q[1].toLowerCase().includes(term)).length+'</h2></div><div class="question-list">'+foundQuestions.map(questionRow).join('')+'</div></section>'+
+ (!foundTopics.length&&!foundSets.length&&!foundQuestions.length?'<div class="empty">No matches. Try a more specific Java, Spring or GIS keyword.</div>':'');
+}
 function renderMain(){
  const el=document.querySelector('.main');if(!el)return;
+ if(query.trim()){el.innerHTML=searchHtml();return;}
  el.innerHTML=({overview:overviewHtml,roadmap:roadmapHtml,atlas:atlasHtml,questions:questionsHtml,journal:journalHtml}[view])();
  if(view==='journal')renderMatches();
 }
@@ -201,7 +214,7 @@ function overviewHtml(){
  metric('QUESTIONS TOUCHED',s.qRead.toLocaleString(),'of '+s.qc.toLocaleString()+' unique questions','blue','☷')+
  metric('CONCEPTS STARTED',s.cStarted,'of '+topics.length+' concepts','violet','◈')+
  metric('INTERVIEW READY',s.cReady,'concepts at final milestone','orange','✧')+'</div>'+
- '<div class="dashboard-grid"><section class="panel focus-panel"><div class="panel-top"><div><div class="eyebrow">YOUR PROGRESS</div><h2>A clearer picture of what you know</h2></div><span class="tiny-mark">LIVE</span></div><div class="focus-content"><div class="donut" style="--p:'+s.cPercent+'"><div><b>'+s.cPercent+'%</b><small>concept coverage</small></div></div><div class="focus-detail"><div class="progress-row"><span><i class="bullet green-dot"></i> Interview ready</span><strong>'+s.cReady+' concepts</strong></div><div class="progress-row"><span><i class="bullet blue-dot"></i> In progress</span><strong>'+(s.cStarted-s.cReady)+' concepts</strong></div><div class="progress-row"><span><i class="bullet gray-dot"></i> Not started</span><strong>'+(topics.length-s.cStarted)+' concepts</strong></div><div class="fine-print">Coverage comes from your own study milestones, not from the source repository’s completed-set labels. Questions are tracked separately.</div></div></div></section>'+
+ '<div class="dashboard-grid"><section class="panel focus-panel"><div class="panel-top"><div><div class="eyebrow">YOUR PROGRESS</div><h2>A clearer picture of what you know</h2></div><span class="tiny-mark">LIVE</span></div><div class="focus-content"><div class="donut" style="background:conic-gradient(var(--green) '+s.cPercent+'%,#24343a 0)"><div><b>'+s.cPercent+'%</b><small>concept coverage</small></div></div><div class="focus-detail"><div class="progress-row"><span><i class="bullet green-dot"></i> Interview ready</span><strong>'+s.cReady+' concepts</strong></div><div class="progress-row"><span><i class="bullet blue-dot"></i> In progress</span><strong>'+(s.cStarted-s.cReady)+' concepts</strong></div><div class="progress-row"><span><i class="bullet gray-dot"></i> Not started</span><strong>'+(topics.length-s.cStarted)+' concepts</strong></div><div class="fine-print">Coverage comes from your own study milestones, not from the source repository’s completed-set labels. Questions are tracked separately.</div></div></div></section>'+
  '<section class="panel"><div class="panel-top"><div><div class="eyebrow">KNOWLEDGE MAP</div><h2>Progress by subject</h2></div><button class="text-link" data-action="view" data-view="atlas">Explore atlas ↗</button></div><div class="domains">'+domain+'</div></section></div>'+
  '<div class="panel split-panel"><div class="split-copy"><div class="eyebrow">HOW TO START</div><h2>Your reading becomes visible progress.</h2><p>Paste a concept explanation, choose the detected topics, and save it. Your evidence is stored in the journal, and those concepts move to <strong>Notes captured · 50%</strong>. Practice and interview readiness remain your decisions.</p><button class="primary-button" data-action="view" data-view="journal">Open study journal ↗</button></div><div class="example-window"><div class="window-dots"><i></i><i></i><i></i><span>example / spring-boot</span></div><div class="example-quote">"Spring Boot uses auto-configuration to configure beans based on the classpath..."</div><div class="tag-row"><span class="tag recognized">✓ Spring Boot</span><span class="tag recognized">✓ Spring Core</span></div><div class="example-bottom"><span>Knowledge captured</span><strong>50% <span>▰▰▰▱</span></strong></div></div></div>'+
  '<section class="panel table-panel"><div class="panel-top"><div><div class="eyebrow">START WITH THE SOURCE</div><h2>Original roadmap order</h2></div><button class="text-link" data-action="view" data-view="roadmap">All 390 sets ↗</button></div><div class="set-preview">'+data.sets.slice(0,6).map(s=>setCompact(SET.get(s[0]))).join('')+'</div></section>';
@@ -349,6 +362,6 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&drawer){closeDrawer();return;}
  if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();document.getElementById('global-search')?.focus();}
 });
-function render(){layout(({overview:overviewHtml,roadmap:roadmapHtml,atlas:atlasHtml,questions:questionsHtml,journal:journalHtml}[view])());if(view==='journal')renderMatches();}
+function render(){layout(query.trim()?searchHtml():({overview:overviewHtml,roadmap:roadmapHtml,atlas:atlasHtml,questions:questionsHtml,journal:journalHtml}[view])());if(view==='journal'&&!query.trim())renderMatches();}
 render();
 })();
