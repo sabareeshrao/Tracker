@@ -16,9 +16,9 @@ This is a **teaching roadmap**, not a declaration that the user used every liste
 | 9 | Interview defense | Explain a project and answer increasingly deep follow-ups | architecture diagrams, STAR examples, evidence and uncertainty | queued |
 
 ## Selection rules
-- Default to **Scenario 001: A mapping project enters an internal tracking application**; explain business purpose before implementation.
+- **Resume from the active scenario in [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json) and [MENTOR_TEACHING_CHECKLIST.md](MENTOR_TEACHING_CHECKLIST.md); do not default to Scenario 001 after it is completed.** As of 2026-10-02, Q001 is understood and Q002 is in progress.
 - Expand from the student's questions and the last confirmed concepts; choose a missing prerequisite if the next scenario relies on it.
-- Avoid repeating mastered explanations unless needed for a new application or the student asks.
+- Avoid repeating previously confirmed explanations; read the mentor anti-repeat queue before selecting a new question. A revisit requires explicit student request, demonstrated prerequisite gap or genuinely deeper new business use case, not a paraphrase.
 - Do not assign specific invented microservice names, Kafka, cloud providers, containers, or deployment pipelines to the user's prior role.
 - Distinguish an educational example from the original company's implementation.
 
