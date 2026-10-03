@@ -326,7 +326,7 @@ Overall, the applications helped teams monitor their operations, reduce manual e
       <textarea rows={2} value={answers[i]} placeholder="My understanding..." onChange={v=>setAnswers(a=>a.map((x,j)=>j===i?v:x))}/>
     </box>
   {/each}
-  <button block color="primary" disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Here are my answers to Day 1 Scenario 001:\n"+answers.map((a,i)=>`\${i+1}. \${prompts[i]}\n\${a}`).join("\n\n")+"\nReview my understanding in our mentor-student style. Do not mark the scenario complete unless I explicitly confirm it.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+  <button block color="primary" disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Here are my answers to Day 1 Scenario 001:\n"+answers.map((a,i)=>`${i+1}. ${prompts[i]}\n${a}`).join("\n\n")+"\nReview my understanding in our mentor-student style. Do not mark the scenario complete unless I explicitly confirm it.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
 </box>
 
 <box border radius="lg" padding={3} gap={1}>
