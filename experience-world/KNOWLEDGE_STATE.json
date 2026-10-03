@@ -47,12 +47,20 @@
       "volatile in-memory object vs persisted database record",
       "frontend–backend–database request flow",
       "required-field validation"
-    ]
+    ],
+    "verbatimArchivePath": "experience-world/scenarios/001-day-1-verbatim.txt",
+    "archiveType": "verbatim original assistant response; chat-specific components are source-only on GitHub"
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Teach Day 2 Scenario 002 about internship-era request-to-database flow. Save its archived learning only when user explicitly says Understood, then choose Day 3 based on the lesson.",
+  "nextAction": "Continue Day 2 Scenario 002 for current simulated Year 1 (2018–2019). Only when the user confirms Understood, preserve the full Day 2 response verbatim, tick the Experience checklist, and advance progress; root question checklist stays separate.",
   "syncedToRootTracker": false,
   "questionsPresented": 2,
   "questionsConfirmedCompleted": 1,
-  "preparationTarget": 1000
+  "preparationTarget": 1000,
+  "currentCareerYear": 1,
+  "currentCareerPeriod": "June 2018 – May 2019",
+  "currentCareerRole": "Java Software Development Intern → Java Backend Developer",
+  "experienceChecklistPath": "experience-world/EXPERIENCE_CHECKLIST.md",
+  "experienceWebPagePath": "experience.html",
+  "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving."
 }
