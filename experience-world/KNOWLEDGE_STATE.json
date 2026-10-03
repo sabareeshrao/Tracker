@@ -78,33 +78,24 @@
     "Actual source code or repo for past work"
   ],
   "latestConfirmedLesson": {
-    "id": "002",
-    "title": "HTML form POST through Servlet, validation, JDBC PreparedStatement and MySQL",
+    "id": "003",
+    "title": "Retrieve a saved project with GET, Servlet, JDBC SELECT, ResultSet and JSP",
     "date": "2026-10-02",
-    "confirmation": "User explicitly said 'understood day 2 push and proceed with day 3'",
-    "evidenceLevel": "self-reported comprehension only",
-    "verbatimArchivePath": "experience-world/scenarios/002-day-2-verbatim.txt",
-    "archivePath": "experience-world/scenarios/002-save-project-servlet-jdbc.md",
+    "confirmation": "day 3 understood start day 4",
+    "evidenceLevel": "self-reported comprehension",
+    "verbatimArchivePath": "experience-world/scenarios/003-day-3-verbatim.txt",
+    "archivePath": "experience-world/scenarios/003-view-project-servlet-jdbc.md",
     "coveredConcepts": [
-      "HTML form action and POST",
-      "HTTP request into Servlet container",
-      "doPost method",
-      "request.getParameter",
-      "server-side validation and HTTP 400",
-      "JDBC and MySQL persistence",
-      "PreparedStatement parameter binding / SQL injection defense",
-      "executeUpdate",
-      "try-with-resources",
-      "redirect only after successful save",
-      "failure when MySQL unavailable"
-    ],
-    "unresolvedOrDeferred": [
-      "retry/duplicate protection",
-      "reading projects from MySQL via doGet, SELECT and ResultSet"
+      "GET query parameter and doGet",
+      "validate ID and 400",
+      "SELECT and executeQuery",
+      "ResultSet row mapping",
+      "404 absent project",
+      "forward to JSP with escaped text"
     ]
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Continue Day 3 Year 1 Q003 with a NEW requirement: employee views existing Project 101 using GET /projects?id=101, Servlet doGet, validated id, JDBC parameterized SELECT, ResultSet mapping, JSP rendering with HTML escaping, 404 missing record and failure when MySQL unavailable. Do not repeat POST INSERT, which Q002 covered. Await explicit understood before marking Q003 complete; plan Q004 UPDATE next.",
+  "nextAction": "Q004 Day 4: employee corrects project status. Explain parameterized UPDATE WHERE id, input validation, executeUpdate row count, missing project, error handling. Q005 safe deletion is next; don't repeat Day 1-3.",
   "syncedToRootTracker": false,
   "questionsPresented": 4,
   "questionsConfirmedCompleted": 3,
@@ -164,6 +155,23 @@
       "unresolvedOrDeferred": [
         "retry/duplicate protection",
         "reading projects from MySQL via doGet, SELECT and ResultSet"
+      ]
+    },
+    {
+      "id": "003",
+      "title": "Retrieve a saved project with GET, Servlet, JDBC SELECT, ResultSet and JSP",
+      "date": "2026-10-02",
+      "confirmation": "day 3 understood start day 4",
+      "evidenceLevel": "self-reported comprehension",
+      "verbatimArchivePath": "experience-world/scenarios/003-day-3-verbatim.txt",
+      "archivePath": "experience-world/scenarios/003-view-project-servlet-jdbc.md",
+      "coveredConcepts": [
+        "GET query parameter and doGet",
+        "validate ID and 400",
+        "SELECT and executeQuery",
+        "ResultSet row mapping",
+        "404 absent project",
+        "forward to JSP with escaped text"
       ]
     }
   ]
