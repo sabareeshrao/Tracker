@@ -538,3 +538,34 @@ Imagine I'm sitting beside you in the office, reviewing your first task. Answer 
   <button block disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Day 2 Scenario 002 — Here are my understanding-test answers:\n\n"+questions.map((q,i)=>`${i+1}. ${q}\nMy answer: ${answers[i]}`).join("\n\n")+"\nPlease review them in our simple mentor-student style and correct any gaps. Do not mark Day 2 understood until I explicitly confirm.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
 </box>
 
+## 📊 Your Experience World progress
+
+<box border radius="lg" padding={3} gap={2}>
+  <row justify="between" align="center">
+    **Current career year**
+    <text color="#38bdf8" weight="medium">Year 1 · 2018–2019</text>
+  </row>
+  <divider color="subtle"/>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Day 1 — Business understanding</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Day 2 — Java request-to-database flow</text>
+    <badge>Awaiting understanding</badge>
+  </row>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Questions introduced</text>
+    **2 / 1,000**
+  </row>
+  <row justify="between" align="center">
+    <text color="secondary" size="sm">Questions confirmed understood</text>
+    **1 / 1,000**
+  </row>
+</box>
+
+**🐯 Mentor:** That's your second day. You now have an example of how an employee's request travels from a browser into Java and eventually reaches MySQL.
+
+Once this flow makes sense, our next challenge will be retrieving an existing project from the database instead of creating a new one.
+
+When you're satisfied, say **"Understood."** I'll preserve this rewritten Day 2 lesson in GitHub, update both checklists, and advance to Question 003.
