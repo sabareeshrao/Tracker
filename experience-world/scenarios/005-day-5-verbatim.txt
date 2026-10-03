@@ -658,3 +658,88 @@ Our Project 102, QA Review 501, archive column, and role names are educational e
 
 ---
 
+## 🎯 Day 5 — Interview-ready answer
+
+**Student:** How should I answer if an interviewer asks, "What is the difference between hard delete and soft delete, and how would you implement them using JDBC?"
+
+**Mentor:** You can explain the general design like this:
+
+<WritingBlock id="85413" variant="standard">In a Java application, hard delete and soft delete solve different business requirements.
+
+A hard delete permanently removes a database row using an SQL DELETE statement.
+
+A soft delete keeps the row in the database but marks it as inactive or archived using a column such as archived.
+
+For example, if a completed project must disappear from an active-project dashboard but remain available for historical reporting, soft delete may be appropriate.
+
+Using JDBC, we can execute a parameterized UPDATE statement to mark that specific project as archived. Active-project queries then filter out archived records.
+
+Before allowing an archive or deletion, the application should validate the project ID and check whether the user is authorized.
+
+For permanent deletion, we also need to consider foreign-key relationships. If QA or workflow records still reference the project, a restrictive foreign key can prevent accidental removal.
+
+We check the affected-row count and handle missing records, constraint conflicts, and database failures separately.
+
+The choice between hard delete and soft delete depends on the application's retention rules, data relationships, and business requirements.</WritingBlock>
+
+### 🧠 One-line memory trick
+
+**Delete Request → Understand Business Need → Check Related Records → Authorization → Hard DELETE or Soft Archive → Preserve Data Correctly**
+
+---
+
+## 📘 Day 5 — Test your understanding
+
+**🐯 Mentor:** Before we move to our next scenario, imagine we're reviewing your work together. I want to hear your reasoning, not memorized definitions.
+
+{@body const qs=["A manager says, “Remove completed projects from my active dashboard, but retain their QA history.” Would you choose hard delete or soft archive, and why?","Project 102 has two QA reviews connected through a restrictive foreign key. What can happen if we execute DELETE FROM projects WHERE id = 102?","Our archive UPDATE returns 0 affected rows. Can we immediately conclude that Project 102 never existed? Explain what else could have happened."]}
+{@body const [answers,setAnswers]=DIL.useState(["","",""])}
+<box border radius="lg" padding={3} gap={3}>
+  {#each qs as q,i}
+    <box key={i} gap={2}>
+      <row align="start" gap={2}>
+        <box background="surface-secondary" radius="md" size="28px" align="center" justify="center">
+          <text size="sm" weight="medium">{i+1}</text>
+        </box>
+        <box flex={1}>
+          <text size="sm" weight="medium">{q}</text>
+        </box>
+      </row>
+      <textarea rows={3} value={answers[i]} placeholder="Explain in your own words..." onChange={v=>setAnswers(a=>a.map((x,j)=>i===j?v:x))}/>
+    </box>
+  {/each}
+  <button block disabled={!answers.every(a=>a.trim())} onClick={()=>GenUI.issueNewTurn("Please review my Day 5 Scenario 005 understanding test:\n\n"+qs.map((q,i)=>`${i+1}. ${q}\nMy answer: ${answers[i]}`).join("\n\n")+"\nReview in our simple mentor–student conversation style. Do not mark Day 5 complete until I explicitly say Understood.")}>Check my understanding <icon name="arrow-right" size="sm"/></button>
+</box>
+
+## 📊 Your Experience World progress
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" justify="between">
+    **Current career year**
+    <text color="#38bdf8" weight="medium">Year 1 · 2018–2019</text>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Days 1–4</text>
+    <badge color="success">Understood</badge>
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Day 5 — Delete or Archive Project</text>
+    <badge>Awaiting understanding</badge>
+  </row>
+  <divider color="subtle"/>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions introduced</text>
+    **5 / 1,000**
+  </row>
+  <row align="center" justify="between">
+    <text color="secondary" size="sm">Questions confirmed understood</text>
+    **4 / 1,000**
+  </row>
+</box>
+
+**🐯 Mentor:** That's Day 5. You've discovered that building a Delete button is not simply about writing an SQL statement. It's about knowing which information the business wants to remove, which information must remain, and how the database protects related records.
+
+Our next new problem will involve **duplicate project IDs and repeated requests**—what happens when the same project is submitted twice, and how to prevent duplicate information.
+
+For now, Day 5 is in progress. When you're satisfied, say **"Understood."** I'll preserve this complete conversation, update both GitHub checklists, and advance to Question 006.
