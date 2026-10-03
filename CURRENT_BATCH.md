@@ -2,6 +2,8 @@
 
 **Status:** Awaiting your answers / study notes. **Date issued:** 2026-10-02. **Size:** 5 unique questions. **Progress:** 0/5 marked completed.
 
+**Permanent chronological record:** [BATCH_HISTORY.md](BATCH_HISTORY.md). Keep every completed batch in that file when replacing this active assignment.
+
 **Resume source:** [Aerial Topographic Services experience](docs/RESUME_EXPERIENCE.md) (user-reported, public). **Checklist:** [QUESTION_CHECKLIST.md](QUESTION_CHECKLIST.md). **Synced tracker state:** [STUDY_PROGRESS.json](STUDY_PROGRESS.json).
 
 ### Your five questions
