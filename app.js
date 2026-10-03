@@ -14,7 +14,7 @@ const rawTopics = [
  ['Java fundamentals','class-loading','Class loading','\\b(class loader|class loading|classloader|loading linking initialization)\\b'],
  ['Java fundamentals','memory-gc','Memory & garbage collection','\\b(garbage collect|heap memory|stack memory|memory leak|outofmemory|gc tuning|metaspace)\\b'],
  ['Java fundamentals','strings','String, StringBuilder & StringBuffer','\\b(stringbuilder|stringbuffer|string pool|string immutability|immutable string|java string)\\b'],
- ['Java fundamentals','equality','equals() & hashCode()','\\b(equals\\(\\)|hashcode\\(\\)|equality contract|equals and hashcode)\\b'],
+ ['Java fundamentals','equality','equals() & hashCode()',"(?:\\b(?:hashcode|equals)\\s*\\(|\\.\\s*equals\\s*\\(|\\bequality\\b|\\bhash\\s*code\\b|\\breference equality\\b)"],
  ['Java fundamentals','exceptions','Exceptions & finally','\\b(exception|throwable|try.catch|finally|throws keyword|throw keyword)\\b'],
  ['Java fundamentals','types-casting','Type conversion & casting','\\b(typecast|type cast|casting|widening|narrowing|autoboxing|unboxing|wrapper class|promotion)\\b'],
  ['Java fundamentals','static-final','static, final & super','\\b(static|final keyword|super keyword|this keyword|system\\.exit)\\b'],
@@ -76,6 +76,26 @@ const rawTopics = [
  ['AI & emerging','llm','LLMs & prompting','\\b(llm|large language model|prompt|tokens?|context window|generative ai)\\b'],
  ['AI & emerging','rag','RAG & embeddings','\\b(rag|retrieval.augmented|embedding|vector database|semantic search|vector search)\\b'],
  ['AI & emerging','spring-ai','Spring AI & agents','\\b(spring ai|ai agents?|agentic|tool calling|function calling)\\b']
+ ["Java fundamentals","immutability","Immutability & immutable classes","\\b(immutab|immutable|defensive cop|unmodifiable)\\b"],
+ ["Java fundamentals","enum","Enums","\\b(enums?|enumeration)\\b"],
+ ["Java fundamentals","java-versions","Java 8, 11, 17 & 21 features","\\b(java\\s*(?:8|11|17|21)|record class|sealed class|virtual thread|switch expression|text block)\\b"],
+ ["Java fundamentals","method-classes","Methods, constructors & objects","\\b(constructor|method|object class|overloading|accessor|access modifier)\\b"],
+ ["Java fundamentals","date-time","Date, time & regular expressions","\\b(date.?time|localdate|localdatetime|regular expression|regex|simpledateformat)\\b"],
+ ["Data & persistence","csv","CSV, import & export","\\b(csv|import.{0,15}export|export.{0,15}import|file upload|excel file|batch import)\\b"],
+ ["Data & persistence","files-io","Files, streams & Java I/O","\\b(file handling|file reader|bufferedreader|filewriter|file.?io|inputstream|outputstream|nio\\b|filesystem)\\b"],
+ ["Spring & APIs","spring-framework","Spring Framework fundamentals","\\b(spring framework|spring container|spring bean|spring context|circular dependenc)\\b"],
+ ["Spring & APIs","configuration","Spring profiles & application config","\\b(application\\.properties|application\\.yml|application\\.yaml|spring profiles?|@profile|configuration file|propertysource|environment variables)\\b"],
+ ["Spring & APIs","scheduling","Scheduling, cron & jobs","\\b(cron\\b|@scheduled|scheduled job|scheduler|batch job)\\b"],
+ ["Spring & APIs","http-clients","HTTP clients & third-party integrations","\\b(resttemplate|webclient|feignclient|feign client|third.party|external api|http client|httpclient)\\b"],
+ ["Spring & APIs","servers","Embedded servers & Tomcat","\\b(tomcat|jetty|undertow|embedded server|application server|web server)\\b"],
+ ["Spring & APIs","spring-batch","Spring Batch & jobs","\\b(spring batch|chunk.oriented|batch processing|itemreader|itemwriter|batch job)\\b"],
+ ["Build, test & deploy","testing","Testing strategies & debugging","\\b(testing strateg|testing workflow|test suite|test cases?|debugg|test pyramid|qa process)\\b"],
+ ["Build, test & deploy","code-quality","Refactoring & code quality","\\b(refactor|clean code|code quality|code smell|sonarqube|technical debt|maintainability)\\b"],
+ ["Build, test & deploy","deployment-env","Environments & application operations","\\b(production environ|staging environ|development environ|configuration management|deployment strateg|blue.green)\\b"],
+ ["GIS & system design","data-pipelines","Data ingestion & ETL","\\b(ingestion|etl\\b|data pipeline|batch intake|data import|data export)\\b"],
+ ["GIS & system design","api-contracts","API contracts & compatibility","\\b(api contract|backward compatib|schema evolution|api migration|breaking change)\\b"],
+ ["Data & persistence","jdbc","JDBC & connection pools","\\b(jdbc|connection pool|hikaricp|datasource|preparedstatement)\\b"],
+ ["Spring & APIs","reactive","Reactive Spring & WebFlux","\\b(webflux|reactive stream|mono\\b|flux\\b|non.blocking)\\b"],
 ];
 const topics = rawTopics.map((r,i)=>({group:r[0],id:r[1],name:r[2],regex:new RegExp(r[3],'i'),qids:[],sets:new Set()}));
 for (const q of QUESTION.values()) {
@@ -87,9 +107,27 @@ for (const q of QUESTION.values()) {
  }
  matched.forEach(t=>{t.qids.push(q.id);q.refs.forEach(r=>t.sets.add(r[0]));});
 }
+// Preserve coverage for questions outside the curated keyword taxonomy.
+const coveredQuestionIds=new Set(topics.flatMap(t=>t.qids));
+const sourceConcepts=new Map();
+for(const q of QUESTION.values()){
+ if(coveredQuestionIds.has(q.id))continue;
+ const n=q.refs[0][0],s=SET.get(n);
+ if(!s)continue;
+ if(!sourceConcepts.has(n)){
+  const name=s.title+' · Set '+n;
+  const keys=s.title.toLowerCase().split(/[^a-z0-9@.]+/).filter(w=>w.length>4&&!['spring','developer','project','projects','using','working','designing','handling','experience','questions','features','enterprise','application','applications','implementing','writing','understanding'].includes(w)).slice(0,3);
+  const phrase=keys.map(w=>w.replace(/[^\w]/g,'\\$&')).join('|');
+  const t={group:'Source-specific topics',id:'source-'+n,name,regex:phrase?new RegExp('\\b('+phrase+')\\b','i'):/$^/,qids:[],sets:new Set([n])};
+  topics.push(t);sourceConcepts.set(n,t);
+ }
+ const t=sourceConcepts.get(n);
+ t.qids.push(q.id);q.refs.forEach(r=>t.sets.add(r[0]));
+}
 const topicById=new Map(topics.map(t=>[t.id,t]));
 const empty=()=>({version:1,concepts:{},questions:{},notes:[]});
 let progress;try {const x=JSON.parse(localStorage.getItem(STORAGE)||'null');progress=x&&typeof x==='object'&&x.version===1?{...empty(),...x}:empty();}catch(e){progress=empty();}
+let roadPhase='all';
 let view='overview',query='',groupFilter='All subjects',stageFilter='all',questionFilter='all',selectedSet=1,selectedTopic=topics[0].id,roadLimit=20,questionLimit=35,topicLimit=48,drawer=null,draft='',selectedTags=new Set(),tagsTouched=false;
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const stageNames=['Not started','Read','Notes captured','Practiced','Interview ready'];
@@ -169,7 +207,7 @@ function overviewHtml(){
  '<section class="panel table-panel"><div class="panel-top"><div><div class="eyebrow">START WITH THE SOURCE</div><h2>Original roadmap order</h2></div><button class="text-link" data-action="view" data-view="roadmap">All 390 sets ↗</button></div><div class="set-preview">'+data.sets.slice(0,6).map(s=>setCompact(SET.get(s[0]))).join('')+'</div></section>';
 }
 function controls(subject){
- const opts=subject==='roadmap'?'<select data-select="phase" aria-label="Roadmap phase"><option value="all">All source phases</option><option value="existing">Existing roadmap · 1–85</option><option value="preview">Question previews · 86–378</option><option value="extension">Optional extensions · 379–390</option></select>':'<select data-select="group" aria-label="Subject group">'+groups.map(g=>'<option value="'+esc(g)+'" '+(groupFilter===g?'selected':'')+'>'+esc(g)+'</option>').join('')+'</select>';
+ const opts=subject==='roadmap'?'<select data-select="phase" aria-label="Roadmap phase"><option value="all" '+(roadPhase==='all'?'selected':'')+'>All source phases</option><option value="existing" '+(roadPhase==='existing'?'selected':'')+'>Existing roadmap · 1–85</option><option value="preview" '+(roadPhase==='preview'?'selected':'')+'>Question previews · 86–378</option><option value="extension" '+(roadPhase==='extension'?'selected':'')+'>Optional extensions · 379–390</option></select>':'<select data-select="group" aria-label="Subject group">'+groups.map(g=>'<option value="'+esc(g)+'" '+(groupFilter===g?'selected':'')+'>'+esc(g)+'</option>').join('')+'</select>';
  const state='<select data-select="stage" aria-label="Progress filter">'+[['all','All progress'],['new','Not started'],['started','In progress'],['ready','Interview ready']].map(a=>'<option value="'+a[0]+'" '+(stageFilter===a[0]?'selected':'')+'>'+a[1]+'</option>').join('')+'</select>';
  return '<div class="filters">'+opts+state+'<span class="filter-hint">Use search above to narrow results</span></div>';
 }
@@ -183,7 +221,7 @@ function setMatches(s){
 }
 function roadmapHtml(){
  let arr=[...SET.values()].filter(setMatches);
- const phaseFilter=document.querySelector('[data-select="phase"]')?.value||'all';
+ const phaseFilter=roadPhase;
  if(phaseFilter!=='all')arr=arr.filter(s=>phaseFilter==='existing'?s.id<=85:phaseFilter==='preview'?s.id>85&&s.id<=378:s.id>=379);
  const display=arr.slice(0,roadLimit);
  return header('390 SETS · SOURCE ORDER','Your complete question roadmap','Every set stays in its original numbered order. Repeated questions are shown once in the global bank but stay linked to every source set.')+
@@ -200,7 +238,7 @@ function topicCard(t){
 }
 function atlasHtml(){
  const arr=topicsFiltered();
- return header(topics.length+' CURATED CONCEPTS','Concept atlas','Keywords and related question families extracted from the full roadmap. Open a concept to set its milestone and see all related questions.')+
+ return header(topics.length+' TRACKABLE CONCEPTS','Concept atlas','Curated subjects and source-specific concepts cover every original question. Open a concept to set its milestone and see all related questions.')+
  controls('atlas')+'<div class="result-line">'+arr.length+' concepts · '+topics.filter(t=>t.qids.length).length+' linked to question text</div>'+
  '<div class="topic-grid">'+arr.slice(0,topicLimit).map(topicCard).join('')+'</div>'+(arr.length? '':'<div class="empty">No matching concepts. Try another search.</div>')+
  (arr.length>topicLimit?'<button class="load-button" data-action="more-topics">Show more concepts ↓</button>':'');
@@ -302,7 +340,7 @@ document.addEventListener('change',e=>{
  if(el.matches('[data-select="group"]')){groupFilter=el.value;topicLimit=48;renderMain();return;}
  if(el.matches('[data-select="stage"]')){stageFilter=el.value;topicLimit=48;roadLimit=20;renderMain();return;}
  if(el.matches('[data-select="question-filter"]')){questionFilter=el.value;questionLimit=35;renderMain();return;}
- if(el.matches('[data-select="phase"]')){const choice=el.value;renderMain();const next=document.querySelector('[data-select="phase"]');if(next)next.value=choice;return;}
+ if(el.matches('[data-select="phase"]')){roadPhase=el.value;roadLimit=20;renderMain();return;}
  if(el.matches('[data-tag]')){tagsTouched=true;if(el.checked)selectedTags.add(el.dataset.tag);else selectedTags.delete(el.dataset.tag);renderMatches();return;}
  if(el.id==='manual-topic'&&el.value){selectedTags.add(el.value);tagsTouched=true;renderMatches();return;}
 });
