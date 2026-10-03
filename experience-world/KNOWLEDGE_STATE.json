@@ -8,14 +8,15 @@
     "001",
     "002",
     "003",
-    "004"
+    "004",
+    "005"
   ],
   "activeScenario": {
-    "id": "005",
-    "title": "Should a project be deleted or archived when a user no longer needs it?",
+    "id": "006",
+    "title": "How do we prevent duplicate mapping projects and safely handle repeated Save requests?",
     "status": "in-progress",
     "startedAt": "2026-10-03",
-    "anchorQuestion": "How do you safely delete or archive an existing MySQL record using JDBC while protecting related QA/workflow data?"
+    "anchorQuestion": "What happens if the same project code is submitted twice, or two employees create it at the same moment, and how should Java/MySQL behave?"
   },
   "concepts": {
     "geospatial-workflow-business-context": {
@@ -91,6 +92,26 @@
       "status": "understood-self-reported",
       "lesson": "004",
       "description": "UPDATE without WHERE may unintentionally modify all rows"
+    },
+    "hard-vs-soft-delete": {
+      "status": "understood-self-reported",
+      "lesson": "005",
+      "description": "Hard DELETE removes rows; archive flag preserves history"
+    },
+    "foreign-key-delete-actions": {
+      "status": "understood-self-reported",
+      "lesson": "005",
+      "description": "RESTRICT vs CASCADE implications for linked QA records"
+    },
+    "archive-active-history-filtering": {
+      "status": "understood-self-reported",
+      "lesson": "005",
+      "description": "Active list excludes archived records, history includes them"
+    },
+    "archive-authorization-http403": {
+      "status": "understood-self-reported",
+      "lesson": "005",
+      "description": "Require authorized role before modifying records"
     }
   },
   "unknowns": [
@@ -99,36 +120,36 @@
     "Actual source code or repo for past work"
   ],
   "latestConfirmedLesson": {
-    "id": "004",
-    "title": "Update one existing project status using parameterized SQL UPDATE",
+    "id": "005",
+    "title": "Safe project deletion versus archiving with foreign keys and QA records",
     "date": "2026-10-03",
-    "confirmation": "User explicitly said 'understood advance to next'",
+    "confirmation": "User explicitly said 'Understood write day 6'",
     "evidenceLevel": "self-reported comprehension only",
-    "verbatimArchivePath": "experience-world/scenarios/004-day-4-verbatim.txt",
-    "archivePath": "experience-world/scenarios/004-update-project-jdbc.md",
+    "verbatimArchivePath": "experience-world/scenarios/005-day-5-verbatim.txt",
+    "archivePath": "experience-world/scenarios/005-safe-delete-vs-archive.md",
     "coveredConcepts": [
-      "SQL UPDATE compared to INSERT/SELECT",
-      "Critical role of WHERE clause when updating one row",
-      "POST project status form and dedicated Servlet",
-      "Validating allowed status values",
-      "PreparedStatement for UPDATE with WHERE id",
-      "executeUpdate affected-row count 0 versus 1",
-      "404 absent record vs 400 invalid input vs database error",
-      "Redirect after successful update",
-      "Lost updates introduced as deferred concurrency topic"
+      "Hard delete versus soft delete/archival as distinct business requirements",
+      "Foreign key relationship with QA review records and ON DELETE RESTRICT/CASCADE tradeoff",
+      "Archival flag versus workflow status",
+      "SQL UPDATE archived=TRUE WHERE archived=FALSE",
+      "Active list versus history filters",
+      "Read/update effects including zero affected rows ambiguity",
+      "Authorization and 403 for archival operations",
+      "HTTP 400/403/404/409/500 distinctions",
+      "DELETE with WHERE and database constraint conflict"
     ],
-    "unresolvedOrDeferred": [
-      "Safe delete vs soft archive",
-      "Foreign key consequences of hard DELETE",
-      "Authorizing project deletion",
-      "Lost update/concurrency control deeper lesson"
+    "deferred": [
+      "Unique project identity and duplicate requests (Day 6)",
+      "CSRF end-to-end security configuration",
+      "Data retention policy verification",
+      "Transactions involving cascading changes"
     ]
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Start Day 5 Q005. New business scenario: deleting Project 102 would also affect linked QA records. Introduce DELETE vs soft delete/archiving, foreign keys and constraints, explicit authorization and confirmation, parameterized deletion, checking row count, 404 vs 409 foreign-key conflict, reversible archive, hidden-from-active-list filtering. Include meaningful beginner dialogue and fail case; finish with test, interview answer and one-line memory trick. Q006 duplicate IDs is next after confirmation. Do not repeat Day 1-4 material.",
+  "nextAction": "Teach Day 6 Q006 in Year 1. Operations intake spreadsheet and repeated Save produce duplicate project codes. Explain auto-generated primary key versus business project code, UNIQUE DB constraint, application duplicate check versus concurrency race, prepared INSERT and duplicate-key handling, HTTP 409 vs network-retry uncertainty, brief idempotency distinction for later follow-up. Keep new lesson story-driven with interactive demo, full failure path, short interview-ready answer, one-line memory chain, 3-question quiz; archive only when user says Understood. Next Q007 deeper frontend/backend validation.",
   "syncedToRootTracker": false,
-  "questionsPresented": 5,
-  "questionsConfirmedCompleted": 4,
+  "questionsPresented": 6,
+  "questionsConfirmedCompleted": 5,
   "preparationTarget": 1000,
   "currentCareerYear": 1,
   "currentCareerPeriod": "June 2018 – May 2019",
@@ -137,11 +158,11 @@
   "experienceWebPagePath": "experience.html",
   "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving.",
   "mentorTeachingChecklistPath": "experience-world/MENTOR_TEACHING_CHECKLIST.md",
-  "nextQuestionId": "Q005",
-  "lastConfirmedQuestionId": "Q004",
-  "nextPlannedQuestionIdAfterActive": "Q006",
+  "nextQuestionId": "Q006",
+  "lastConfirmedQuestionId": "Q005",
+  "nextPlannedQuestionIdAfterActive": "Q007",
   "avoidRepeatingConfirmedConcepts": true,
-  "mentorResumeProtocol": "Before teaching inspect MENTOR_TEACHING_CHECKLIST.md then canonical state and experience checklist. Q001–Q004 understood self-reported; Q005 in progress. Keep original lesson text unmodified; update both checklists and status only on explicit confirmation.",
+  "mentorResumeProtocol": "Always consult MENTOR_TEACHING_CHECKLIST.md and this state. Q001–Q005 self-reported understood, Q006 current and not yet completed. Day5 original source saved, do not repeat old material as new. Update both checklists and archive exact wording upon explicit user understanding.",
   "confirmedLessons": [
     {
       "id": "001",
@@ -228,6 +249,32 @@
         "Foreign key consequences of hard DELETE",
         "Authorizing project deletion",
         "Lost update/concurrency control deeper lesson"
+      ]
+    },
+    {
+      "id": "005",
+      "title": "Safe project deletion versus archiving with foreign keys and QA records",
+      "date": "2026-10-03",
+      "confirmation": "User explicitly said 'Understood write day 6'",
+      "evidenceLevel": "self-reported comprehension only",
+      "verbatimArchivePath": "experience-world/scenarios/005-day-5-verbatim.txt",
+      "archivePath": "experience-world/scenarios/005-safe-delete-vs-archive.md",
+      "coveredConcepts": [
+        "Hard delete versus soft delete/archival as distinct business requirements",
+        "Foreign key relationship with QA review records and ON DELETE RESTRICT/CASCADE tradeoff",
+        "Archival flag versus workflow status",
+        "SQL UPDATE archived=TRUE WHERE archived=FALSE",
+        "Active list versus history filters",
+        "Read/update effects including zero affected rows ambiguity",
+        "Authorization and 403 for archival operations",
+        "HTTP 400/403/404/409/500 distinctions",
+        "DELETE with WHERE and database constraint conflict"
+      ],
+      "deferred": [
+        "Unique project identity and duplicate requests (Day 6)",
+        "CSRF end-to-end security configuration",
+        "Data retention policy verification",
+        "Transactions involving cascading changes"
       ]
     }
   ]
