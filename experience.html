@@ -48,9 +48,10 @@
 <div class="two-col">
 <section class="panel" aria-label="Current lesson and archived transcript">
   <div class="eyebrow">Archive</div>
-  <h2>Day 1 — original conversation</h2>
+  <h2>Original mentor–student conversations</h2>
   <p>Saved word-for-word, including the mentor/student dialogue, code blocks, diagrams, interview answer, and the original checkpoint. The source includes chat-specific elements that GitHub Markdown does not render as live controls.</p>
   <a class="action" href="experience-world/scenarios/001-day-1-verbatim.txt">Read exact Day 1 ↗</a>
+  <a class="action" href="experience-world/scenarios/002-day-2-verbatim.txt">Read exact Day 2 ↗</a>
   <a class="action secondary" href="experience-world/scenarios/001-mapping-project-intake.md">View source transcript ↗</a>
 </section>
 <section class="panel" aria-label="How lessons get marked complete">
@@ -103,7 +104,7 @@ function number(v,fallback){var n=Number(v);return Number.isFinite(n)&&n>=0?Math
 function update(){
 var complete=Array.isArray(state.completedScenarioIds)?state.completedScenarioIds.map(String):[];
 var total=number(state.preparationTarget,1000),done=number(state.questionsConfirmedCompleted,complete.length);
-var presented=number(state.questionsPresented,Math.max(2,done)),active=(state.activeScenario&&String(state.activeScenario.id))||'002';
+var presented=number(state.questionsPresented,Math.max(2,done)),active=(state.activeScenario&&String(state.activeScenario.id))||'003';
 var year=number(state.currentCareerYear,1);
 if(year<1||year>6)year=1;
 var chap=chapters.filter(function(x){return x.id===year;})[0]||chapters[0];
@@ -138,7 +139,7 @@ var now=Boolean(item.id&&item.id===active&&!ok);
 var line=el('div','task');
 var cb=el('input');cb.type='checkbox';cb.disabled=true;cb.checked=ok;cb.setAttribute('aria-label',(ok?'Completed: ':'Not completed: ')+item.title);line.appendChild(cb);
 var body=el('div','body');body.appendChild(el('strong',null,item.title));body.appendChild(el('small',null,item.desc));
-if(item.file){var a=el('a',null,'Read Day 1 — exact saved text ↗');a.href=item.file;body.appendChild(a);}
+if(item.file){var a=el('a',null,'Read Day '+Number(item.id)+' — exact saved text ↗');a.href=item.file;body.appendChild(a);}
 line.appendChild(body);
 line.appendChild(el('span','tag right '+(ok?'done':now?'now':'soon'),ok?'UNDERSTOOD':now?'IN PROGRESS':'PLANNED'));
 items.appendChild(line);
