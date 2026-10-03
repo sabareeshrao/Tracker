@@ -4,25 +4,55 @@
   "track": "five-year-experience-world",
   "publicRepository": true,
   "status": "in-progress",
-  "completedScenarioIds": [],
+  "completedScenarioIds": [
+    "001"
+  ],
   "activeScenario": {
-    "id": "001",
-    "title": "A mapping project enters an internal tracking application",
+    "id": "002",
+    "title": "How does Save Project travel from HTML/JSP to Servlet, JDBC and MySQL?",
     "status": "in-progress",
     "startedAt": "2026-10-02",
-    "anchorQuestion": "What business problem did your geospatial workflow application solve?"
+    "anchorQuestion": "What happens from clicking Save Project to storing it in MySQL?"
   },
-  "concepts": {},
+  "concepts": {
+    "geospatial-workflow-business-context": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 001 explicit user confirmation"
+    },
+    "in-memory-object-vs-database": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 001 explicit user confirmation"
+    },
+    "business-validation-basics": {
+      "status": "understood-self-reported",
+      "evidence": "Scenario 001 explicit user confirmation"
+    }
+  },
   "unknowns": [
     "Whether the reported five microservices belonged to one platform or multiple applications",
     "Actual API/DB names, integrations and deployment topology",
     "Actual source code or repo for past work"
   ],
-  "latestConfirmedLesson": null,
+  "latestConfirmedLesson": {
+    "id": "001",
+    "title": "Why a geospatial workflow application exists",
+    "date": "2026-10-02",
+    "confirmation": "User explicitly said 'understood'",
+    "evidenceLevel": "self-reported comprehension only",
+    "archivePath": "experience-world/scenarios/001-mapping-project-intake.md",
+    "learnedConcepts": [
+      "GIS/QA/operations workflow visibility",
+      "centralized project status",
+      "basic Java Project domain object",
+      "volatile in-memory object vs persisted database record",
+      "frontend–backend–database request flow",
+      "required-field validation"
+    ]
+  },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Present Day 1 Scenario 001. Await explicit user 'Understood' before saving completed lesson and moving to Scenario 002.",
+  "nextAction": "Teach Day 2 Scenario 002 about internship-era request-to-database flow. Save its archived learning only when user explicitly says Understood, then choose Day 3 based on the lesson.",
   "syncedToRootTracker": false,
-  "questionsPresented": 1,
-  "questionsConfirmedCompleted": 0,
+  "questionsPresented": 2,
+  "questionsConfirmedCompleted": 1,
   "preparationTarget": 1000
 }
