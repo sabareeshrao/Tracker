@@ -9,14 +9,15 @@
     "002",
     "003",
     "004",
-    "005"
+    "005",
+    "006"
   ],
   "activeScenario": {
-    "id": "006",
-    "title": "How do we prevent duplicate mapping projects and safely handle repeated Save requests?",
+    "id": "007",
+    "title": "Where must validation happen in frontend, Java backend, and MySQL?",
     "status": "in-progress",
     "startedAt": "2026-10-03",
-    "anchorQuestion": "What happens if the same project code is submitted twice, or two employees create it at the same moment, and how should Java/MySQL behave?"
+    "anchorQuestion": "How do you distribute data validation across a browser form, a Servlet, and the database without trusting the frontend or duplicating uncontrolled rules?"
   },
   "concepts": {
     "geospatial-workflow-business-context": {
@@ -112,6 +113,26 @@
       "status": "understood-self-reported",
       "lesson": "005",
       "description": "Require authorized role before modifying records"
+    },
+    "unique-business-project-code": {
+      "status": "understood-self-reported",
+      "lesson": "006",
+      "description": "Auto-increment primary key differs from unique business project code"
+    },
+    "concurrent-duplicate-race": {
+      "status": "understood-self-reported",
+      "lesson": "006",
+      "description": "Application check-then-insert race requires database unique constraint"
+    },
+    "duplicate-key-409": {
+      "status": "understood-self-reported",
+      "lesson": "006",
+      "description": "Map specific duplicate key SQL error to 409, not all SQLException"
+    },
+    "retry-vs-duplicate-intro": {
+      "status": "understood-self-reported",
+      "lesson": "006",
+      "description": "Timeout retry and idempotency-key concept, deeper design reserved"
     }
   },
   "unknowns": [
@@ -120,36 +141,34 @@
     "Actual source code or repo for past work"
   ],
   "latestConfirmedLesson": {
-    "id": "005",
-    "title": "Safe project deletion versus archiving with foreign keys and QA records",
+    "id": "006",
+    "title": "Prevent duplicate project codes and handle simultaneous Save requests",
     "date": "2026-10-03",
-    "confirmation": "User explicitly said 'Understood write day 6'",
+    "confirmation": "User said 'Understood write day 6' immediately following completed Day 6 lesson",
     "evidenceLevel": "self-reported comprehension only",
-    "verbatimArchivePath": "experience-world/scenarios/005-day-5-verbatim.txt",
-    "archivePath": "experience-world/scenarios/005-safe-delete-vs-archive.md",
+    "verbatimArchivePath": "experience-world/scenarios/006-day-6-verbatim.txt",
+    "archivePath": "experience-world/scenarios/006-duplicate-project-codes.md",
     "coveredConcepts": [
-      "Hard delete versus soft delete/archival as distinct business requirements",
-      "Foreign key relationship with QA review records and ON DELETE RESTRICT/CASCADE tradeoff",
-      "Archival flag versus workflow status",
-      "SQL UPDATE archived=TRUE WHERE archived=FALSE",
-      "Active list versus history filters",
-      "Read/update effects including zero affected rows ambiguity",
-      "Authorization and 403 for archival operations",
-      "HTTP 400/403/404/409/500 distinctions",
-      "DELETE with WHERE and database constraint conflict"
+      "Database surrogate primary key versus unique business project code",
+      "UNIQUE constraint prevents duplicates across concurrent inserts",
+      "Application existence check has a race condition",
+      "MySQL 1062 duplicate-key exception and specific HTTP 409 mapping",
+      "Normalization of business codes consistent with collation",
+      "Generated database keys",
+      "Difference between conflicting create and timeout retry",
+      "Intro to idempotency keys and separate future reliable retry handling"
     ],
     "deferred": [
-      "Unique project identity and duplicate requests (Day 6)",
-      "CSRF end-to-end security configuration",
-      "Data retention policy verification",
-      "Transactions involving cascading changes"
+      "Full idempotency key persistence design",
+      "Input validation across UI/server/DB",
+      "Batch import reconciliation details"
     ]
   },
   "confirmationRule": "Only 'understood' or explicit user completion confirmation advances a scenario; confirmation is self-reported comprehension, not practice or interview readiness.",
-  "nextAction": "Teach Day 6 Q006 in Year 1. Operations intake spreadsheet and repeated Save produce duplicate project codes. Explain auto-generated primary key versus business project code, UNIQUE DB constraint, application duplicate check versus concurrency race, prepared INSERT and duplicate-key handling, HTTP 409 vs network-retry uncertainty, brief idempotency distinction for later follow-up. Keep new lesson story-driven with interactive demo, full failure path, short interview-ready answer, one-line memory chain, 3-question quiz; archive only when user says Understood. Next Q007 deeper frontend/backend validation.",
+  "nextAction": "Teach Day 7 Q007 (Year 1). New QA/business scenario: importing a mapping project with a code, name, due date and CRS identifier; demonstrate frontend helpfulness vs backend authoritative rules vs database integrity constraints. Avoid repeating basic null/name check and code UNIQUE from earlier days except 1-sentence connections. Show bypassing HTML form, invalid future/past dates or invalid CRS/project code; implement carefully separated rules, SQL NOT NULL/CHECK/UNIQUE/FOREIGN KEY as appropriate; distinguish validation errors 400, conflicts 409, server failure 500 and return actionable field messages. Include code, failure case, interview answer, understanding test. Next Q008 reporting SQL filters/joins/aggregates. Await explicit understood before marking Q007 complete.",
   "syncedToRootTracker": false,
-  "questionsPresented": 6,
-  "questionsConfirmedCompleted": 5,
+  "questionsPresented": 7,
+  "questionsConfirmedCompleted": 6,
   "preparationTarget": 1000,
   "currentCareerYear": 1,
   "currentCareerPeriod": "June 2018 – May 2019",
@@ -158,11 +177,11 @@
   "experienceWebPagePath": "experience.html",
   "archivePolicy": "Preserve complete original assistant Day text verbatim (including formatting, code and chat-specific UI source); do not rewrite or summarize when archiving.",
   "mentorTeachingChecklistPath": "experience-world/MENTOR_TEACHING_CHECKLIST.md",
-  "nextQuestionId": "Q006",
-  "lastConfirmedQuestionId": "Q005",
-  "nextPlannedQuestionIdAfterActive": "Q007",
+  "nextQuestionId": "Q007",
+  "lastConfirmedQuestionId": "Q006",
+  "nextPlannedQuestionIdAfterActive": "Q008",
   "avoidRepeatingConfirmedConcepts": true,
-  "mentorResumeProtocol": "Always consult MENTOR_TEACHING_CHECKLIST.md and this state. Q001–Q005 self-reported understood, Q006 current and not yet completed. Day5 original source saved, do not repeat old material as new. Update both checklists and archive exact wording upon explicit user understanding.",
+  "mentorResumeProtocol": "Read mentor ledger, canonical state, student checklist and most recent Day 6 original archive. Q001–Q006 self-reported understood. Day 7 Q007 current and not yet completed; do not re-teach previous topics. On explicit confirmation archive complete original and advance both checklists.",
   "confirmedLessons": [
     {
       "id": "001",
@@ -275,6 +294,30 @@
         "CSRF end-to-end security configuration",
         "Data retention policy verification",
         "Transactions involving cascading changes"
+      ]
+    },
+    {
+      "id": "006",
+      "title": "Prevent duplicate project codes and handle simultaneous Save requests",
+      "date": "2026-10-03",
+      "confirmation": "User said 'Understood write day 6' immediately following completed Day 6 lesson",
+      "evidenceLevel": "self-reported comprehension only",
+      "verbatimArchivePath": "experience-world/scenarios/006-day-6-verbatim.txt",
+      "archivePath": "experience-world/scenarios/006-duplicate-project-codes.md",
+      "coveredConcepts": [
+        "Database surrogate primary key versus unique business project code",
+        "UNIQUE constraint prevents duplicates across concurrent inserts",
+        "Application existence check has a race condition",
+        "MySQL 1062 duplicate-key exception and specific HTTP 409 mapping",
+        "Normalization of business codes consistent with collation",
+        "Generated database keys",
+        "Difference between conflicting create and timeout retry",
+        "Intro to idempotency keys and separate future reliable retry handling"
+      ],
+      "deferred": [
+        "Full idempotency key persistence design",
+        "Input validation across UI/server/DB",
+        "Batch import reconciliation details"
       ]
     }
   ]
