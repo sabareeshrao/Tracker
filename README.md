@@ -14,6 +14,10 @@ In the GitHub repository, go to **Settings → Pages → Build and deployment �
 
 **If https://sabareeshrao.github.io/Tracker/ shows 404:** The HTML file being committed is not sufficient to activate GitHub Pages. Visit [Settings → Pages](https://github.com/sabareeshrao/Tracker/settings/pages) → Source **Deploy from a branch** → branch **main** → folder **/(root)** → **Save**. Wait for the publishing job, then refresh the link. The GitHub integration available to this assistant cannot change that repository setting.
 
+## Five-Year Experience World
+
+The [Experience World checklist](experience.html) is a separate scenario-based mentoring track, linked in the main dashboard sidebar. It shows **which simulated career year you are studying**, a read-only checklist synchronized from [GitHub learning state](experience-world/KNOWLEDGE_STATE.json), and links to complete [verbatim lesson transcripts](experience-world/scenarios/001-day-1-verbatim.txt). [Markdown career checklist](experience-world/EXPERIENCE_CHECKLIST.md). **Current: Year 1 (2018–2019), Day 1 understood, Day 2 in progress, 1/1,000 self-reported understood.** This does not overwrite the independent 2,719-question study checklist.
+
 ## Resume-driven interview batches
 
 - **[Resume experience reference](docs/RESUME_EXPERIENCE.md)** — the user's exact stated responsibilities, roles and results (user-reported; not externally verified).
