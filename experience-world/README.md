@@ -51,6 +51,10 @@ The exact reference is the user's favorite very-simple mentor–student explanat
 - Save future completed Day conversations **verbatim**, including original wording, code, diagrams and source formatting. Preserve chat-specific UI components as literal source; GitHub Markdown cannot execute them.
 - Keep completion metadata, question/year labels, and source-of-truth notes in separate files; never insert a rewritten synopsis in place of the original lesson.
 
+## Software and cloud roadmap
+
+- [Five-year software and tools roadmap](TOOLS_AND_SOFTWARE_ROADMAP.md) — when and why to introduce IntelliJ, Git/GitHub, SQL clients, testing, Jira, CI/CD, Docker, AWS/Azure, Redis, Kafka, Kubernetes and production monitoring. Every added tool is tagged as resume-reported versus practice-only; no changes to completed-day counters.
+
 ## Start here
 - [World roadmap](WORLD_MAP.md)
 - [Knowledge state](KNOWLEDGE_STATE.json)
