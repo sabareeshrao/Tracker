@@ -1,5 +1,8 @@
 # Scenario Archive
 
+**Lesson creators:** Read [mandatory teaching playbook](../LESSON_CREATION_PLAYBOOK.md), [blank Day template](LESSON_TEMPLATE.md), [software roadmap](../TOOLS_AND_SOFTWARE_ROADMAP.md), and the [live mentor anti-repeat ledger](../MENTOR_TEACHING_CHECKLIST.md) **before** writing any new Day. This is an archive of *confirmed original content*, not a collection of edited summaries. The playbook is the source of truth for style, quiz and exact-save requirements.
+
+
 Each completed conversation gets its **unmodified original assistant response**, in numerical order:
 
 - [`001-day-1-verbatim.txt`](001-day-1-verbatim.txt) — Day 1 exact text as it appeared in chat, with original code snippets and DIL source preserved.
