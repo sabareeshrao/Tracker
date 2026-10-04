@@ -16,6 +16,9 @@ A scenario-by-scenario mentor–student learning track, separate from the existi
 
 ## Teaching protocol
 
+**MANDATORY AUTHORING RULES:** [LESSON_CREATION_PLAYBOOK.md](LESSON_CREATION_PLAYBOOK.md) (step-by-step lesson creation, software introduction, five-year schedule, quizzes and progress writes) and [blank lesson template](scenarios/LESSON_TEMPLATE.md). Any lesson author or chat branch must read the live files before creating the next Day. [AGENTS.md](AGENTS.md) contains the short agent handoff.
+
+
 **Required FIRST read for every lesson:** [Mentor-only anti-repeat checklist](MENTOR_TEACHING_CHECKLIST.md) → [canonical knowledge state](KNOWLEDGE_STATE.json) → [student career checklist](EXPERIENCE_CHECKLIST.md) → last relevant verbatim lesson. Never pick a lesson from memory alone; obey the single active question, and use new scenario IDs only for new material.
 1. Pick one business scenario and one anchor interview question. Prioritize prerequisites before implementation.
 2. Write an easy conversational exchange: Mentor (five years experienced) ↔ Student (college Java graduate). Start at ground zero, discuss why, follow the request/data flow, show minimal accurate Java code if useful, include one failure case, and end with an interview-ready summary and one-line memory chain.
