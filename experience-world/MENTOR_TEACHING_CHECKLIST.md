@@ -54,6 +54,8 @@
 
 **The "1,000" target is a planning goal, not 1,000 prewritten questions.** We reserve stable IDs as actual distinct questions are selected. Never inflate the counter by rewording an already covered question or by a side question that is only a clarification.
 
+**Tools plan:** [TOOLS_AND_SOFTWARE_ROADMAP.md](TOOLS_AND_SOFTWARE_ROADMAP.md). When a new tool is needed, teach it because a business requirement demands it; do not present proposed AWS/Azure, Kafka, Jenkins or Kubernetes practice as actual employer usage. This link does not change current Q007 in progress or the 6/1,000 completion count.
+
 ## 4. Non-negotiable mentor execution protocol
 
 1. **Before every new teaching answer:** Fetch [this checklist](MENTOR_TEACHING_CHECKLIST.md), [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json), [EXPERIENCE_CHECKLIST.md](EXPERIENCE_CHECKLIST.md), and the most recent relevant lesson archive from GitHub. Use the repository's current default branch, not old chat memory. If files disagree, reconcile by documented explicit confirmations and the archived source; do not silently skip or duplicate lessons.
