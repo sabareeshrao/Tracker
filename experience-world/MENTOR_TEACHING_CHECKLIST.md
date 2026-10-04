@@ -58,6 +58,9 @@
 
 ## 4. Non-negotiable mentor execution protocol
 
+**REQUIRED LESSON AUTHORING GATE:** Read [LESSON_CREATION_PLAYBOOK.md](LESSON_CREATION_PLAYBOOK.md) and [scenarios/LESSON_TEMPLATE.md](scenarios/LESSON_TEMPLATE.md) before creating any Day. The playbook defines the Day 1/revised Day 2 conversation depth, how GitHub/cloud/DevOps software earns an introduction, the mandatory three-question understanding test, and how to archive verbatim upon explicit confirmation. It is not sufficient to read the tool list alone. Current main task remains Q007; merely updating instructions never ticks it.
+
+
 1. **Before every new teaching answer:** Fetch [this checklist](MENTOR_TEACHING_CHECKLIST.md), [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json), [EXPERIENCE_CHECKLIST.md](EXPERIENCE_CHECKLIST.md), and the most recent relevant lesson archive from GitHub. Use the repository's current default branch, not old chat memory. If files disagree, reconcile by documented explicit confirmations and the archived source; do not silently skip or duplicate lessons.
 2. **Check explicit next pointer first.** If the active scenario is IN PROGRESS, finish *that* scenario, not the next one. If the user requests another topic, honor it without declaring the unfinished one understood; record the detour and resume its pointer afterward.
 3. **Deduplicate against this ledger** by comparing each proposed new question's business action, concept, evidence, and outcome with checked items. If same outcome and only synonyms differ, reject the duplicate and select a new requirement or deeper, clearly named follow-up.
