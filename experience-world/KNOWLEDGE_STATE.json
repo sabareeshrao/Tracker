@@ -320,5 +320,24 @@
         "Batch import reconciliation details"
       ]
     }
-  ]
+  ],
+  "lessonAuthoring": {
+    "instructionsUpdatedAt": "2026-10-04",
+    "requiredReadOrder": [
+      "experience-world/LESSON_CREATION_PLAYBOOK.md",
+      "experience-world/MENTOR_TEACHING_CHECKLIST.md",
+      "experience-world/KNOWLEDGE_STATE.json",
+      "experience-world/EXPERIENCE_CHECKLIST.md",
+      "experience-world/TOOLS_AND_SOFTWARE_ROADMAP.md",
+      "experience-world/WORLD_MAP.md",
+      "latest relevant experience-world/scenarios/NNN-day-N-verbatim.txt"
+    ],
+    "blankTemplatePath": "experience-world/scenarios/LESSON_TEMPLATE.md",
+    "agentHandoffPath": "experience-world/AGENTS.md",
+    "canonicalStyle": "Complete Day 1 and rewritten Day 2: practical work scenario → problem → mentor/student discovery → one earned new concept or software tool at a time → small example/trace → failure and fix → resume-safe context → interview answer → memory trick → 3-question comprehension test",
+    "softwareRule": "Introduce tool only when a real new business need justifies it; label resume-reported versus learning-only and do not attribute hypothetical cloud, CI/CD or deployments to actual employer",
+    "yearDistribution": "Approximately 200 distinct anchor days per simulated career year as a planning band, but transitions depend on covered skills and live state, not forced numeric boundaries",
+    "archiveRule": "On explicit Understood preserve original full user-visible assistant text verbatim; then reconcile JSON, mentor ledger, student checklist, roadmap and archive links; do not mark the root 2719-question bank",
+    "currentScenarioMustNotAdvanceUntilConfirmation": true
+  }
 }
