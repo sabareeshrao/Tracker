@@ -17,6 +17,8 @@ This is a **teaching roadmap**, not a declaration that the user used every liste
 
 **Tool-by-year companion:** [TOOLS_AND_SOFTWARE_ROADMAP.md](TOOLS_AND_SOFTWARE_ROADMAP.md) explains when Git/GitHub, Postman, CI/CD, AWS/Azure cloud, Docker, Kubernetes, monitoring and other software enter the practical storyline. These are learning plans, not claims about employer tools.
 
+**Mandatory lesson-generation protocol:** [LESSON_CREATION_PLAYBOOK.md](LESSON_CREATION_PLAYBOOK.md), applied after checking live mentor queue and knowledge state. [Lesson skeleton](scenarios/LESSON_TEMPLATE.md). The five-year software roadmap is **not** a script to introduce all tools at once; introduce software only to solve a new business need, state whether its use is user-reported or learning-only, and retain the previous lesson's grounding and comprehension check.
+
 ## Selection rules
 - **Resume from the active scenario in [KNOWLEDGE_STATE.json](KNOWLEDGE_STATE.json) and [MENTOR_TEACHING_CHECKLIST.md](MENTOR_TEACHING_CHECKLIST.md); do not default to Scenario 001 after it is completed.** As of 2026-10-03, Q001–Q006 are understood and Q007 is in progress.
 - Expand from the student's questions and the last confirmed concepts; choose a missing prerequisite if the next scenario relies on it.
