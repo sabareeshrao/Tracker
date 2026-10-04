@@ -115,6 +115,10 @@ Teach subscriptions, budgets, identity and least privilege *before* deploying an
 
 Every item gets a *why → task → tool use → failure → fix → interview-ready explanation → test your understanding*. Not every tool is required in every scenario, and the exact software mix will evolve with actual project evidence.
 
+## Creation instructions for every software/tool lesson
+
+**This file answers *what software and why*. The mandatory [LESSON_CREATION_PLAYBOOK.md](LESSON_CREATION_PLAYBOOK.md) answers *how to create the actual lesson*, including Day 1 dialogue tone, the user's favorite transaction analogy, one business problem and failure at a time, realistic interface/command snippets, a quiz, interview answer and separate confirmation tracking. Read both before teaching a tool.** Use the [scenario drafting template](scenarios/LESSON_TEMPLATE.md) and keep the latest [mentor queue](MENTOR_TEACHING_CHECKLIST.md) as the source of truth for the next distinct question.
+
 ## Continuity rules
 
 - This file is **planning-only**. It does not tick Q001–Q1000 or change current Day 7 status.
