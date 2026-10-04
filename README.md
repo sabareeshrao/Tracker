@@ -18,6 +18,8 @@ In the GitHub repository, go to **Settings → Pages → Build and deployment �
 
 The [Experience World checklist](experience.html) is a separate scenario-based mentoring track, linked in the main dashboard sidebar. The [mentor-only teaching checklist](experience-world/MENTOR_TEACHING_CHECKLIST.md) prevents repeated lessons by preserving the last confirmed question, unfinished scenario, unique next question and prior concepts. It shows **which simulated career year you are studying**, a read-only checklist synchronized from [GitHub learning state](experience-world/KNOWLEDGE_STATE.json), and links to complete [verbatim lesson transcripts](experience-world/scenarios/001-day-1-verbatim.txt). [Markdown career checklist](experience-world/EXPERIENCE_CHECKLIST.md). **Current: Year 1 (2018–2019), Days 1–6 understood, Day 7 in progress, 6/1,000 self-reported understood.** This does not overwrite the independent 2,719-question study checklist.
 
+The [planned five-year software roadmap](experience-world/TOOLS_AND_SOFTWARE_ROADMAP.md) covers IntelliJ, Git/GitHub, SQL/database clients, Spring Boot, React, testing, Linux, CI/CD, Docker, AWS/Azure, monitoring and related tools. Resume-reported technologies are distinguished from optional practice tools; this planning document does not mark any extra lesson complete.
+
 ## Resume-driven interview batches
 
 - **[Resume experience reference](docs/RESUME_EXPERIENCE.md)** — the user's exact stated responsibilities, roles and results (user-reported; not externally verified).
